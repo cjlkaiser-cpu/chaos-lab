@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 25: Dimension fractal de atractores — Curso Teoria del Caos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 05</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">25</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Dimension fractal</span>
+                        <span class="text-gray-400 font-light ml-1">— de atractores</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-24.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="../modulo-06/leccion-26.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-sm font-medium text-violet-400 mb-1">Modulo 05</h2>
+                <p class="text-xs text-gray-500 mb-4">Herramientas de Analisis</p>
+
+                <!-- Progress -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>5/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="space-y-1">
+                    <a href="leccion-21.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">21</span>
+                        <span>Exponente de Lyapunov</span>
+                    </a>
+                    <a href="leccion-22.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">22</span>
+                        <span>Perturbacion-renormalizacion</span>
+                    </a>
+                    <a href="leccion-23.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">23</span>
+                        <span>Diagramas de bifurcacion</span>
+                    </a>
+                    <a href="leccion-24.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">24</span>
+                        <span>Cascada de duplicacion</span>
+                    </a>
+                    <a href="leccion-25.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
+                        <span class="mono text-xs">25</span>
+                        <span>Dimension fractal</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 25</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Dimension fractal de atractores</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 font-light">¿Cuantas dimensiones tiene un atractor extrano? No una, no dos, sino fractal</p>
+                </div>
+
+                <!-- Content -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">¿Cuantas dimensiones tiene un atractor?</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En geometria euclidiana, la dimension es un numero entero: un punto tiene dimension 0, una linea dimension 1, una superficie dimension 2, un volumen dimension 3. Pero los atractores extranos del caos viven en un mundo diferente. El atractor de Lorenz no es una linea (dimension 1) ni una superficie (dimension 2). Es algo intermedio: tiene dimension fraccionaria.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esta idea, la de <em class="text-violet-300">dimension fractal</em>, fue formalizada por Benoit Mandelbrot en los anos 1970 y se convirtio en una de las herramientas mas poderosas para caracterizar la complejidad geometrica de los atractores caoticos. La dimension fractal cuantifica como de "arrugado", "plegado" o "complejo" es un objeto geometrico, dandole un numero preciso a lo que nuestros ojos perciben como complejidad.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Para un atractor caotico, la dimension fractal nos dice algo fundamental: cuantas variables independientes necesitamos realmente para describir el estado del sistema en el atractor. Si un sistema tridimensional tiene un atractor de dimension 2.06 (como el de Lorenz), esto significa que las trayectorias estan confinadas a una estructura que es "casi" una superficie, pero con una complejidad adicional infinitesimal que la hace ligeramente mas que bidimensional.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Dimension de box-counting</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La dimension de box-counting (tambien llamada dimension de Minkowski-Bouligand o dimension de capacidad) es la mas intuitiva y la mas facil de calcular numericamente. La idea es cubrir el objeto con cajas (hipercubos) de lado \(\epsilon\) y contar cuantas cajas \(N(\epsilon)\) se necesitan para cubrirlo completamente.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para un objeto euclidiano, la relacion entre \(N\) y \(\epsilon\) sigue una ley de potencia: \(N(\epsilon) \sim \epsilon^{-D}\), donde \(D\) es la dimension. Una linea de longitud \(L\) necesita \(N \approx L/\epsilon\) cajas, asi que \(D = 1\). Un cuadrado de lado \(L\) necesita \(N \approx (L/\epsilon)^2\), asi que \(D = 2\). Pero un fractal necesita \(N \sim \epsilon^{-D}\) con \(D\) no entero.
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$D_0 = \lim_{\epsilon \to 0} \frac{\ln N(\epsilon)}{\ln(1/\epsilon)}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En la practica, no podemos tomar el limite \(\epsilon \to 0\) (la resolucion del atractor digitalizado es finita). En su lugar, calculamos \(N(\epsilon)\) para varios valores de \(\epsilon\), graficamos \(\ln N\) versus \(\ln(1/\epsilon)\), y ajustamos una recta. La pendiente de esa recta es la dimension de box-counting.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El rango de \(\epsilon\) es critico: demasiado grande y las cajas no resuelven la estructura del atractor; demasiado pequeno y caemos en la resolucion finita de los datos. La region lineal del grafico \(\ln N\) vs \(\ln(1/\epsilon)\) es donde la estimacion es confiable.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Dimension de correlacion</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La dimension de correlacion \(D_2\), introducida por Grassberger y Procaccia (1983), es una alternativa estadistica al box-counting que es mas robusta numericamente y requiere menos datos. En lugar de cubrir con cajas, se basa en la <em class="text-violet-300">suma de correlacion</em>:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$C(\epsilon) = \lim_{N\to\infty} \frac{1}{N^2} \sum_{i \neq j} \Theta(\epsilon - \|\mathbf{x}_i - \mathbf{x}_j\|)$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Donde \(\Theta\) es la funcion de Heaviside y la suma cuenta el numero de pares de puntos en el atractor que estan a distancia menor que \(\epsilon\). La dimension de correlacion es:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$D_2 = \lim_{\epsilon \to 0} \frac{\ln C(\epsilon)}{\ln \epsilon}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La dimension de correlacion siempre satisface \(D_2 \leq D_0\) (la dimension de box-counting). Para muchos atractores caoticos, ambas son muy cercanas. La ventaja de \(D_2\) es que pesa las regiones del atractor segun la frecuencia con que la trayectoria las visita, dando mas importancia a las partes densamente visitadas.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Dimension de Hausdorff</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La dimension de Hausdorff-Besicovitch es la definicion matematicamente rigurosa de dimension fractal, y es el <em class="text-cyan-300">gold standard</em> teorico. Se define usando cubiertas optimas del conjunto (no necesariamente cajas regulares) y un concepto de "medida" generalizada. Formalmente:
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para un valor \(d\), la medida de Hausdorff \(\mathcal{H}^d(S)\) es el infimo sobre todas las cubiertas de \(S\) por conjuntos de diametro menor que \(\epsilon\) de la suma \(\sum |U_i|^d\), tomando el limite cuando \(\epsilon \to 0\). La dimension de Hausdorff es el valor critico de \(d\) donde la medida salta de infinito a cero.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    En la practica, la dimension de Hausdorff rara vez se calcula directamente (es extremadamente dificil de estimar numericamente). Se usa como referencia teorica, y se aproxima mediante la dimension de box-counting o de correlacion. Para la mayoria de los atractores caoticos bien estudiados, las tres dimensiones son muy cercanas.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Dimensiones de atractores famosos</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La dimension fractal de un atractor nos dice mucho sobre su estructura geometrica y dinamica. Veamos algunos ejemplos clasicos:
+                </p>
+
+                <div class="overflow-x-auto my-6">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Atractor</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">D&#8320; (box)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">D&#8322; (corr.)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Interpretacion</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Lorenz</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.06</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.05</td>
+                                <td class="py-3 px-4">Casi una superficie, con estructura extra infinitesimal</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Rossler</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.01</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.01</td>
+                                <td class="py-3 px-4">Apenas mas que una superficie; caos debil</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Henon</td>
+                                <td class="py-3 px-4 mono text-cyan-400">1.26</td>
+                                <td class="py-3 px-4 mono text-cyan-400">1.22</td>
+                                <td class="py-3 px-4">Entre linea y superficie; fractal 2D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Conjunto de Cantor</td>
+                                <td class="py-3 px-4 mono text-cyan-400">0.631</td>
+                                <td class="py-3 px-4 mono text-cyan-400">0.631</td>
+                                <td class="py-3 px-4">Entre un punto y una linea; polvo fractal</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Sierpinski triangle</td>
+                                <td class="py-3 px-4 mono text-cyan-400">1.585</td>
+                                <td class="py-3 px-4 mono text-cyan-400">1.585</td>
+                                <td class="py-3 px-4">Entre linea y superficie; autosimilar exacto</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4">Frontera de Mandelbrot</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.00</td>
+                                <td class="py-3 px-4 mono text-cyan-400">2.00</td>
+                                <td class="py-3 px-4">Tan complejo como una superficie completa</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4">Mackey-Glass (&tau;=30)</td>
+                                <td class="py-3 px-4 mono text-cyan-400">3.6</td>
+                                <td class="py-3 px-4 mono text-cyan-400">3.5</td>
+                                <td class="py-3 px-4">Hipersuerficie fractal; caos de alta dimension</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Observa que el atractor de Lorenz tiene dimension \(\approx 2.06\). Esto significa que vive en tres dimensiones, pero sus trayectorias estan confinadas a una estructura que es esencialmente una superficie con un poco de grosor fractal. ¿Por que? La fuerte contraccion a lo largo de un eje (\(\lambda_3 \approx -14.57\)) aplasta el atractor hasta hacerlo casi plano, pero la expansion caotica (\(\lambda_1 \approx 0.906\)) crea pliegues que le dan una estructura infinitamente detallada.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Existe una relacion elegante entre la dimension fractal y los exponentes de Lyapunov, conocida como la <em class="text-violet-300">conjetura de Kaplan-Yorke</em>:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$D_{KY} = j + \frac{\sum_{i=1}^{j} \lambda_i}{|\lambda_{j+1}|}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    donde \(j\) es el mayor entero tal que \(\sum_{i=1}^{j} \lambda_i \geq 0\). Para Lorenz: \(j = 2\) (ya que \(\lambda_1 + \lambda_2 = 0.906 + 0 = 0.906 > 0\)), asi que \(D_{KY} = 2 + 0.906/14.57 \approx 2.062\). Esta formula conecta directamente la geometria del atractor con su dinamica.
+                </p>
+
+                <!-- Emphasis Box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 p-6 rounded-r-xl my-8">
+                    <p class="text-violet-200 text-lg font-light italic">
+                        "La dimension fractal mide la complejidad geometrica del atractor: un numero que cuantifica cuanto espacio ocupa entre una linea y una superficie. Es la huella digital geometrica del caos."
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">El algoritmo de box-counting</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para implementar el box-counting numericamente sobre un atractor reconstruido:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-5 my-6">
+                    <ol class="list-decimal list-inside space-y-2 text-gray-300 text-sm">
+                        <li>Generar una trayectoria larga sobre el atractor (despues de eliminar el transitorio)</li>
+                        <li>Proyectar a 2D (o usar la reconstruccion completa en nD)</li>
+                        <li>Para cada tamano de caja \(\epsilon_k\) (tipicamente 10-20 valores logaritmicamente espaciados):</li>
+                        <li class="ml-6">Dividir el espacio en una grilla de celdas de lado \(\epsilon_k\)</li>
+                        <li class="ml-6">Contar cuantas celdas contienen al menos un punto del atractor: \(N(\epsilon_k)\)</li>
+                        <li>Graficar \(\ln N\) vs \(\ln(1/\epsilon)\)</li>
+                        <li>Ajustar una recta por minimos cuadrados en la region lineal</li>
+                        <li>La pendiente es \(D_0\)</li>
+                    </ol>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La precision del resultado depende criticamente del numero de puntos en la trayectoria y del rango de \(\epsilon\). Una regla practica: necesitamos al menos \(10^{D+1}\) puntos para estimar con fiabilidad una dimension \(D\). Para el atractor de Lorenz (\(D \approx 2\)), esto significa al menos \(10^3 = 1000\) puntos, pero \(10^4\) o mas dan resultados mucho mejores.
+                </p>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-violet-400 font-medium text-lg mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            <span class="font-medium text-gray-200">¿Por que D &asymp; 2.06 para Lorenz?</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Usando la formula de Kaplan-Yorke y los exponentes de Lyapunov del atractor de Lorenz (\(\lambda_1 \approx 0.906\), \(\lambda_2 \approx 0\), \(\lambda_3 \approx -14.57\)), calcula la dimension fractal. Explica intuitivamente por que el resultado esta tan cerca de 2.</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Box-counting del conjunto de Cantor</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">El conjunto de Cantor se construye eliminando el tercio central de un segmento, luego el tercio central de cada segmento restante, y asi sucesivamente. En el paso \(n\), hay \(2^n\) segmentos de longitud \(3^{-n}\). Demuestra que su dimension de box-counting es \(D_0 = \ln 2 / \ln 3 \approx 0.631\).</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Experimenta con &epsilon; en el LAB</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">En el laboratorio interactivo, ajusta el tamano de caja \(\epsilon\) y observa como cambia \(N(\epsilon)\). ¿Para que rango de \(\epsilon\) es lineal la relacion log-log? ¿Que dimension obtienes?</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">LAB: Box-counting sobre Lorenz</h2>
+                <p class="text-gray-400 text-sm mb-4">Visualizacion del metodo de box-counting aplicado a una proyeccion 2D del atractor de Lorenz. La mitad izquierda muestra el atractor con la grilla de cajas superpuesta (las cajas ocupadas se resaltan). La mitad derecha muestra el grafico log-log de \(N(\epsilon)\) vs \(1/\epsilon\) con el ajuste lineal que estima la dimension. Usa el slider para cambiar el tamano de caja.</p>
+
+                <div class="lab-container my-6">
+                    <div class="bg-gray-900 px-4 py-2 flex items-center justify-between border-b border-violet-500/30">
+                        <div class="flex items-center gap-2">
+                            <div class="flex gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <span class="ml-4 text-sm text-gray-400 mono">box-counting.js</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <label class="text-xs text-gray-500">
+                                &epsilon; = <span id="eps-val" class="text-cyan-400 mono">8</span> px
+                            </label>
+                            <input type="range" id="eps-slider" min="2" max="40" step="1" value="8"
+                                class="w-32 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-violet-500">
+                            <span id="dim-display" class="text-xs text-violet-400 mono">D &asymp; --</span>
+                        </div>
+                    </div>
+                    <canvas id="lab-canvas" width="900" height="500" style="width: 100%; background: #000;"></canvas>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-24.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-xl">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 24: Cascada de duplicacion</div>
+                    </div>
+                </a>
+                <a href="../modulo-06/leccion-26.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 26: Secciones de Poincare</div>
+                    </div>
+                    <span class="text-xl">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 05 — Leccion 25</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Teoria del Caos &middot; De Lorenz al Infinito</p>
+        </div>
+    </footer>
+
+    <!-- LAB Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        const epsSlider = document.getElementById('eps-slider');
+        const epsVal = document.getElementById('eps-val');
+        const dimDisplay = document.getElementById('dim-display');
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.scale(dpr, dpr);
+        const W = canvas.clientWidth;
+        const H = canvas.clientHeight;
+
+        // Lorenz integration
+        const SIGMA = 10, RHO = 28, BETA = 8/3;
+        const DT = 0.005;
+        const NUM_POINTS = 30000;
+        const WARMUP = 1000;
+
+        function lorenz(s) {
+            return [
+                SIGMA * (s[1] - s[0]),
+                s[0] * (RHO - s[2]) - s[1],
+                s[0] * s[1] - BETA * s[2]
+            ];
+        }
+
+        function rk4(s, dt) {
+            const k1 = lorenz(s);
+            const s2 = [s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2];
+            const k2 = lorenz(s2);
+            const s3 = [s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2];
+            const k3 = lorenz(s3);
+            const s4 = [s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt];
+            const k4 = lorenz(s4);
+            return [
+                s[0] + (k1[0]+2*k2[0]+2*k3[0]+k4[0]) * dt/6,
+                s[1] + (k1[1]+2*k2[1]+2*k3[1]+k4[1]) * dt/6,
+                s[2] + (k1[2]+2*k2[2]+2*k3[2]+k4[2]) * dt/6
+            ];
+        }
+
+        // Generate attractor points
+        let state = [1, 1, 1];
+        for (let i = 0; i < WARMUP; i++) state = rk4(state, DT);
+
+        const points = [];
+        for (let i = 0; i < NUM_POINTS; i++) {
+            state = rk4(state, DT);
+            points.push([state[0], state[2]]); // x-z projection
+        }
+
+        // Find bounds
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        for (const p of points) {
+            minX = Math.min(minX, p[0]);
+            maxX = Math.max(maxX, p[0]);
+            minY = Math.min(minY, p[1]);
+            maxY = Math.max(maxY, p[1]);
+        }
+
+        // Add padding
+        const padX = (maxX - minX) * 0.05;
+        const padY = (maxY - minY) * 0.05;
+        minX -= padX; maxX += padX;
+        minY -= padY; maxY += padY;
+
+        // Attractor display area (left half)
+        const attrX = 20;
+        const attrY = 20;
+        const attrW = W * 0.52 - 20;
+        const attrH = H - 40;
+
+        // Log-log plot area (right half)
+        const logX = W * 0.56;
+        const logY = 40;
+        const logW = W * 0.42;
+        const logH = H * 0.5 - 20;
+
+        // Dimension result area
+        const resX = W * 0.56;
+        const resY = H * 0.55;
+        const resW = W * 0.42;
+        const resH = H * 0.42;
+
+        function projAttr(px, py) {
+            return [
+                attrX + ((px - minX) / (maxX - minX)) * attrW,
+                attrY + attrH - ((py - minY) / (maxY - minY)) * attrH
+            ];
+        }
+
+        // Precompute box-counting for multiple epsilon values
+        function boxCount(epsilon) {
+            // epsilon is in screen pixels, convert to data coordinates
+            const epsDataX = epsilon * (maxX - minX) / attrW;
+            const epsDataY = epsilon * (maxY - minY) / attrH;
+
+            const occupied = new Set();
+            for (const p of points) {
+                const bx = Math.floor((p[0] - minX) / epsDataX);
+                const by = Math.floor((p[1] - minY) / epsDataY);
+                occupied.add(bx + ',' + by);
+            }
+            return { count: occupied.size, boxes: occupied, epsDataX, epsDataY };
+        }
+
+        // Pre-compute for all epsilon values for the log-log plot
+        function computeAllBoxCounts() {
+            const results = [];
+            for (let eps = 2; eps <= 60; eps += 1) {
+                const bc = boxCount(eps);
+                results.push({ eps, count: bc.count });
+            }
+            return results;
+        }
+
+        const allCounts = computeAllBoxCounts();
+
+        // Linear regression
+        function linearFit(data) {
+            const n = data.length;
+            let sx = 0, sy = 0, sxx = 0, sxy = 0;
+            for (const d of data) {
+                sx += d.x;
+                sy += d.y;
+                sxx += d.x * d.x;
+                sxy += d.x * d.y;
+            }
+            const slope = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+            const intercept = (sy - slope * sx) / n;
+            return { slope, intercept };
+        }
+
+        let currentEps = 8;
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, W, H);
+
+            // === Draw attractor ===
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.5)';
+            ctx.beginPath();
+            ctx.roundRect(attrX - 5, attrY - 5, attrW + 10, attrH + 10, 8);
+            ctx.fill();
+
+            // Draw attractor points
+            for (let i = 0; i < points.length; i += 2) {
+                const [sx, sy] = projAttr(points[i][0], points[i][1]);
+                const t = i / points.length;
+                ctx.fillStyle = `rgba(${100 + 68*t}, ${30 + 55*t}, ${200}, 0.3)`;
+                ctx.fillRect(sx, sy, 1, 1);
+            }
+
+            // Draw box grid
+            const bc = boxCount(currentEps);
+            const epsX = bc.epsDataX;
+            const epsY = bc.epsDataY;
+
+            // Draw occupied boxes
+            for (const key of bc.boxes) {
+                const [bx, by] = key.split(',').map(Number);
+                const dataX = minX + bx * epsX;
+                const dataY = minY + by * epsY;
+                const [sx1, sy1] = projAttr(dataX, dataY + epsY);
+                const [sx2, sy2] = projAttr(dataX + epsX, dataY);
+
+                ctx.fillStyle = 'rgba(168, 85, 247, 0.08)';
+                ctx.fillRect(sx1, sy1, sx2 - sx1, sy2 - sy1);
+                ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)';
+                ctx.lineWidth = 0.5;
+                ctx.strokeRect(sx1, sy1, sx2 - sx1, sy2 - sy1);
+            }
+
+            // Attractor label
+            ctx.font = '12px Inter';
+            ctx.fillStyle = '#9ca3af';
+            ctx.textAlign = 'left';
+            ctx.fillText('Proyeccion x-z | N(\u03B5) = ' + bc.count, attrX, attrY - 10);
+
+            // === Log-log plot ===
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(logX, logY - 20, logW, logH + 30, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#1f2937';
+            ctx.beginPath();
+            ctx.roundRect(logX, logY - 20, logW, logH + 30, 6);
+            ctx.stroke();
+
+            ctx.font = '11px Inter';
+            ctx.fillStyle = '#9ca3af';
+            ctx.textAlign = 'left';
+            ctx.fillText('Grafico log-log: ln(N) vs ln(1/\u03B5)', logX + 10, logY - 6);
+
+            // Prepare log data
+            const logData = allCounts.map(d => ({
+                x: Math.log(1/d.eps),
+                y: Math.log(d.count)
+            }));
+
+            const lxMin = Math.min(...logData.map(d => d.x));
+            const lxMax = Math.max(...logData.map(d => d.x));
+            const lyMin = Math.min(...logData.map(d => d.y));
+            const lyMax = Math.max(...logData.map(d => d.y));
+
+            const lMargin = 40;
+            const lPlotW = logW - lMargin - 15;
+            const lPlotH = logH - 20;
+
+            function logToScreen(lx, ly) {
+                return [
+                    logX + lMargin + ((lx - lxMin) / (lxMax - lxMin)) * lPlotW,
+                    logY + lPlotH - ((ly - lyMin) / (lyMax - lyMin)) * lPlotH
+                ];
+            }
+
+            // Axes
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            const [axOX, axOY] = logToScreen(lxMin, lyMin);
+            const [axRX, axRY] = logToScreen(lxMax, lyMin);
+            const [axTX, axTY] = logToScreen(lxMin, lyMax);
+            ctx.moveTo(axTX, axTY);
+            ctx.lineTo(axOX, axOY);
+            ctx.lineTo(axRX, axRY);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.font = '9px JetBrains Mono';
+            ctx.fillStyle = '#6b7280';
+            ctx.textAlign = 'center';
+            ctx.fillText('ln(1/\u03B5)', logX + lMargin + lPlotW/2, logY + lPlotH + 15);
+            ctx.save();
+            ctx.translate(logX + 12, logY + lPlotH/2);
+            ctx.rotate(-Math.PI/2);
+            ctx.fillText('ln N(\u03B5)', 0, 0);
+            ctx.restore();
+
+            // Plot data points
+            for (let i = 0; i < logData.length; i++) {
+                const [sx, sy] = logToScreen(logData[i].x, logData[i].y);
+                const isCurrentEps = allCounts[i].eps === currentEps;
+                ctx.fillStyle = isCurrentEps ? '#22d3ee' : 'rgba(168, 85, 247, 0.5)';
+                ctx.beginPath();
+                ctx.arc(sx, sy, isCurrentEps ? 5 : 2.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Linear fit (use middle range for best estimate)
+            const fitStart = Math.floor(logData.length * 0.15);
+            const fitEnd = Math.floor(logData.length * 0.7);
+            const fitData = logData.slice(fitStart, fitEnd);
+            const fit = linearFit(fitData);
+
+            // Draw fit line
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 3]);
+            ctx.beginPath();
+            const [fx1, fy1] = logToScreen(lxMin, fit.intercept + fit.slope * lxMin);
+            const [fx2, fy2] = logToScreen(lxMax, fit.intercept + fit.slope * lxMax);
+            ctx.moveTo(fx1, fy1);
+            ctx.lineTo(fx2, fy2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.lineWidth = 1;
+
+            const dimension = fit.slope;
+
+            // === Dimension result panel ===
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(resX, resY, resW, resH, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#1f2937';
+            ctx.beginPath();
+            ctx.roundRect(resX, resY, resW, resH, 6);
+            ctx.stroke();
+
+            ctx.font = '12px Inter';
+            ctx.fillStyle = '#9ca3af';
+            ctx.textAlign = 'left';
+            ctx.fillText('Resultado del box-counting', resX + 15, resY + 22);
+
+            // Big dimension number
+            ctx.font = 'bold 36px JetBrains Mono';
+            ctx.fillStyle = '#a855f7';
+            ctx.fillText('D\u2080 \u2248 ' + dimension.toFixed(3), resX + 15, resY + 68);
+
+            // Comparison values
+            ctx.font = '12px JetBrains Mono';
+            ctx.fillStyle = '#6b7280';
+            const compY = resY + 95;
+            ctx.fillText('Valor teorico (Kaplan-Yorke): 2.062', resX + 15, compY);
+            ctx.fillText('Cajas ocupadas (actual): ' + bc.count, resX + 15, compY + 20);
+            ctx.fillText('Tamano de caja \u03B5: ' + currentEps + ' px', resX + 15, compY + 40);
+            ctx.fillText('Puntos del atractor: ' + NUM_POINTS, resX + 15, compY + 60);
+
+            // Visual dimension interpretation bar
+            const barX = resX + 15;
+            const barY = compY + 80;
+            const barW = resW - 30;
+            const barH = 20;
+
+            // Gradient from 1D to 3D
+            const grad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+            grad.addColorStop(0, '#22c55e');
+            grad.addColorStop(0.33, '#eab308');
+            grad.addColorStop(0.66, '#f97316');
+            grad.addColorStop(1, '#ef4444');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(barX, barY, barW, barH, 4);
+            ctx.fill();
+
+            // Labels
+            ctx.font = '9px JetBrains Mono';
+            ctx.fillStyle = '#9ca3af';
+            ctx.textAlign = 'center';
+            ctx.fillText('1D', barX, barY + barH + 12);
+            ctx.fillText('2D', barX + barW * 0.33, barY + barH + 12);
+            ctx.fillText('3D', barX + barW, barY + barH + 12);
+
+            // Marker for current dimension
+            const markerX = barX + ((dimension - 1) / 2) * barW;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(markerX, barY - 2);
+            ctx.lineTo(markerX - 5, barY - 10);
+            ctx.lineTo(markerX + 5, barY - 10);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.font = '10px JetBrains Mono';
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'center';
+            ctx.fillText(dimension.toFixed(2), markerX, barY - 14);
+
+            // Update display
+            dimDisplay.textContent = 'D \u2248 ' + dimension.toFixed(3);
+        }
+
+        epsSlider.addEventListener('input', function() {
+            currentEps = parseInt(this.value);
+            epsVal.textContent = currentEps;
+            draw();
+        });
+
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.clientWidth * dpr;
+            canvas.height = canvas.clientHeight * dpr;
+            ctx.scale(dpr, dpr);
+            draw();
+        });
+
+        draw();
+
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 02 · Espacio de fases | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 01</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 02 / 05</span>
+                <div class="flex gap-2">
+                    <a href="leccion-01.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-03.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 01</h2>
+                <p class="text-sm text-gray-400 mt-1">Fundamentos del Caos</p>
+
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>2 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-01.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">01</span>
+                        <span>Que es el caos determinista</span>
+                    </a>
+                    <a href="leccion-02.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">02</span>
+                        <span>Espacio de fases</span>
+                    </a>
+                    <a href="leccion-03.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">03</span>
+                        <span>Atractores</span>
+                    </a>
+                    <a href="leccion-04.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">04</span>
+                        <span>Sensibilidad a condiciones iniciales</span>
+                    </a>
+                    <a href="leccion-05.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">05</span>
+                        <span>Disipatividad</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 02</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Espacio de fases</h1>
+                    <p class="text-xl text-gray-400">La geometria oculta detras de las ecuaciones diferenciales</p>
+                </div>
+
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Que es el espacio de fases -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Que es el espacio de fases</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La forma habitual de estudiar un sistema dinamico es graficar su evolucion temporal:
+                            la posicion \(x\) como funcion del tiempo \(t\). Esto nos da una curva en el plano \(x\)-\(t\)
+                            que nos dice donde esta el sistema en cada instante. Pero hay una representacion mucho mas
+                            poderosa: el <strong class="text-white">espacio de fases</strong>.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En el espacio de fases, no graficamos la posicion contra el tiempo. En su lugar, graficamos
+                            la posicion contra la velocidad: \(x\) vs \(\dot{x}\). Cada punto de este espacio representa
+                            un estado completo del sistema: sabemos donde esta <em>y</em> hacia donde se mueve. El tiempo
+                            desaparece como eje; se convierte en un parametro implicito que dirige el flujo del sistema
+                            a traves del espacio.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esta idea, introducida por Henri Poincare a finales del siglo XIX, transformo el estudio de los
+                            sistemas dinamicos. En lugar de resolver ecuaciones diferenciales (lo cual es frecuentemente imposible
+                            de forma analitica), podemos estudiar la <strong class="text-white">geometria</strong> del espacio de
+                            fases y extraer informacion cualitativa sobre el comportamiento del sistema sin resolver nada.
+                        </p>
+                    </section>
+
+                    <!-- Coordenadas generalizadas -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Coordenadas generalizadas</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Para un sistema con \(n\) grados de libertad, el espacio de fases tiene \(2n\) dimensiones:
+                            \(n\) coordenadas de posicion y \(n\) de momento (o velocidad). Un pendulo simple tiene un grado
+                            de libertad (\(\theta\)), por lo que su espacio de fases es bidimensional: \((\theta, \dot{\theta})\).
+                            Un pendulo doble tiene dos grados de libertad, y su espacio de fases es de cuatro dimensiones.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Cada punto del espacio de fases codifica toda la informacion necesaria para determinar la evolucion
+                            futura del sistema. Si conocemos \((\theta, \dot{\theta})\) en un instante dado, las ecuaciones de
+                            movimiento determinan univocamente \((\theta(t), \dot{\theta}(t))\) para todo \(t\) futuro (y pasado).
+                            El estado presente contiene toda la historia y todo el destino.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Consideremos el oscilador armonico amortiguado, uno de los sistemas mas fundamentales de la fisica:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\dot{x} = v, \quad \dot{v} = -\omega^2 x - \gamma v$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            donde \(\omega\) es la frecuencia natural y \(\gamma\) es el coeficiente de amortiguamiento.
+                            Este sistema de dos ecuaciones de primer orden es equivalente a la ecuacion de segundo orden
+                            \(\ddot{x} + \gamma\dot{x} + \omega^2 x = 0\). En el espacio de fases, cada par \((x, v)\)
+                            define un punto, y la ecuacion define un <strong class="text-white">campo vectorial</strong>
+                            que indica la direccion y magnitud del flujo en cada punto.
+                        </p>
+                    </section>
+
+                    <!-- Trayectorias y orbitas -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Trayectorias y orbitas</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Cuando elegimos una condicion inicial \((x_0, v_0)\) y dejamos evolucionar el sistema, el punto
+                            representativo se mueve por el espacio de fases trazando una curva llamada <strong class="text-white">trayectoria</strong>
+                            u <strong class="text-white">orbita</strong>. Esta curva es unica: por cada punto del espacio de
+                            fases pasa exactamente una trayectoria. Esto es consecuencia del teorema de existencia y unicidad
+                            de las ecuaciones diferenciales ordinarias.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Una consecuencia fundamental: <strong class="text-white">las trayectorias en el espacio de fases nunca se cruzan</strong>.
+                            Si dos trayectorias se cruzaran en un punto, habria dos evoluciones futuras distintas partiendo del
+                            mismo estado, lo cual contradice el determinismo del sistema. La unica excepcion son los puntos fijos
+                            (equilibrios), donde la velocidad del flujo es cero.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Para el oscilador armonico sin amortiguamiento (\(\gamma = 0\)), las trayectorias son elipses cerradas
+                            centradas en el origen. Cada elipse corresponde a un nivel de energia diferente, y el sistema recorre
+                            su elipse periodicamente para siempre. Cuando anadimos amortiguamiento (\(\gamma > 0\)), las trayectorias
+                            se convierten en espirales que convergen al origen: la energia se disipa y el sistema se detiene.
+                        </p>
+                    </section>
+
+                    <!-- Retratos de fase -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Retratos de fase</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">retrato de fase</strong> es el dibujo completo de todas las
+                            trayectorias posibles en el espacio de fases. Es como un mapa de flujo que muestra, para cualquier
+                            condicion inicial, hacia donde ira el sistema. Mirando el retrato de fase podemos responder preguntas
+                            como: ¿el sistema oscila o se detiene? ¿Hay equilibrios estables? ¿Las orbitas son periodicas o
+                            aperiodicas?
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El retrato de fase captura toda la informacion cualitativa sobre el sistema. Dos sistemas con
+                            retratos de fase topologicamente equivalentes (uno se puede deformar continuamente en el otro)
+                            tienen el mismo comportamiento cualitativo, aunque sus ecuaciones sean diferentes.
+                        </p>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                El espacio de fases transforma una ecuacion diferencial en geometria. En lugar de resolver la
+                                ecuacion, estudiamos las curvas, los puntos fijos y el flujo. La geometria revela la estructura
+                                del sistema de forma inmediata y visual.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Table: Types of phase portraits -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Tipos de retratos de fase (sistemas lineales 2D)</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Tipo</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Autovalores</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Forma</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Estabilidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Centro</td>
+                                        <td class="px-4 py-3 text-gray-400">Imaginarios puros \(\pm i\omega\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Elipses cerradas</td>
+                                        <td class="px-4 py-3 text-gray-400">Neutro</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Espiral estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Complejos, Re &lt; 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Espirales convergentes</td>
+                                        <td class="px-4 py-3 text-gray-400">Asintoticamente estable</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Espiral inestable</td>
+                                        <td class="px-4 py-3 text-gray-400">Complejos, Re &gt; 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Espirales divergentes</td>
+                                        <td class="px-4 py-3 text-gray-400">Inestable</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Nodo estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Reales negativos</td>
+                                        <td class="px-4 py-3 text-gray-400">Lineas convergentes</td>
+                                        <td class="px-4 py-3 text-gray-400">Asintoticamente estable</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Punto silla</td>
+                                        <td class="px-4 py-3 text-gray-400">Reales, signos opuestos</td>
+                                        <td class="px-4 py-3 text-gray-400">Hiperbolas</td>
+                                        <td class="px-4 py-3 text-gray-400">Inestable</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Dibuja el retrato de fase para un oscilador armonico sin amortiguamiento (\(\gamma = 0\)).
+                                    ¿Que forma tienen las trayectorias? ¿Depende la forma del nivel de energia?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Ahora activa el amortiguamiento en la simulacion (\(\gamma > 0\)). ¿Como cambian las trayectorias?
+                                    ¿Hacia donde convergen? Explica fisicamente por que el punto fijo es el origen.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>¿Por que no pueden cruzarse dos trayectorias en el espacio de fases de un sistema
+                                    determinista? Formula el argumento usando el teorema de existencia y unicidad
+                                    de ecuaciones diferenciales ordinarias.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Retrato de fase del oscilador</h2>
+                        <p class="text-gray-400 mb-4">Retrato de fase del oscilador armonico. Activa o desactiva el
+                        amortiguamiento para ver la diferencia entre centro y espiral estable. Haz clic en el canvas
+                        para lanzar nuevas trayectorias.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::phase-portrait</span>
+                                <div class="flex gap-2">
+                                    <button id="btnDamping" class="px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 rounded transition">Amortiguamiento: OFF</button>
+                                    <button id="btnClear" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Limpiar</button>
+                                    <button id="btnPreset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Multi-orbita</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="800" height="600" class="w-full cursor-crosshair"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-01.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 01: Que es el caos determinista</span>
+                </a>
+                <a href="leccion-03.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 03: Atractores &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 01 &middot; Leccion 02</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Phase Portrait -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        const cx = W / 2;
+        const cy = H / 2;
+        const scale = 80; // pixels per unit
+
+        let damping = 0;
+        let trajectories = [];
+        let animId;
+
+        const omega2 = 1.0; // omega^2 = 1
+
+        function stateToScreen(x, v) {
+            return { sx: cx + x * scale, sy: cy - v * scale };
+        }
+        function screenToState(sx, sy) {
+            return { x: (sx - cx) / scale, v: -(sy - cy) / scale };
+        }
+
+        function stepRK4(x, v, dt) {
+            function dx(x, v) { return v; }
+            function dv(x, v) { return -omega2 * x - damping * v; }
+
+            const k1x = dx(x, v);
+            const k1v = dv(x, v);
+            const k2x = dx(x + 0.5*dt*k1x, v + 0.5*dt*k1v);
+            const k2v = dv(x + 0.5*dt*k1x, v + 0.5*dt*k1v);
+            const k3x = dx(x + 0.5*dt*k2x, v + 0.5*dt*k2v);
+            const k3v = dv(x + 0.5*dt*k2x, v + 0.5*dt*k2v);
+            const k4x = dx(x + dt*k3x, v + dt*k3v);
+            const k4v = dv(x + dt*k3x, v + dt*k3v);
+
+            return {
+                x: x + (dt/6)*(k1x + 2*k2x + 2*k3x + k4x),
+                v: v + (dt/6)*(k1v + 2*k2v + 2*k3v + k4v)
+            };
+        }
+
+        function addTrajectory(x0, v0) {
+            const hue = Math.random() * 60 + 250; // violet-cyan range
+            trajectories.push({
+                x: x0, v: v0,
+                trail: [{ x: x0, v: v0 }],
+                hue: hue,
+                active: true
+            });
+        }
+
+        function addPreset() {
+            trajectories = [];
+            for (let r = 0.5; r <= 3.0; r += 0.5) {
+                for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 3) {
+                    addTrajectory(r * Math.cos(angle), r * Math.sin(angle));
+                }
+            }
+        }
+
+        function drawGrid() {
+            ctx.strokeStyle = '#1f2937';
+            ctx.lineWidth = 1;
+            for (let i = -5; i <= 5; i++) {
+                const px = cx + i * scale;
+                const py = cy - i * scale;
+                ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, H); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(W, py); ctx.stroke();
+            }
+            // Axes
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, H); ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '13px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('x (posicion)', W - 60, cy - 10);
+            ctx.save();
+            ctx.translate(cx + 15, 30);
+            ctx.fillText('v (velocidad)', 0, 0);
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, W, H);
+            drawGrid();
+
+            // Draw trajectories
+            for (const traj of trajectories) {
+                if (traj.trail.length < 2) continue;
+                for (let i = 1; i < traj.trail.length; i++) {
+                    const alpha = 0.15 + 0.85 * (i / traj.trail.length);
+                    const p0 = stateToScreen(traj.trail[i-1].x, traj.trail[i-1].v);
+                    const p1 = stateToScreen(traj.trail[i].x, traj.trail[i].v);
+                    ctx.beginPath();
+                    ctx.strokeStyle = `hsla(${traj.hue}, 80%, 65%, ${alpha})`;
+                    ctx.lineWidth = 1.5;
+                    ctx.moveTo(p0.sx, p0.sy);
+                    ctx.lineTo(p1.sx, p1.sy);
+                    ctx.stroke();
+                }
+                // Current point
+                const cp = stateToScreen(traj.x, traj.v);
+                ctx.beginPath();
+                ctx.arc(cp.sx, cp.sy, 3, 0, Math.PI * 2);
+                ctx.fillStyle = `hsl(${traj.hue}, 90%, 75%)`;
+                ctx.fill();
+            }
+
+            // Info
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '12px JetBrains Mono, monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(`gamma = ${damping.toFixed(2)}  |  trayectorias: ${trajectories.length}`, 10, H - 10);
+        }
+
+        function animate() {
+            const dt = 0.02;
+            for (const traj of trajectories) {
+                if (!traj.active) continue;
+                for (let i = 0; i < 3; i++) {
+                    const next = stepRK4(traj.x, traj.v, dt);
+                    traj.x = next.x;
+                    traj.v = next.v;
+                }
+                traj.trail.push({ x: traj.x, v: traj.v });
+                if (traj.trail.length > 600) traj.trail.shift();
+            }
+            draw();
+            animId = requestAnimationFrame(animate);
+        }
+
+        // Events
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = W / rect.width;
+            const scaleY = H / rect.height;
+            const sx = (e.clientX - rect.left) * scaleX;
+            const sy = (e.clientY - rect.top) * scaleY;
+            const state = screenToState(sx, sy);
+            addTrajectory(state.x, state.v);
+        });
+
+        document.getElementById('btnDamping').addEventListener('click', function() {
+            damping = damping === 0 ? 0.15 : 0;
+            this.textContent = damping > 0 ? 'Amortiguamiento: ON' : 'Amortiguamiento: OFF';
+            this.className = damping > 0
+                ? 'px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition'
+                : 'px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 rounded transition';
+        });
+
+        document.getElementById('btnClear').addEventListener('click', function() {
+            trajectories = [];
+        });
+
+        document.getElementById('btnPreset').addEventListener('click', function() {
+            addPreset();
+        });
+
+        // Start with a default trajectory
+        addTrajectory(2, 0);
+        addTrajectory(0, 2);
+        addTrajectory(3, 1);
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

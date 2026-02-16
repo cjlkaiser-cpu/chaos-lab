@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 17 · Chen y Lu: puente Lorenz-Chen | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 04</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 17 / 20</span>
+                <div class="flex gap-2">
+                    <a href="leccion-16.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-18.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 04</h2>
+                <p class="text-sm text-gray-400 mt-1">Familia de Atractores</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>2 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-16.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">16</span>
+                        <span>Rossler: la ruta de Feigenbaum</span>
+                    </a>
+                    <a href="leccion-17.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">17</span>
+                        <span>Chen y Lu</span>
+                    </a>
+                    <a href="leccion-18.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">18</span>
+                        <span>Thomas y Halvorsen</span>
+                    </a>
+                    <a href="leccion-19.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">19</span>
+                        <span>Aizawa y Sprott</span>
+                    </a>
+                    <a href="leccion-20.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">20</span>
+                        <span>Dadras y Rabinovich-Fabrikant</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 17</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Chen y Lu: puente Lorenz-Chen</h1>
+                    <p class="text-xl text-gray-400">Un continuo de atractores conectando dos mundos caoticos</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- La familia Lorenz-Chen -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">La familia Lorenz-Chen</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Durante decadas, el atractor de Lorenz reino como el ejemplo canonico del caos determinista.
+                            Pero a finales del siglo XX, los investigadores comenzaron a preguntarse: ¿existen otros
+                            sistemas con estructura similar pero dinamica diferente? ¿Y si Lorenz no es un caso
+                            aislado, sino un extremo de una familia continua de atractores?
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La respuesta llego en 1999 cuando Guanrong Chen y Tetsushi Ueta publicaron un sistema
+                            que, aunque comparte la misma estructura algebraica general que Lorenz, exhibe un
+                            comportamiento caotico cualitativamente diferente. Y poco despues, Jinhu Lu y Guanrong Chen
+                            encontraron un sistema que actua como <strong class="text-white">puente</strong> entre
+                            ambos, revelando que Lorenz y Chen son los dos extremos de un espectro continuo.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esta historia ilustra un tema recurrente en la ciencia: lo que parece un fenomeno
+                            unico a menudo resulta ser un miembro de una familia mas amplia. Clasificar y conectar
+                            los diferentes atractores es fundamental para entender la estructura global del caos.
+                        </p>
+                    </section>
+
+                    <!-- Chen system -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El sistema de Chen (1999)</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Guanrong Chen llego a su sistema desde una perspectiva inusual: el <strong class="text-white">anti-control
+                            del caos</strong>. Mientras la mayoria de ingenieros buscaban suprimir el caos en sus sistemas,
+                            Chen se propuso hacer lo contrario: tomar un sistema lineal estable y perturbarlo
+                            de manera que se volviera caotico. Este enfoque de "caotificacion" lo llevo a descubrir
+                            un nuevo atractor.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Las ecuaciones de Chen tienen la misma cantidad de terminos que las de Lorenz, pero
+                            con coeficientes diferentes que producen una dinamica distinta:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = a(y-x), \quad \dot{y} = (c-a)x - xz + cy, \quad \dot{z} = xy - bz$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con los parametros clasicos \(a = 35\), \(b = 3\), \(c = 28\), el sistema produce un
+                            atractor de doble ala similar al de Lorenz pero con diferencias sutiles e importantes.
+                            La forma de las alas es mas "abierta" y las transiciones entre lobulos tienen una
+                            estadistica diferente. Tecnicamente, el sistema de Chen viola la condicion de
+                            Shilnikov para el tipo de caos que exhibe Lorenz, lo que significa que su caos tiene
+                            un origen topologico distinto.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La diferencia clave esta en la segunda ecuacion: donde Lorenz tiene \((r-z)x - y\),
+                            Chen tiene \((c-a)x - xz + cy\). El termino \(cy\) en la segunda ecuacion de Chen
+                            cambia fundamentalmente la estructura del espacio de fases cerca de los puntos de
+                            equilibrio, produciendo un tipo diferente de inestabilidad.
+                        </p>
+                    </section>
+
+                    <!-- Lu system -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El sistema de Lu</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En 2002, Jinhu Lu y Guanrong Chen presentaron un tercer sistema que completa la
+                            familia. El sistema de Lu tiene una estructura intermedia entre Lorenz y Chen:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = a(y-x), \quad \dot{y} = -xz + cy, \quad \dot{z} = xy - bz$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con \(a = 36\), \(b = 3\), \(c = 20\), el sistema de Lu produce un atractor
+                            que geometricamente parece un hibrido entre Lorenz y Chen. La segunda ecuacion
+                            ya no tiene el termino \(x\) lineal que aparece tanto en Lorenz como en Chen,
+                            lo que lo situa exactamente en la frontera entre ambos regimenes.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El atractor de Lu tiene una estetica propia: sus alas son mas compactas que las de
+                            Chen y las transiciones entre lobulos son mas suaves. Es como si el sistema hubiera
+                            encontrado un equilibrio entre la estructura rigida de Lorenz y la apertura de Chen.
+                        </p>
+                    </section>
+
+                    <!-- Unifying parameter -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El parametro unificador</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La verdadera elegancia de esta familia emerge cuando definimos un sistema unificado
+                            con un parametro de interpolacion \(\alpha \in [0, 1]\). Para \(\alpha = 0\) recuperamos
+                            el sistema de Lorenz, para \(\alpha = 0.8\) obtenemos el de Lu, y para \(\alpha = 1\)
+                            llegamos al de Chen. A medida que \(\alpha\) varia continuamente, el atractor se
+                            transforma suavemente de uno a otro.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Este descubrimiento tiene implicaciones profundas. Muestra que los diferentes tipos
+                            de caos no son fenomenos aislados, sino manifestaciones de un paisaje continuo.
+                            La clasificacion de atractores caoticos por familias parametricas es una herramienta
+                            poderosa para entender la diversidad del comportamiento caotico.
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Sistema</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">a</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">b</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">c</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Caracter</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Lorenz</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">10</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">8/3</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">28</td>
+                                        <td class="px-4 py-3 text-gray-300">Clasico, alas compactas</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Lu</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">36</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">3</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">20</td>
+                                        <td class="px-4 py-3 text-gray-300">Puente, transiciones suaves</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Chen</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">35</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">3</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">28</td>
+                                        <td class="px-4 py-3 text-gray-300">Anti-control, alas abiertas</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                La familia unificada muestra que Lorenz y Chen son extremos de un espectro continuo.
+                                No existe una frontera abrupta entre un "tipo" de caos y otro; la transicion es
+                                gradual y continua, gobernada por como los parametros modifican la estructura del
+                                espacio de fases cerca de los puntos de equilibrio.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Observa el atractor de Chen en el LAB y comparalo mentalmente con el de Lorenz
+                                    (leccion 12). ¿Que diferencias geometricas puedes identificar? Presta atencion
+                                    a la forma de las alas y la frecuencia de las transiciones entre lobulos.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Compara las ecuaciones de Chen y Lorenz termino a termino. ¿Que terminos son identicos?
+                                    ¿Cual es la diferencia clave en la segunda ecuacion? ¿Por que crees que esa diferencia
+                                    produce un comportamiento caotico distinto?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>Usa los sliders para variar los parametros \(a\), \(b\) y \(c\) del sistema de Chen.
+                                    ¿Para que valores el sistema deja de ser caotico? ¿Puedes encontrar orbitas periodicas?
+                                    Abre ChaosLab para comparar ambos atractores lado a lado.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Atractor de Chen 3D</h2>
+                        <p class="text-gray-400 mb-4">Visualizacion tridimensional del atractor de Chen. Experimenta con los
+                        parametros para explorar la riqueza de la familia Lorenz-Chen.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex flex-wrap items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30 gap-2">
+                                <span class="mono text-xs text-violet-400">chaos-lab::chen-3d</span>
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <label class="text-xs text-gray-400 flex items-center gap-1">
+                                        a = <span id="paramAVal" class="mono text-cyan-400">35</span>
+                                        <input type="range" id="paramA" min="20" max="50" step="0.5" value="35"
+                                            class="w-20 accent-violet-500">
+                                    </label>
+                                    <label class="text-xs text-gray-400 flex items-center gap-1">
+                                        b = <span id="paramBVal" class="mono text-cyan-400">3.0</span>
+                                        <input type="range" id="paramB" min="1" max="6" step="0.1" value="3"
+                                            class="w-20 accent-violet-500">
+                                    </label>
+                                    <label class="text-xs text-gray-400 flex items-center gap-1">
+                                        c = <span id="paramCVal" class="mono text-cyan-400">28</span>
+                                        <input type="range" id="paramC" min="15" max="40" step="0.5" value="28"
+                                            class="w-20 accent-violet-500">
+                                    </label>
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="900" height="500" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-16.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 16: Rossler: la ruta de Feigenbaum</span>
+                </a>
+                <a href="leccion-18.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 18: Thomas y Halvorsen &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 04 &middot; Leccion 17</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Chen Attractor 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    (function() {
+        // --- RK4 integrator ---
+        function rk4(f, s, p, dt) {
+            const k1 = f(s, p);
+            const k2 = f([s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2], p);
+            const k3 = f([s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2], p);
+            const k4 = f([s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt], p);
+            return [s[0]+(k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                    s[1]+(k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                    s[2]+(k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6];
+        }
+
+        // --- Chen system ---
+        function chen(s, p) {
+            const [x, y, z] = s;
+            const { a, b, c } = p;
+            return [
+                a * (y - x),
+                (c - a) * x - x * z + c * y,
+                x * y - b * z
+            ];
+        }
+
+        // --- Three.js setup ---
+        const canvas = document.getElementById('labCanvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(canvas.width, canvas.height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x030712);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, canvas.width / canvas.height, 0.1, 1000);
+        camera.position.set(60, 40, 60);
+        camera.lookAt(0, 20, 0);
+
+        // Trail
+        const MAX_POINTS = 15000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(MAX_POINTS * 3);
+        const colors = new Float32Array(MAX_POINTS * 3);
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        geometry.setDrawRange(0, 0);
+
+        const material = new THREE.LineBasicMaterial({ vertexColors: true, linewidth: 1 });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+
+        // State
+        let state = [-0.1, 0.5, -0.6];
+        let params = { a: 35, b: 3, c: 28 };
+        let pointCount = 0;
+        let paused = false;
+        let angle = 0;
+
+        const blueColor = new THREE.Color(0x3b82f6);
+        const violetColor = new THREE.Color(0xa855f7);
+
+        function resetSim() {
+            state = [-0.1, 0.5, -0.6];
+            pointCount = 0;
+            geometry.setDrawRange(0, 0);
+            angle = 0;
+        }
+
+        function addPoint(x, y, z) {
+            if (pointCount >= MAX_POINTS) {
+                for (let i = 0; i < (MAX_POINTS - 1) * 3; i++) {
+                    positions[i] = positions[i + 3];
+                    colors[i] = colors[i + 3];
+                }
+                pointCount = MAX_POINTS - 1;
+            }
+            const i = pointCount * 3;
+            positions[i] = x;
+            positions[i + 1] = z;
+            positions[i + 2] = y;
+
+            const t = pointCount / MAX_POINTS;
+            const c = blueColor.clone().lerp(violetColor, t);
+            colors[i] = c.r;
+            colors[i + 1] = c.g;
+            colors[i + 2] = c.b;
+
+            pointCount++;
+            geometry.setDrawRange(0, pointCount);
+            geometry.attributes.position.needsUpdate = true;
+            geometry.attributes.color.needsUpdate = true;
+        }
+
+        // Controls
+        function setupSlider(id, valId, key, parser) {
+            const slider = document.getElementById(id);
+            const valEl = document.getElementById(valId);
+            slider.addEventListener('input', function() {
+                params[key] = parseFloat(this.value);
+                valEl.textContent = parser ? parser(params[key]) : params[key];
+                resetSim();
+            });
+        }
+        setupSlider('paramA', 'paramAVal', 'a', v => v.toFixed(0));
+        setupSlider('paramB', 'paramBVal', 'b', v => v.toFixed(1));
+        setupSlider('paramC', 'paramCVal', 'c', v => v.toFixed(0));
+
+        document.getElementById('btnReset').addEventListener('click', resetSim);
+        document.getElementById('btnPause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        // Animation
+        const dt = 0.002;
+        const stepsPerFrame = 30;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!paused) {
+                for (let i = 0; i < stepsPerFrame; i++) {
+                    state = rk4(chen, state, params, dt);
+                    addPoint(state[0], state[1], state[2]);
+                }
+
+                angle += 0.003;
+                const radius = 70;
+                camera.position.x = radius * Math.cos(angle);
+                camera.position.z = radius * Math.sin(angle);
+                camera.position.y = 35;
+                camera.lookAt(0, 20, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Warm up
+        for (let i = 0; i < 1000; i++) {
+            state = rk4(chen, state, params, dt);
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

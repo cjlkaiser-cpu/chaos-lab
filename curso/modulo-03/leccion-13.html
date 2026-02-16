@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 13: Derivacion de Runge-Kutta 4 — Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 03</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">13</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Derivacion de Runge-Kutta 4</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-12.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-14.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-lg font-medium text-violet-400">Modulo 03</h2>
+                <p class="text-gray-500 text-sm mb-4">Integracion Numerica</p>
+
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>3/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="leccion-11.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">11</span>
+                        <span>De ecuaciones a trayectorias</span>
+                    </a>
+                    <a href="leccion-12.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">12</span>
+                        <span>Euler vs RK4</span>
+                    </a>
+                    <a href="leccion-13.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 text-sm">
+                        <span class="mono text-xs">13</span>
+                        <span>Derivacion de RK4</span>
+                    </a>
+                    <a href="leccion-14.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">14</span>
+                        <span>Eleccion del paso temporal</span>
+                    </a>
+                    <a href="leccion-15.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">15</span>
+                        <span>De ecuaciones a pixeles</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 13</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~35 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Derivacion de</span> Runge-Kutta 4
+                    </h1>
+                    <p class="text-gray-500 text-lg">Las cuatro pendientes que dominan la simulacion</p>
+                </div>
+
+                <!-- h2: La idea: Simpson -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">La idea: de Simpson a RK4</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El metodo de Euler evalua la pendiente en un solo punto y avanza en linea recta: una evaluacion, orden 1.
+                    El metodo de Heun (y el del punto medio) mejoran evaluando la pendiente en <em class="text-violet-300">dos puntos</em>,
+                    alcanzando orden 2. La pregunta natural es: que pasa si evaluamos en mas puntos?
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Runge-Kutta de cuarto orden (RK4) lleva esta idea a su conclusion natural: usa
+                    <strong class="text-white">cuatro evaluaciones de la pendiente</strong> por paso, cuidadosamente
+                    posicionadas y ponderadas. El resultado es un error local de \(\mathcal{O}(h^5)\), lo que significa
+                    que cada paso individual es extraordinariamente preciso.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La clave esta en la ponderacion. Los pesos no son arbitrarios: provienen de la
+                    <strong class="text-white">regla de Simpson</strong> para integracion numerica. Simpson aproxima la integral
+                    de una funcion usando tres puntos (inicio, medio, final) con pesos \(1:4:1\). RK4 adapta esta idea a las EDO,
+                    evaluando el punto medio dos veces (con correcciones sucesivas) para capturar la curvatura de la solucion
+                    con notable fidelidad.
+                </p>
+
+                <!-- h2: Las cuatro evaluaciones -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">Las cuatro evaluaciones</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Dada una EDO \(\frac{dy}{dt} = f(t, y)\) con estado actual \((t_n, y_n)\) y paso temporal \(h\),
+                    RK4 calcula cuatro pendientes intermedias:
+                </p>
+
+                $$k_1 = f(t_n,\; y_n)$$
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-cyan-400">\(k_1\)</strong> es la pendiente al <strong class="text-white">inicio</strong>
+                    del intervalo. Identica a la evaluacion de Euler. Es nuestra primera aproximacion de la velocidad del sistema.
+                </p>
+
+                $$k_2 = f\!\left(t_n + \frac{h}{2},\; y_n + \frac{h}{2}\,k_1\right)$$
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-violet-400">\(k_2\)</strong> es la pendiente en el <strong class="text-white">punto medio</strong>,
+                    estimada usando \(k_1\) para llegar alli. Usamos la pendiente inicial para predecir donde estaremos a mitad de
+                    camino, y luego evaluamos la derivada en ese punto predicho. Esta pendiente captura informacion sobre la
+                    curvatura que \(k_1\) por si sola no contiene.
+                </p>
+
+                $$k_3 = f\!\left(t_n + \frac{h}{2},\; y_n + \frac{h}{2}\,k_2\right)$$
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-rose-400">\(k_3\)</strong> es una <strong class="text-white">segunda evaluacion en el punto medio</strong>,
+                    pero usando \(k_2\) para llegar en lugar de \(k_1\). Esta es la innovacion clave de RK4: la primera estimacion
+                    del punto medio no es perfecta, asi que la usamos para obtener una prediccion corregida. \(k_3\) evaluada
+                    en este punto mejorado captura efectos de orden superior, incluyendo informacion sobre la tercera derivada.
+                </p>
+
+                $$k_4 = f\!\left(t_n + h,\; y_n + h\,k_3\right)$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    <strong class="text-amber-400">\(k_4\)</strong> es la pendiente al <strong class="text-white">final</strong> del intervalo,
+                    estimada avanzando un paso completo con la pendiente corregida \(k_3\). Nos da informacion sobre el comportamiento
+                    de la derivada al otro extremo del paso.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Finalmente, combinamos las cuatro pendientes con la media ponderada:
+                </p>
+
+                $$y_{n+1} = y_n + \frac{h}{6}\left(k_1 + 2k_2 + 2k_3 + k_4\right)$$
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Los pesos \(1, 2, 2, 1\) (que suman 6, de ahi el denominador) no son arbitrarios. Provienen directamente de
+                    la regla de Simpson para integracion numerica, como veremos a continuacion.
+                </p>
+
+                <!-- h2: Interpretacion geometrica -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">Interpretacion geometrica</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Cada pendiente \(k_i\) representa una "propuesta" de direccion para avanzar:
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-cyan-400">\(k_1\) -- pendiente al inicio:</strong> Miramos donde estamos ahora.
+                    Si avanzaramos usando solo esta pendiente, tendriamos Euler. Pero sabemos que la curva real gira,
+                    asi que necesitamos mas informacion.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-violet-400">\(k_2\) -- punto medio via \(k_1\):</strong> Damos un medio paso tentativo
+                    usando \(k_1\) y miramos la pendiente alli. Esta pendiente refleja mejor la curvatura en la primera mitad
+                    del intervalo.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-rose-400">\(k_3\) -- punto medio corregido via \(k_2\):</strong> Repetimos el medio paso,
+                    pero usando \(k_2\) como guia. Esto refina nuestra estimacion del punto medio. En cierto sentido, \(k_3\) es
+                    la pendiente que <em class="text-violet-300">hubieramos obtenido</em> si hubieramos usado Heun para llegar.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    <strong class="text-amber-400">\(k_4\) -- pendiente al final via \(k_3\):</strong> Avanzamos un paso completo
+                    con \(k_3\) y miramos la pendiente al final. La media ponderada de las cuatro captura la curvatura de la
+                    solucion con extraordinaria fidelidad.
+                </p>
+
+                <!-- Emphasis box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 px-6 py-4 my-8 rounded-r-lg">
+                    <p class="text-gray-200 font-medium">
+                        Los pesos 1:2:2:1 vienen de la regla de Simpson. Las dos evaluaciones en el punto medio
+                        (\(k_2 + k_3\)) suman peso 4, que es el peso central de Simpson. Los extremos (\(k_1\) y \(k_4\))
+                        reciben peso 1 cada uno.
+                    </p>
+                </div>
+
+                <!-- h2: Conexion con cuadratura -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">Conexion con la cuadratura de Simpson</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Toda EDO tiene una forma integral equivalente:
+                </p>
+
+                $$y(t_n + h) = y(t_n) + \int_{t_n}^{t_n + h} f(t, y(t))\, dt$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El problema se reduce a aproximar esta integral. La regla de Simpson de \(1/3\) aproxima una integral
+                    con tres puntos equiespaciados:
+                </p>
+
+                $$\int_a^b g(t)\, dt \approx \frac{b - a}{6}\left[g(a) + 4\,g\!\left(\frac{a+b}{2}\right) + g(b)\right]$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Los pesos son \(1:4:1\), sumando 6. En RK4, evaluamos el punto medio <em class="text-violet-300">dos veces</em>
+                    (\(k_2\) y \(k_3\)), cada una con peso 2. La suma \(2 + 2 = 4\) coincide con el peso central de Simpson:
+                </p>
+
+                $$\frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4) = \frac{h}{6}\!\left(1 \cdot k_1 + 4 \cdot \frac{k_2 + k_3}{2} + 1 \cdot k_4\right)$$
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    RK4 es, en esencia, <strong class="text-white">la regla de Simpson aplicada a la forma integral de la EDO</strong>.
+                    La complicacion es que el integrando \(f(t, y(t))\) depende de la solucion desconocida. Las evaluaciones
+                    sucesivas (\(k_1 \to k_2 \to k_3 \to k_4\)) resuelven esta circularidad prediciendo los valores
+                    intermedios de \(y\) paso a paso.
+                </p>
+
+                <!-- h2: Error y convergencia -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">Error y convergencia</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Expandimos \(y(t_n + h)\) en serie de Taylor:
+                </p>
+
+                $$y(t_n + h) = y_n + hy' + \frac{h^2}{2}y'' + \frac{h^3}{6}y''' + \frac{h^4}{24}y^{(4)} + \frac{h^5}{120}y^{(5)} + \cdots$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Expandiendo cada \(k_i\) en Taylor y sustituyendo en la formula de RK4, se demuestra que RK4 coincide
+                    con la expansion exacta <em class="text-violet-300">hasta el termino \(h^4\)</em>. La primera discrepancia
+                    aparece en el termino \(h^5\):
+                </p>
+
+                $$y_{n+1}^{\text{RK4}} = y(t_n + h) + \mathcal{O}(h^5)$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Este es el <strong class="text-white">error de truncamiento local</strong>: \(\mathcal{O}(h^5)\) por paso.
+                    Para recorrer un intervalo fijo \(T\) necesitamos \(N = T/h\) pasos, asi que el
+                    <strong class="text-white">error global</strong> es:
+                </p>
+
+                $$\text{Error global} = N \cdot \mathcal{O}(h^5) = \frac{T}{h} \cdot \mathcal{O}(h^5) = \mathcal{O}(h^4)$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La consecuencia practica es extraordinaria. Cada vez que reducimos \(h\) a la mitad:
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Euler</strong> \(\mathcal{O}(h)\): error se reduce por factor <strong class="text-gray-400">2</strong>.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Heun</strong> \(\mathcal{O}(h^2)\): error se reduce por factor <strong class="text-yellow-400">4</strong>.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    <strong class="text-white">RK4</strong> \(\mathcal{O}(h^4)\): error se reduce por factor <strong class="text-cyan-400">16</strong>.
+                    Cada halving del paso temporal regala cuatro bits extra de precision.
+                </p>
+
+                <!-- Table: Method comparison -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Metodo</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Orden</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Error local</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Error global</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Eval/paso</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Factor al halvar h</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400 mono text-xs">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-red-400">Euler</td>
+                                <td class="py-2 px-4">1</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h^2)\)</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h)\)</td>
+                                <td class="py-2 px-4">1</td>
+                                <td class="py-2 px-4">2x</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-yellow-400">Heun (RK2)</td>
+                                <td class="py-2 px-4">2</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h^3)\)</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h^2)\)</td>
+                                <td class="py-2 px-4">2</td>
+                                <td class="py-2 px-4">4x</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 text-green-400">RK4</td>
+                                <td class="py-2 px-4">4</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h^5)\)</td>
+                                <td class="py-2 px-4">\(\mathcal{O}(h^4)\)</td>
+                                <td class="py-2 px-4">4</td>
+                                <td class="py-2 px-4 text-cyan-400">16x</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    RK4 usa 4 evaluaciones por paso, pero su eficiencia por evaluacion es muy superior. Euler necesitaria
+                    16 veces mas pasos (16 evaluaciones) para lograr la misma mejora que RK4 consigue con un solo halving.
+                    El coste adicional de 4 evaluaciones se paga con creces.
+                </p>
+
+                <!-- h3: Por que no RK5, RK6? -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Por que no RK5, RK6...?</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Si cuatro evaluaciones dan orden 4, por que no usar cinco para orden 5? A partir de orden 5,
+                    el numero de evaluaciones crece mas rapido que el orden. RK4 es el "punto dulce":
+                    4 evaluaciones para orden 4 (una evaluacion por orden). Un metodo RK de orden 5 necesita al menos
+                    6 evaluaciones, y uno de orden 6 necesita al menos 7.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Por esto RK4 ha dominado la integracion numerica durante mas de un siglo. Cuando se necesita mas
+                    precision, en lugar de subir el orden se usa un metodo adaptativo como RK45 (Dormand-Prince),
+                    que combina un metodo de orden 4 y uno de orden 5 para estimar y controlar el error automaticamente.
+                    Lo veremos en la leccion 14.
+                </p>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-lg font-medium text-violet-400 mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            Aplica un paso de RK4 a mano sobre \(\frac{dy}{dx} = -y\) con \(y_0 = 1\), \(x_0 = 0\) y
+                            \(h = 0.2\). Calcula \(k_1, k_2, k_3, k_4\) y \(y_1\). Compara con la solucion exacta
+                            \(e^{-0.2} = 0.81873\).
+                        </li>
+                        <li>
+                            Repite el ejercicio con Euler usando el mismo \(h = 0.2\). Cual es el error relativo de cada
+                            metodo? Cuantas veces mas preciso es RK4?
+                        </li>
+                        <li>
+                            Explica por que los pesos de RK4 son \(1:2:2:1\) y no \(1:1:1:1\) (promedio simple). Que regla
+                            de cuadratura justifica esta eleccion?
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <div class="my-12">
+                    <h2 class="text-2xl font-medium text-violet-400 mb-2">LAB: Visualizacion de las 4 pendientes</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Un paso de RK4 sobre \(dy/dx = -y\) (solucion exacta: \(e^{-x}\)). Las cuatro pendientes aparecen
+                        en secuencia: \(k_1\) (cyan), \(k_2\) (violeta), \(k_3\) (rosa), \(k_4\) (ambar). La media ponderada
+                        se muestra en verde. Ajusta \(h\) para ver como cambia la geometria del paso.
+                    </p>
+
+                    <div class="lab-container">
+                        <div class="bg-gray-950 px-4 py-3 flex items-center gap-4 flex-wrap border-b border-violet-500/30">
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-400">h:</label>
+                                <input type="range" id="h-slider" min="0.1" max="1.5" step="0.05" value="0.5"
+                                    class="w-32 accent-violet-500">
+                                <span id="h-value" class="mono text-xs text-cyan-400 w-10">0.50</span>
+                            </div>
+                            <button id="btn-animate" class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-lg border border-cyan-500/30 hover:bg-cyan-500/30 transition">
+                                Animar
+                            </button>
+                            <button id="btn-reset" class="px-3 py-1 bg-gray-800 text-gray-400 text-xs rounded-lg border border-gray-700 hover:bg-gray-700 transition">
+                                Reset
+                            </button>
+                            <span id="stage-info" class="mono text-xs text-gray-500 ml-auto">Paso completo</span>
+                        </div>
+                        <canvas id="lab-canvas" class="w-full bg-black" style="height: 450px;"></canvas>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-12.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-lg">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm">Euler vs RK4</div>
+                    </div>
+                </a>
+                <a href="leccion-14.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm">Eleccion del paso temporal</div>
+                    </div>
+                    <span class="text-lg">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 03 &middot; Leccion 13</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Integracion Numerica &middot; Derivacion de Runge-Kutta 4</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================
+        // LAB: RK4 Four Slopes on dy/dx = -y
+        // ============================
+        (function() {
+            const canvas = document.getElementById('lab-canvas');
+            const ctx = canvas.getContext('2d');
+            const hSlider = document.getElementById('h-slider');
+            const hValue = document.getElementById('h-value');
+            const btnAnimate = document.getElementById('btn-animate');
+            const btnReset = document.getElementById('btn-reset');
+            const stageInfo = document.getElementById('stage-info');
+
+            const dpr = window.devicePixelRatio || 1;
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+
+            // ODE: dy/dx = -y, exact: y = e^{-x}
+            const f = (x, y) => -y;
+            const exact = (x) => Math.exp(-x);
+
+            // Coordinate system
+            const xMin = -0.2, xMax = 3.5;
+            const yMin = -0.15, yMax = 1.3;
+
+            let h = 0.5;
+            let animStage = 5; // 0..4 = k1..result, 5 = all shown
+            let animating = false;
+            let animTimer = null;
+
+            function toSX(x) {
+                const rect = canvas.getBoundingClientRect();
+                return 55 + (x - xMin) / (xMax - xMin) * (rect.width - 75);
+            }
+            function toSY(y) {
+                const rect = canvas.getBoundingClientRect();
+                return 20 + (yMax - y) / (yMax - yMin) * (rect.height - 60);
+            }
+
+            function drawSlopeArrow(sx, sy, slope, color, label) {
+                const rect = canvas.getBoundingClientRect();
+                const pxX = (rect.width - 75) / (xMax - xMin);
+                const pxY = (rect.height - 60) / (yMax - yMin);
+                // Draw a slope segment of length ~0.15 in x-units
+                const segLen = 0.15;
+                const ex = sx + segLen * pxX;
+                const ey = sy - slope * segLen * pxY;
+
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.setLineDash([]);
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(ex, ey);
+                ctx.stroke();
+
+                // Arrowhead
+                const angle = Math.atan2(ey - sy, ex - sx);
+                ctx.beginPath();
+                ctx.moveTo(ex, ey);
+                ctx.lineTo(ex - 8 * Math.cos(angle - 0.35), ey - 8 * Math.sin(angle - 0.35));
+                ctx.moveTo(ex, ey);
+                ctx.lineTo(ex - 8 * Math.cos(angle + 0.35), ey - 8 * Math.sin(angle + 0.35));
+                ctx.stroke();
+
+                if (label) {
+                    ctx.fillStyle = color;
+                    ctx.font = 'bold 13px JetBrains Mono';
+                    ctx.fillText(label, ex + 6, ey - 4);
+                }
+            }
+
+            function draw() {
+                const rect = canvas.getBoundingClientRect();
+                const w = rect.width, ht = rect.height;
+                ctx.clearRect(0, 0, w, ht);
+
+                // Grid
+                ctx.strokeStyle = '#1a1a2e';
+                ctx.lineWidth = 1;
+                for (let x = 0; x <= 3; x += 0.5) {
+                    ctx.beginPath(); ctx.moveTo(toSX(x), 0); ctx.lineTo(toSX(x), ht); ctx.stroke();
+                }
+                for (let y = 0; y <= 1.2; y += 0.2) {
+                    ctx.beginPath(); ctx.moveTo(0, toSY(y)); ctx.lineTo(w, toSY(y)); ctx.stroke();
+                }
+
+                // Axes labels
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '11px Inter';
+                for (let x = 0; x <= 3; x += 0.5) ctx.fillText(x.toFixed(1), toSX(x) - 8, ht - 10);
+                for (let y = 0; y <= 1.2; y += 0.2) ctx.fillText(y.toFixed(1), 8, toSY(y) + 4);
+                ctx.fillText('x', w - 15, ht - 10);
+                ctx.fillText('y', 8, 15);
+
+                // Exact curve e^(-x)
+                ctx.strokeStyle = '#4b5563';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                let first = true;
+                for (let x = 0; x <= xMax; x += 0.01) {
+                    const y = exact(x);
+                    const sx = toSX(x), sy = toSY(y);
+                    if (first) { ctx.moveTo(sx, sy); first = false; }
+                    else ctx.lineTo(sx, sy);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = '#4b5563';
+                ctx.font = '11px Inter';
+                ctx.fillText('e^(-x) exacta', toSX(1.8) + 5, toSY(exact(1.8)) - 10);
+
+                // Starting point (x0=0, y0=1)
+                const x0 = 0, y0 = 1;
+                const sx0 = toSX(x0), sy0 = toSY(y0);
+
+                // Compute RK4 quantities
+                const k1 = f(x0, y0);                          // -1
+                const ym1 = y0 + (h / 2) * k1;                 // midpoint y via k1
+                const k2 = f(x0 + h / 2, ym1);                 // slope at midpoint
+                const ym2 = y0 + (h / 2) * k2;                 // corrected midpoint y via k2
+                const k3 = f(x0 + h / 2, ym2);                 // corrected slope at midpoint
+                const ye = y0 + h * k3;                         // end y via k3
+                const k4 = f(x0 + h, ye);                      // slope at end
+                const y1 = y0 + (h / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
+
+                // Start point
+                ctx.beginPath();
+                ctx.arc(sx0, sy0, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.stroke();
+                ctx.fillStyle = '#9ca3af'; ctx.font = '11px Inter';
+                ctx.fillText('(0, 1)', sx0 - 18, sy0 + 20);
+
+                // k1 (cyan) -- slope at start
+                if (animStage >= 0) {
+                    drawSlopeArrow(sx0, sy0, k1, '#22d3ee', 'k\u2081');
+
+                    // Dashed line to midpoint via k1
+                    if (animStage >= 1) {
+                        const smx = toSX(x0 + h / 2), smy = toSY(ym1);
+                        ctx.strokeStyle = 'rgba(34,211,238,0.25)';
+                        ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+                        ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.lineTo(smx, smy); ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.beginPath(); ctx.arc(smx, smy, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(34,211,238,0.5)'; ctx.fill();
+                    }
+                }
+
+                // k2 (violet) -- slope at midpoint via k1
+                if (animStage >= 1) {
+                    const smx = toSX(x0 + h / 2), smy = toSY(ym1);
+                    drawSlopeArrow(smx, smy, k2, '#a855f7', 'k\u2082');
+
+                    // Dashed line to corrected midpoint
+                    if (animStage >= 2) {
+                        const smy2 = toSY(ym2);
+                        ctx.strokeStyle = 'rgba(168,85,247,0.25)';
+                        ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+                        ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.lineTo(smx, smy2); ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.beginPath(); ctx.arc(smx, smy2, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(168,85,247,0.5)'; ctx.fill();
+                    }
+                }
+
+                // k3 (rose) -- corrected slope at midpoint via k2
+                if (animStage >= 2) {
+                    const smx = toSX(x0 + h / 2), smy2 = toSY(ym2);
+                    drawSlopeArrow(smx, smy2, k3, '#f43f5e', 'k\u2083');
+
+                    // Dashed line to end via k3
+                    if (animStage >= 3) {
+                        const sex = toSX(x0 + h), sey = toSY(ye);
+                        ctx.strokeStyle = 'rgba(244,63,94,0.25)';
+                        ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+                        ctx.beginPath(); ctx.moveTo(sx0, sy0); ctx.lineTo(sex, sey); ctx.stroke();
+                        ctx.setLineDash([]);
+                        ctx.beginPath(); ctx.arc(sex, sey, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(244,63,94,0.5)'; ctx.fill();
+                    }
+                }
+
+                // k4 (amber) -- slope at end via k3
+                if (animStage >= 3) {
+                    const sex = toSX(x0 + h), sey = toSY(ye);
+                    drawSlopeArrow(sex, sey, k4, '#f59e0b', 'k\u2084');
+                }
+
+                // Weighted average result (green)
+                if (animStage >= 4) {
+                    const sx1 = toSX(x0 + h), sy1 = toSY(y1);
+
+                    ctx.strokeStyle = '#22c55e';
+                    ctx.lineWidth = 3;
+                    ctx.setLineDash([]);
+                    ctx.beginPath();
+                    ctx.moveTo(sx0, sy0);
+                    ctx.lineTo(sx1, sy1);
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(sx1, sy1, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fill();
+                    ctx.strokeStyle = '#000'; ctx.lineWidth = 1; ctx.stroke();
+
+                    // Exact value marker
+                    const exactY = exact(x0 + h);
+                    const syEx = toSY(exactY);
+                    ctx.beginPath();
+                    ctx.arc(sx1, syEx, 4, 0, Math.PI * 2);
+                    ctx.fillStyle = '#6b7280'; ctx.fill();
+
+                    // Labels
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillStyle = '#22c55e';
+                    ctx.fillText('RK4: ' + y1.toFixed(6), sx1 + 10, sy1 - 2);
+                    ctx.fillStyle = '#6b7280';
+                    ctx.fillText('Exacto: ' + exactY.toFixed(6), sx1 + 10, syEx + 14);
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.fillText('Error: ' + Math.abs(y1 - exactY).toExponential(2), sx1 + 10, sy1 + 18);
+                }
+
+                // Info panel
+                const panelX = w - 210, panelY = 15;
+                const panelH = animStage >= 4 ? 115 : Math.max(30, 22 * (animStage + 1) + 15);
+                ctx.fillStyle = 'rgba(0,0,0,0.75)';
+                ctx.fillRect(panelX - 10, panelY - 5, 205, panelH);
+                ctx.strokeStyle = 'rgba(168,85,247,0.3)';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(panelX - 10, panelY - 5, 205, panelH);
+
+                ctx.font = '11px JetBrains Mono';
+                if (animStage >= 0) { ctx.fillStyle = '#22d3ee'; ctx.fillText('k\u2081 = ' + k1.toFixed(6), panelX, panelY + 14); }
+                if (animStage >= 1) { ctx.fillStyle = '#a855f7'; ctx.fillText('k\u2082 = ' + k2.toFixed(6), panelX, panelY + 34); }
+                if (animStage >= 2) { ctx.fillStyle = '#f43f5e'; ctx.fillText('k\u2083 = ' + k3.toFixed(6), panelX, panelY + 54); }
+                if (animStage >= 3) { ctx.fillStyle = '#f59e0b'; ctx.fillText('k\u2084 = ' + k4.toFixed(6), panelX, panelY + 74); }
+                if (animStage >= 4) { ctx.fillStyle = '#22c55e'; ctx.fillText('y\u2081 = ' + y1.toFixed(6), panelX, panelY + 98); }
+
+                // Stage labels
+                const stages = [
+                    'k\u2081: pendiente al inicio',
+                    'k\u2082: punto medio (via k\u2081)',
+                    'k\u2083: punto medio corregido (via k\u2082)',
+                    'k\u2084: pendiente al final (via k\u2083)',
+                    'Resultado: media ponderada 1:2:2:1',
+                    'Paso completo'
+                ];
+                stageInfo.textContent = stages[Math.min(animStage, 5)];
+            }
+
+            function runAnimation() {
+                if (animating) return;
+                animating = true;
+                animStage = -1;
+                btnAnimate.textContent = 'Animando...';
+
+                let step = 0;
+                animTimer = setInterval(() => {
+                    animStage = step;
+                    draw();
+                    step++;
+                    if (step > 5) {
+                        clearInterval(animTimer);
+                        animTimer = null;
+                        animating = false;
+                        animStage = 5;
+                        btnAnimate.textContent = 'Animar';
+                        draw();
+                    }
+                }, 900);
+            }
+
+            function reset() {
+                if (animTimer) { clearInterval(animTimer); animTimer = null; }
+                animating = false;
+                animStage = 5;
+                btnAnimate.textContent = 'Animar';
+                draw();
+            }
+
+            hSlider.addEventListener('input', () => {
+                h = parseFloat(hSlider.value);
+                hValue.textContent = h.toFixed(2);
+                reset();
+            });
+
+            btnAnimate.addEventListener('click', runAnimation);
+            btnReset.addEventListener('click', reset);
+
+            window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+            resizeCanvas();
+            draw();
+        })();
+    </script>
+</body>
+</html>

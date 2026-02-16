@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 28 · Caos en la naturaleza | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 06</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 28 / 30</span>
+                <div class="flex gap-2">
+                    <a href="leccion-27.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-29.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 06</h2>
+                <p class="text-sm text-gray-400 mt-1">Mas Alla</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>3 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-26.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">26</span>
+                        <span>Secciones de Poincare</span>
+                    </a>
+                    <a href="leccion-27.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">27</span>
+                        <span>Mapa logistico</span>
+                    </a>
+                    <a href="leccion-28.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">28</span>
+                        <span>Caos en la naturaleza</span>
+                    </a>
+                    <a href="leccion-29.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">29</span>
+                        <span>Visualizacion avanzada</span>
+                    </a>
+                    <a href="leccion-30.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">30</span>
+                        <span>Fronteras abiertas</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 28</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Caos en la naturaleza</h1>
+                    <p class="text-xl text-gray-400">Del laboratorio al mundo real: donde el caos gobierna</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- El caos esta en todas partes -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">El caos esta en todas partes</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Hasta ahora hemos estudiado el caos como un fenomeno matematico: ecuaciones de Lorenz, mapas
+                            logisticos, dimensiones fractales. Pero el caos no es un artificio teorico. Es la regla, no la
+                            excepcion, en la naturaleza. La gran mayoria de los sistemas fisicos, biologicos, quimicos y
+                            sociales son no lineales, y la no linealidad es la puerta al caos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Cuando Lorenz descubrio el caos en 1963, lo hizo estudiando un modelo simplificado de la
+                            atmosfera. Su descubrimiento no era sobre matematicas abstractas: era sobre el clima, sobre
+                            por que no podemos predecir el tiempo mas alla de unos pocos dias, sobre los limites
+                            fundamentales del conocimiento en un universo determinista.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            En esta leccion haremos un recorrido por los sistemas caoticos mas importantes del mundo real.
+                            No nos detendremos en las ecuaciones (ya tenemos las herramientas para eso), sino en la
+                            <strong class="text-white">intuicion fisica</strong>: por que estos sistemas son caoticos,
+                            que consecuencias practicas tiene, y que podemos y que no podemos predecir.
+                        </p>
+                    </section>
+
+                    <!-- Meteorologia -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Meteorologia</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La atmosfera es el sistema caotico por excelencia, y fue su estudio lo que inicio toda la
+                            revolucion del caos. Edward Lorenz, trabajando en el MIT en los anos 60, descubrio que su
+                            modelo simplificado de conveccion atmosferica era extremadamente sensible a las condiciones
+                            iniciales. Una diferencia de una parte en un millon en la temperatura inicial podia producir
+                            predicciones completamente diferentes en cuestion de dias simulados.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">tiempo de Lyapunov</strong> de la atmosfera &mdash; el tiempo
+                            en el que las incertidumbres se duplican &mdash; es de aproximadamente 2.5 dias. Esto
+                            significa que cada 2.5 dias, necesitariamos duplicar la precision de nuestras mediciones
+                            iniciales para mantener la misma calidad de prediccion. Despues de unos 10-14 dias, la
+                            precision necesaria excede cualquier capacidad de medicion concebible.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Este es el <strong class="text-white">horizonte de prediccion meteorologica</strong>: existe
+                            un limite fundamental, no tecnologico, a nuestra capacidad de predecir el clima. Podemos
+                            mejorar nuestros modelos, nuestras computadoras y nuestras redes de observacion, pero nunca
+                            superaremos las dos semanas de prediccion fiable. Lorenz lo resumio con su celebre metafora
+                            del <em>efecto mariposa</em>: el aleteo de una mariposa en Brasil puede desencadenar un
+                            tornado en Texas.
+                        </p>
+                    </section>
+
+                    <!-- Dinamica de fluidos -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Dinamica de fluidos</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La turbulencia es quizas el problema abierto mas importante de la fisica clasica. Cuando un
+                            fluido fluye lentamente (bajo numero de Reynolds), su movimiento es suave y predecible:
+                            <strong class="text-white">flujo laminar</strong>. Pero cuando la velocidad aumenta, el
+                            flujo se vuelve erratico, con vortices de todos los tamanos que interactuan caoticamante:
+                            <strong class="text-white">turbulencia</strong>.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Las ecuaciones de Navier-Stokes que gobiernan los fluidos son perfectamente deterministas.
+                            Sin embargo, las soluciones turbulentas son caoticas: sensibles a condiciones iniciales,
+                            aperiodicas, con estructura fractal en las escalas espaciales de los vortices. La famosa
+                            cascada de energia de Kolmogorov describe como la energia se transfiere de los grandes
+                            vortices a los pequenos, en un proceso autosimilar que es fundamentalmente caotico.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Se atribuye a Werner Heisenberg la frase: "Cuando me encuentre con Dios, le hare dos
+                            preguntas: por que la relatividad y por que la turbulencia. Creo que tendra respuesta para
+                            la primera." La turbulencia sigue siendo uno de los grandes misterios de la fisica, y su
+                            naturaleza caotica es la razon fundamental de su dificultad.
+                        </p>
+                    </section>
+
+                    <!-- El corazon humano -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El corazon humano</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Contraintuitivamente, un corazon sano <strong class="text-white">no</strong> late de forma
+                            perfectamente regular. Si medimos los intervalos entre latidos con precision de milisegundos,
+                            encontramos fluctuaciones aparentemente aleatorias. Estas fluctuaciones tienen estructura
+                            fractal: la variabilidad del ritmo cardiaco (HRV, Heart Rate Variability) muestra
+                            correlaciones a largo plazo caracteristicas de un sistema caotico.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Lo sorprendente es que la <strong class="text-white">perdida</strong> de esta variabilidad
+                            caotica es una senal de enfermedad. Un corazon que late como un metronomo perfecto &mdash;
+                            demasiado regular &mdash; es un corazon enfermo. Las arritmias patologicas como la
+                            fibrilacion ventricular no son "demasiado caos" sino una forma <em>diferente</em> de caos:
+                            una desorganizacion espaciotemporal donde las ondas electricas del corazon se fragmentan
+                            en multiples frentes caoticos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Esta perspectiva ha transformado la cardiologia. El analisis de la HRV usando herramientas
+                            de dinamica no lineal &mdash; exponentes de Lyapunov, dimension de correlacion, entropia
+                            aproximada &mdash; se usa clinicamente para evaluar el riesgo cardiaco. El caos, lejos de
+                            ser un enemigo, resulta ser un signo de salud.
+                        </p>
+                    </section>
+
+                    <!-- Ecologia -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Ecologia</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Robert May, el mismo biologo que popularizo el mapa logistico, demostro que las poblaciones
+                            biologicas pueden exhibir caos incluso con las reglas mas simples de crecimiento y
+                            competencia. Cuando las tasas de reproduccion son suficientemente altas y las generaciones
+                            son discretas (como en muchos insectos), las poblaciones pueden oscilar caoticamante de una
+                            generacion a otra.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los sistemas depredador-presa, como las ecuaciones de Lotka-Volterra generalizadas, pueden
+                            exhibir caos cuando hay tres o mas especies interactuando. Las fluctuaciones de las
+                            poblaciones de lemmings, las explosiones de insectos plaga, los colapsos de pesquerias
+                            &mdash; todos estos fenomenos tienen componentes caoticos que los hacen intrinsecamente
+                            dificiles de predecir.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            El mensaje para los ecologos es humilde pero importante: la impredecibilidad de los
+                            ecosistemas no se debe solo a nuestra ignorancia de los factores relevantes. Incluso con
+                            conocimiento perfecto de todas las interacciones, la dinamica puede ser caotica. La gestion
+                            de recursos naturales debe tener en cuenta esta incertidumbre inherente.
+                        </p>
+                    </section>
+
+                    <!-- Sistema solar -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Sistema solar</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema solar, que durante siglos fue el paradigma de la predicibilidad newtoniana, resulta
+                            ser caotico en escalas de tiempo suficientemente largas. Los trabajos de Jacques Laskar en los
+                            anos 1990 demostraron que las orbitas planetarias son caoticas con un tiempo de Lyapunov de
+                            unos 5 millones de anos. Esto significa que no podemos predecir las posiciones exactas de los
+                            planetas mas alla de unas decenas de millones de anos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Simulaciones numericas muestran que existe una probabilidad pequena pero no despreciable de
+                            que la orbita de Mercurio se vuelva inestable en los proximos miles de millones de anos,
+                            potencialmente colisionando con Venus o siendo eyectado del sistema solar. La estabilidad
+                            a largo plazo del sistema solar no esta garantizada: es un sistema caotico que ha tenido
+                            suerte durante 4.500 millones de anos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Otros ejemplos de caos celeste incluyen la rotacion de Hiperion (luna de Saturno), que
+                            tumbles caoticamante en lugar de rotar suavemente, y las brechas de Kirkwood en el cinturon
+                            de asteroides, que son regiones inestables creadas por resonancias caoticas con Jupiter.
+                        </p>
+                    </section>
+
+                    <!-- Economia -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Economia</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los mercados financieros exhiben muchas caracteristicas del caos: sensibilidad a pequenas
+                            perturbaciones (un tweet puede mover miles de millones), comportamiento aparentemente aleatorio
+                            pero con estructura estadistica (las distribuciones de retornos no son gaussianas, tienen
+                            "colas pesadas"), y cascadas de retroalimentacion no lineal (el panico alimenta mas panico).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Sin embargo, la cuestion de si los mercados son verdaderamente caoticos en el sentido tecnico
+                            (deterministas pero sensibles) o simplemente ruidosos (estocasticos) sigue siendo debatida.
+                            Benoit Mandelbrot argumento persuasivamente que los mercados tienen estructura fractal, con
+                            patrones autosimilares en todas las escalas temporales. Lo que es claro es que los modelos
+                            lineales son insuficientes, y las herramientas de la teoria del caos ofrecen perspectivas
+                            que los modelos tradicionales no pueden.
+                        </p>
+                    </section>
+
+                    <!-- Emphasis box -->
+                    <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                        <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                        <p class="text-gray-300">
+                            El caos no es una anomalia: es la regla en la naturaleza. Desde la atmosfera hasta el corazon
+                            humano, desde las orbitas planetarias hasta los ecosistemas, los sistemas caoticos estan en
+                            todas partes. Reconocer el caos no es una derrota &mdash; es el primer paso para comprender
+                            los limites fundamentales de la prediccion.
+                        </p>
+                    </div>
+
+                    <!-- Table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Sistemas caoticos en la naturaleza</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Campo</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Sistema caotico</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Tiempo de Lyapunov</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Consecuencia practica</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Meteorologia</td>
+                                        <td class="px-4 py-3 text-gray-400">Conveccion atmosferica</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~2.5 dias</td>
+                                        <td class="px-4 py-3 text-gray-400">Prediccion limitada a ~10 dias</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Fluidos</td>
+                                        <td class="px-4 py-3 text-gray-400">Turbulencia</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~L/v (escala integral)</td>
+                                        <td class="px-4 py-3 text-gray-400">Imposible predecir flujo detallado</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Cardiologia</td>
+                                        <td class="px-4 py-3 text-gray-400">Ritmo cardiaco (HRV)</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~minutos</td>
+                                        <td class="px-4 py-3 text-gray-400">Regularidad excesiva = enfermedad</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Ecologia</td>
+                                        <td class="px-4 py-3 text-gray-400">Poblaciones depredador-presa</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~generaciones</td>
+                                        <td class="px-4 py-3 text-gray-400">Colapsos impredecibles de pesquerias</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Astronomia</td>
+                                        <td class="px-4 py-3 text-gray-400">Orbitas planetarias</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~5 millones de anos</td>
+                                        <td class="px-4 py-3 text-gray-400">Posiciones impredecibles a >50 Ma</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Economia</td>
+                                        <td class="px-4 py-3 text-gray-400">Mercados financieros</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~dias-semanas</td>
+                                        <td class="px-4 py-3 text-gray-400">Crashes impredecibles</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Si el tiempo de Lyapunov de la atmosfera es de ~2.5 dias y necesitamos que la
+                                    incertidumbre no exceda un factor de 1000, ¿cuantos dias de prediccion fiable
+                                    podemos esperar como maximo? (Pista: \(2^n > 1000\) cuando \(n > \log_2(1000) \approx 10\),
+                                    asi que ~10 duplicaciones = ~25 dias, pero la realidad es mas estricta.)</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>¿Es un corazon sano periodico o caotico? Argumenta por que la variabilidad
+                                    del ritmo cardiaco es un signo de salud y no de enfermedad, usando los conceptos
+                                    de adaptabilidad y retroalimentacion.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>Nombra 3 sistemas caoticos que encuentres en tu vida cotidiana. Para cada uno,
+                                    identifica la no linealidad y la retroalimentacion que hacen posible el caos.
+                                    ¿Puedes estimar intuitivamente su tiempo de Lyapunov?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Caos en la naturaleza</h2>
+                        <p class="text-gray-400 mb-4">Tres paneles mostrando visualizaciones inspiradas en sistemas caoticos reales.
+                        Izquierda: patrones meteorologicos (flujo de Lorenz). Centro: turbulencia de fluidos (campo de vortices).
+                        Derecha: senal cardiaca con modulacion caotica.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::nature-chaos</span>
+                                <div class="flex gap-2">
+                                    <button id="btnReset28" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause28" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="1000" height="400" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-27.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">&larr; Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 27: Mapa logistico</span>
+                </a>
+                <a href="leccion-29.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente &rarr;</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 29: Visualizacion avanzada</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 06 &middot; Leccion 28</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Nature Chaos Panels -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        const panelW = Math.floor(W / 3);
+        let paused = false;
+        let time = 0;
+
+        // === PANEL 1: Weather (Lorenz-inspired particles) ===
+        const weatherParticles = [];
+        const sigma = 10, rho = 28, beta = 8/3;
+        const numWeather = 150;
+        for (let i = 0; i < numWeather; i++) {
+            weatherParticles.push({
+                x: (Math.random() - 0.5) * 30,
+                y: (Math.random() - 0.5) * 30,
+                z: Math.random() * 40 + 5,
+                trail: []
+            });
+        }
+
+        function stepLorenz(p, dt) {
+            const dx = sigma * (p.y - p.x) * dt;
+            const dy = (p.x * (rho - p.z) - p.y) * dt;
+            const dz = (p.x * p.y - beta * p.z) * dt;
+            p.x += dx; p.y += dy; p.z += dz;
+        }
+
+        // === PANEL 2: Fluid turbulence (vortex particles) ===
+        const fluidParticles = [];
+        const numFluid = 300;
+        const vortices = [
+            { x: panelW * 0.3, y: H * 0.35, s: 1, r: 60 },
+            { x: panelW * 0.7, y: H * 0.65, s: -1, r: 50 },
+            { x: panelW * 0.5, y: H * 0.2, s: 1, r: 40 },
+            { x: panelW * 0.6, y: H * 0.5, s: -0.7, r: 35 }
+        ];
+        for (let i = 0; i < numFluid; i++) {
+            fluidParticles.push({
+                x: Math.random() * panelW,
+                y: Math.random() * H,
+                vx: 0, vy: 0, age: 0,
+                maxAge: 100 + Math.random() * 200
+            });
+        }
+
+        // === PANEL 3: ECG signal with chaotic modulation ===
+        let ecgPhase = 0;
+        const ecgHistory = new Float32Array(300);
+        let ecgLorenzX = 1, ecgLorenzY = 1, ecgLorenzZ = 1;
+
+        function ecgWave(t) {
+            // Simplified ECG waveform
+            const p = t % (2 * Math.PI);
+            let val = 0;
+            // P wave
+            val += 0.15 * Math.exp(-((p - 0.8) ** 2) / 0.02);
+            // QRS complex
+            val -= 0.1 * Math.exp(-((p - 1.5) ** 2) / 0.005);
+            val += 1.0 * Math.exp(-((p - 1.65) ** 2) / 0.003);
+            val -= 0.15 * Math.exp(-((p - 1.8) ** 2) / 0.005);
+            // T wave
+            val += 0.25 * Math.exp(-((p - 2.8) ** 2) / 0.04);
+            return val;
+        }
+
+        function resetAll() {
+            time = 0;
+            for (const p of weatherParticles) {
+                p.x = (Math.random() - 0.5) * 30;
+                p.y = (Math.random() - 0.5) * 30;
+                p.z = Math.random() * 40 + 5;
+                p.trail = [];
+            }
+            for (const p of fluidParticles) {
+                p.x = Math.random() * panelW;
+                p.y = Math.random() * H;
+                p.age = 0;
+            }
+            ecgHistory.fill(0);
+            ecgPhase = 0;
+        }
+
+        function drawPanel1() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, 0, panelW - 2, H);
+            ctx.clip();
+
+            // Title
+            ctx.fillStyle = '#22d3ee';
+            ctx.font = '12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Meteorologia', panelW / 2, 18);
+
+            const cx = panelW / 2;
+            const cy = H / 2 + 10;
+            const scale = 4.5;
+
+            for (const p of weatherParticles) {
+                stepLorenz(p, 0.005);
+                const sx = cx + (p.x) * scale;
+                const sy = cy - (p.z - 25) * scale;
+                p.trail.push({ x: sx, y: sy });
+                if (p.trail.length > 30) p.trail.shift();
+
+                // Draw trail
+                for (let i = 1; i < p.trail.length; i++) {
+                    const alpha = (i / p.trail.length) * 0.5;
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(34, 211, 238, ${alpha})`;
+                    ctx.lineWidth = 1;
+                    ctx.moveTo(p.trail[i - 1].x, p.trail[i - 1].y);
+                    ctx.lineTo(p.trail[i].x, p.trail[i].y);
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawPanel2() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(panelW + 1, 0, panelW - 2, H);
+            ctx.clip();
+            ctx.translate(panelW, 0);
+
+            // Title
+            ctx.fillStyle = '#a855f7';
+            ctx.font = '12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Turbulencia', panelW / 2, 18);
+
+            // Update vortex positions slowly
+            for (const v of vortices) {
+                v.x += Math.sin(time * 0.3 + v.r) * 0.3;
+                v.y += Math.cos(time * 0.2 + v.r * 0.7) * 0.2;
+            }
+
+            for (const p of fluidParticles) {
+                let fx = 0.3, fy = 0;
+                for (const v of vortices) {
+                    const dx = p.x - v.x;
+                    const dy = p.y - v.y;
+                    const d2 = dx * dx + dy * dy + 100;
+                    const d = Math.sqrt(d2);
+                    const strength = v.s * v.r * v.r / d2;
+                    fx += -dy * strength * 0.15;
+                    fy += dx * strength * 0.15;
+                }
+                p.x += fx * 0.8;
+                p.y += fy * 0.8;
+                p.age++;
+
+                if (p.age > p.maxAge || p.x < -10 || p.x > panelW + 10 || p.y < -10 || p.y > H + 10) {
+                    p.x = Math.random() * 10;
+                    p.y = Math.random() * H;
+                    p.age = 0;
+                }
+
+                const alpha = Math.min(p.age / 20, 1) * Math.max(0, 1 - p.age / p.maxAge) * 0.7;
+                const speed = Math.sqrt(fx * fx + fy * fy);
+                const t = Math.min(speed / 3, 1);
+                const r = Math.floor(120 + 48 * t);
+                const g = Math.floor(60 + 120 * (1 - t));
+                const b = Math.floor(200 + 55 * (1 - t));
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        function drawPanel3() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(panelW * 2 + 1, 0, panelW - 2, H);
+            ctx.clip();
+            ctx.translate(panelW * 2, 0);
+
+            // Title
+            ctx.fillStyle = '#f87171';
+            ctx.font = '12px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Ritmo Cardiaco', panelW / 2, 18);
+
+            // Step Lorenz for modulation
+            for (let i = 0; i < 5; i++) {
+                const dx = sigma * (ecgLorenzY - ecgLorenzX) * 0.005;
+                const dy = (ecgLorenzX * (rho - ecgLorenzZ) - ecgLorenzY) * 0.005;
+                const dz = (ecgLorenzX * ecgLorenzY - beta * ecgLorenzZ) * 0.005;
+                ecgLorenzX += dx; ecgLorenzY += dy; ecgLorenzZ += dz;
+            }
+
+            // ECG with chaotic modulation
+            const modulation = 1.0 + 0.08 * (ecgLorenzX / 20);
+            ecgPhase += 0.07 * modulation;
+            const val = ecgWave(ecgPhase);
+
+            // Shift history
+            for (let i = 0; i < ecgHistory.length - 1; i++) {
+                ecgHistory[i] = ecgHistory[i + 1];
+            }
+            ecgHistory[ecgHistory.length - 1] = val;
+
+            // Draw grid
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 0.5;
+            for (let gx = 0; gx < panelW; gx += 20) {
+                ctx.beginPath(); ctx.moveTo(gx, 30); ctx.lineTo(gx, H - 10); ctx.stroke();
+            }
+            for (let gy = 30; gy < H; gy += 20) {
+                ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(panelW, gy); ctx.stroke();
+            }
+
+            // Draw ECG trace
+            const baseline = H * 0.55;
+            const amplitude = H * 0.3;
+            ctx.beginPath();
+            ctx.strokeStyle = '#22c55e';
+            ctx.lineWidth = 2;
+            ctx.shadowColor = '#22c55e';
+            ctx.shadowBlur = 8;
+            for (let i = 0; i < ecgHistory.length; i++) {
+                const px = (i / ecgHistory.length) * (panelW - 20) + 10;
+                const py = baseline - ecgHistory[i] * amplitude;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // BPM display
+            const bpm = Math.floor(70 + ecgLorenzX * 0.5);
+            ctx.fillStyle = '#22c55e';
+            ctx.font = 'bold 20px JetBrains Mono, monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText(bpm + ' BPM', panelW - 15, H - 15);
+
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, W, H);
+
+            // Panel dividers
+            ctx.strokeStyle = '#1f1f3a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(panelW, 0); ctx.lineTo(panelW, H);
+            ctx.moveTo(panelW * 2, 0); ctx.lineTo(panelW * 2, H);
+            ctx.stroke();
+
+            drawPanel1();
+            drawPanel2();
+            drawPanel3();
+            time += 0.016;
+        }
+
+        function animate() {
+            if (!paused) draw();
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('btnReset28').addEventListener('click', resetAll);
+        document.getElementById('btnPause28').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        // Warm up Lorenz
+        for (let i = 0; i < 2000; i++) {
+            for (const p of weatherParticles) stepLorenz(p, 0.005);
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

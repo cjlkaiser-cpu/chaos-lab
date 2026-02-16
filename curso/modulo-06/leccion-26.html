@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 26 · Secciones de Poincare | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 06</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 26 / 30</span>
+                <div class="flex gap-2">
+                    <a href="../modulo-05/leccion-25.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-27.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 06</h2>
+                <p class="text-sm text-gray-400 mt-1">Mas Alla</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>1 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 20%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-26.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">26</span>
+                        <span>Secciones de Poincare</span>
+                    </a>
+                    <a href="leccion-27.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">27</span>
+                        <span>Mapa logistico</span>
+                    </a>
+                    <a href="leccion-28.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">28</span>
+                        <span>Caos en la naturaleza</span>
+                    </a>
+                    <a href="leccion-29.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">29</span>
+                        <span>Visualizacion avanzada</span>
+                    </a>
+                    <a href="leccion-30.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">30</span>
+                        <span>Fronteras abiertas</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 26</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Secciones de Poincare</h1>
+                    <p class="text-xl text-gray-400">De flujos continuos a mapas discretos: la elegancia de reducir dimensiones</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Reducir dimensiones -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Reducir dimensiones</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Hasta ahora hemos estudiado sistemas dinamicos continuos: ecuaciones diferenciales que describen
+                            como evoluciona un estado en el tiempo de manera fluida e ininterrumpida. El atractor de Lorenz,
+                            por ejemplo, vive en un espacio tridimensional y su trayectoria serpentea sin descanso entre las
+                            dos alas de la mariposa. Pero visualizar y analizar objetos tridimensionales que evolucionan en
+                            el tiempo es inherentemente dificil.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Henri Poincare, el gigante de las matematicas del siglo XIX y padre de la topologia, tuvo una
+                            idea brillante: en lugar de intentar comprender todo el flujo continuo a la vez, podemos colocar
+                            un <strong class="text-white">plano de corte</strong> en el espacio de fases y registrar solo
+                            los puntos donde la trayectoria atraviesa ese plano. Este acto aparentemente simple de
+                            "rebanar" el flujo transforma un problema continuo en uno discreto, y reduce la dimension del
+                            sistema en una unidad.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Un flujo tridimensional se convierte en un mapa bidimensional. Un flujo bidimensional se convierte
+                            en un mapa unidimensional. Y los mapas discretos, como veremos en la proxima leccion, son mucho
+                            mas faciles de analizar matematicamente. Esta es la magia de la <strong class="text-white">seccion
+                            de Poincare</strong>: una ventana discreta al comportamiento continuo.
+                        </p>
+                    </section>
+
+                    <!-- La idea de Poincare -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">La idea de Poincare</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Imaginemos el atractor de Lorenz girando en tres dimensiones. Ahora imaginemos que colocamos
+                            un plano vertical en algun lugar del espacio de fases, como una pared de cristal atravesando
+                            la trayectoria. Cada vez que la orbita cruza este plano, marcamos un punto. Con el tiempo,
+                            estos puntos se acumulan y forman un patron.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La eleccion del plano no es arbitraria. Queremos un plano que sea transversal al flujo, es
+                            decir, que la trayectoria lo cruce de manera oblicua, no tangencial. Ademas, nos interesa
+                            registrar solo los cruces en una direccion (por ejemplo, cuando \(\dot{z} > 0\)) para evitar
+                            contar el mismo ciclo dos veces. Formalmente, definimos la seccion de Poincare como:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\Sigma = \{(x,y,z) : z = z_0, \dot{z} > 0\}$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            donde \(z_0\) es la altura del plano de corte y la condicion \(\dot{z} > 0\) asegura que solo
+                            registramos cruces en una direccion. Para el sistema de Lorenz, una eleccion clasica es
+                            \(z_0 = \rho - 1 = 27\), que corresponde al nivel de los puntos fijos no triviales.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Lo que obtenemos no es una nube aleatoria de puntos. En un sistema caotico con un atractor
+                            extrano, los puntos de interseccion revelan una estructura geometrica rica: curvas, pliegues,
+                            patrones fractales. La seccion de Poincare destila la esencia del atractor en una imagen
+                            bidimensional.
+                        </p>
+                    </section>
+
+                    <!-- Mapa de retorno -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Mapa de retorno</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La seccion de Poincare no solo es una herramienta de visualizacion: es la base para construir
+                            un <strong class="text-white">mapa de retorno</strong>. Si llamamos \(x_n\) al n-esimo punto
+                            de interseccion con el plano \(\Sigma\), entonces existe una funcion \(P\) que relaciona cada
+                            punto con el siguiente:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$P: \Sigma \to \Sigma, \quad x_{n+1} = P(x_n)$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esta funcion \(P\) se llama el <strong class="text-white">mapa de Poincare</strong> o mapa de
+                            primer retorno. Es un mapa discreto que captura toda la dinamica relevante del flujo continuo
+                            original. Los puntos fijos de \(P\) corresponden a orbitas periodicas del flujo. Los puntos
+                            periodicos de \(P\) (con periodo \(n\)) corresponden a orbitas que se cierran despues de
+                            \(n\) cruces con la seccion.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La estabilidad de estos puntos fijos y periodicos se puede analizar con las herramientas
+                            clasicas de los sistemas discretos: valores propios de la matriz jacobiana del mapa,
+                            multiplicadores de Floquet, exponentes de Lyapunov discretos. Todo el arsenal matematico
+                            de los sistemas dinamicos discretos se aplica directamente.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Para el atractor de Lorenz, el mapa de retorno tiene una propiedad notable: si proyectamos
+                            los puntos de la seccion sobre una unica variable (por ejemplo, el maximo local de \(z\) en
+                            cada ciclo), obtenemos un mapa unidimensional con forma de tienda invertida. Este mapa
+                            unidimensional captura la esencia del caos del sistema tridimensional original.
+                        </p>
+                    </section>
+
+                    <!-- De flujo continuo a mapa discreto -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">De flujo continuo a mapa discreto</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La transformacion de un flujo continuo en un mapa discreto es mas que una conveniencia tecnica:
+                            es un cambio conceptual profundo. En el flujo continuo, el estado evoluciona de manera suave y
+                            continua. En el mapa discreto, damos "saltos" de un cruce al siguiente, ignorando los detalles
+                            intermedios.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Este paso tiene consecuencias importantes. Primero, reduce la dimension: un flujo en
+                            \(\mathbb{R}^3\) se convierte en un mapa en \(\mathbb{R}^2\). Segundo, elimina el tiempo
+                            como variable continua: el "tiempo" del mapa es simplemente el numero de cruce \(n\). Tercero,
+                            preserva las propiedades topologicas esenciales: las orbitas periodicas del flujo se convierten
+                            en puntos periodicos del mapa, y los atractores extranos del flujo se convierten en atractores
+                            extranos del mapa.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Esta correspondencia entre flujos continuos y mapas discretos es uno de los puentes mas
+                            fructiferos de la matematica. Permite aplicar herramientas algebraicas, topologicas y
+                            computacionales del mundo discreto al estudio de ecuaciones diferenciales. Poincare intuyo
+                            este puente a finales del siglo XIX, pero su verdadero poder solo se revelo con la llegada
+                            del caos y los computadores un siglo despues.
+                        </p>
+                    </section>
+
+                    <!-- Estructura en la seccion -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Estructura en la seccion</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Cuando observamos la seccion de Poincare de un atractor extrano, lo primero que llama la atencion
+                            es que los puntos no llenan uniformemente la region del plano. En su lugar, se concentran en
+                            estructuras filamentosas, curvas que se pliegan y bifurcan, formando patrones que recuerdan a
+                            los fractales que estudiamos en modulos anteriores.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esto no es coincidencia. La seccion de Poincare de un atractor extrano es, en general, un
+                            <strong class="text-white">conjunto fractal</strong>. Su dimension no es un numero entero:
+                            esta entre 1 y 2 para la seccion de un flujo tridimensional. Esta dimension fractal esta
+                            directamente relacionada con la dimension fractal del atractor original, reducida en una unidad
+                            por el corte transversal.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Para el atractor de Lorenz, la seccion de Poincare en \(z = 27\) muestra dos ramas curvas
+                            que corresponden a las dos alas del atractor. La trayectoria alterna entre estas ramas de
+                            manera aparentemente aleatoria, pero con una estructura estadistica bien definida. Cada rama
+                            tiene un espesor infinitesimal pero no nulo: si hacemos zoom, encontramos sub-ramas, y dentro
+                            de estas mas sub-ramas, en una cascada fractal infinita.
+                        </p>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                Poincare convirtio el estudio de flujos continuos en el estudio de mapas discretos.
+                                Una idea de 1889 que se convirtio en la piedra angular de la teoria moderna del caos,
+                                conectando el mundo continuo de las ecuaciones diferenciales con el mundo discreto de
+                                las iteraciones.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Comparison Table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Sistemas y sus secciones</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Sistema</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Plano de seccion</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Estructura revelada</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Dimension</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Lorenz</td>
+                                        <td class="px-4 py-3 text-gray-400">z = 27</td>
+                                        <td class="px-4 py-3 text-gray-400">Dos ramas curvadas (ala izq/der)</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~1.06</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Rossler</td>
+                                        <td class="px-4 py-3 text-gray-400">y = 0, dy/dt < 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Bandas plegadas</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~1.01</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Henon-Heiles</td>
+                                        <td class="px-4 py-3 text-gray-400">y = 0, py > 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Islas KAM + caos</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">2 (Hamiltoniano)</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Duffing forzado</td>
+                                        <td class="px-4 py-3 text-gray-400">t mod T = 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Fractal en (x, dx/dt)</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">~1.4</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Orbita periodica</td>
+                                        <td class="px-4 py-3 text-gray-400">Cualquier transversal</td>
+                                        <td class="px-4 py-3 text-gray-400">Punto fijo unico</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>¿Por que se elige \(z = \rho - 1 = 27\) como plano de seccion para el atractor
+                                    de Lorenz? Pista: investiga donde estan los puntos de equilibrio no triviales del
+                                    sistema de Lorenz y que significado fisico tiene ese nivel.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Si un punto en la seccion de Poincare es un punto fijo del mapa de retorno \(P\),
+                                    ¿que significa esto para la orbita del flujo continuo original? ¿Y si es un punto
+                                    periodico de periodo 2?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>En el LAB de abajo, observa como se acumulan los puntos en la seccion. ¿Cuantas
+                                    intersecciones con el plano ocurren por cada "vuelta" completa del atractor (una
+                                    oscilacion entre las dos alas)? ¿Que nos dice la densidad de puntos sobre la
+                                    dinamica?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Seccion de Poincare del atractor de Lorenz</h2>
+                        <p class="text-gray-400 mb-4">Atractor de Lorenz en 3D con un plano semi-transparente en z = 27.
+                        Los puntos rojos marcan donde la trayectoria cruza el plano (con z creciente). Observa como los
+                        puntos forman la seccion transversal del atractor.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::poincare-section</span>
+                                <div class="flex gap-2">
+                                    <span id="pointCount" class="mono text-xs text-cyan-400 px-2 py-1">Puntos: 0</span>
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <div id="labCanvas" style="width:100%; height:500px;"></div>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="../modulo-05/leccion-25.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">&larr; Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 25: Dimension fractal</span>
+                </a>
+                <a href="leccion-27.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente &rarr;</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 27: Mapa logistico</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 06 &middot; Leccion 26</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Poincare Section of Lorenz -->
+    <script>
+    (function() {
+        const container = document.getElementById('labCanvas');
+        let paused = false;
+        let animId;
+
+        // Three.js setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x030712);
+        const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(60, 40, 60);
+        camera.lookAt(0, 0, 25);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        // Lorenz parameters
+        const sigma = 10, rho = 28, beta = 8/3;
+        const dt = 0.005;
+        const zPlane = 27; // Poincare section plane
+
+        // Trail geometry
+        const maxTrailPoints = 12000;
+        const trailGeometry = new THREE.BufferGeometry();
+        const trailPositions = new Float32Array(maxTrailPoints * 3);
+        const trailColors = new Float32Array(maxTrailPoints * 3);
+        trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+        trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+        const trailMaterial = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.7 });
+        const trailLine = new THREE.Line(trailGeometry, trailMaterial);
+        scene.add(trailLine);
+
+        // Poincare section points
+        const sectionPoints = [];
+        const sectionGeometry = new THREE.BufferGeometry();
+        const maxSectionPoints = 2000;
+        const sectionPositions = new Float32Array(maxSectionPoints * 3);
+        sectionGeometry.setAttribute('position', new THREE.BufferAttribute(sectionPositions, 3));
+        const sectionMaterial = new THREE.PointsMaterial({ color: 0xff3333, size: 3, sizeAttenuation: true });
+        const sectionDots = new THREE.Points(sectionGeometry, sectionMaterial);
+        scene.add(sectionDots);
+
+        // Semi-transparent cutting plane
+        const planeGeo = new THREE.PlaneGeometry(80, 80);
+        const planeMat = new THREE.MeshBasicMaterial({
+            color: 0xa855f7, transparent: true, opacity: 0.08,
+            side: THREE.DoubleSide, depthWrite: false
+        });
+        const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+        planeMesh.position.set(0, 0, zPlane);
+        scene.add(planeMesh);
+
+        // Plane border ring
+        const planeEdge = new THREE.EdgesGeometry(planeGeo);
+        const planeLineMat = new THREE.LineBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.3 });
+        const planeLineObj = new THREE.LineSegments(planeEdge, planeLineMat);
+        planeLineObj.position.copy(planeMesh.position);
+        scene.add(planeLineObj);
+
+        // Axes helper (subtle)
+        const axLen = 15;
+        const axMat = new THREE.LineBasicMaterial({ color: 0x333333 });
+        [[[axLen,0,0],[-axLen,0,0]], [[0,axLen,0],[0,-axLen,0]], [[0,0,axLen+30],[0,0,0]]].forEach(pair => {
+            const g = new THREE.BufferGeometry().setFromPoints(pair.map(p => new THREE.Vector3(...p)));
+            scene.add(new THREE.Line(g, axMat));
+        });
+
+        // State
+        let x = 1, y = 1, z = 1;
+        let prevZ = z;
+        let trailIndex = 0;
+        let sectionCount = 0;
+        let angle = 0;
+
+        function lorenzStep() {
+            const dx = sigma * (y - x) * dt;
+            const dy = (x * (rho - z) - y) * dt;
+            const dz = (x * y - beta * z) * dt;
+            x += dx; y += dy; z += dz;
+        }
+
+        function updateTrail() {
+            const idx = (trailIndex % maxTrailPoints) * 3;
+            trailPositions[idx] = x;
+            trailPositions[idx + 1] = y;
+            trailPositions[idx + 2] = z;
+            // Color by velocity
+            const v = Math.sqrt((sigma*(y-x))**2 + (x*(rho-z)-y)**2 + (x*y-beta*z)**2);
+            const t = Math.min(v / 40, 1);
+            trailColors[idx] = 0.4 + 0.6 * t;
+            trailColors[idx + 1] = 0.2 + 0.3 * (1 - t);
+            trailColors[idx + 2] = 0.8;
+            trailIndex++;
+        }
+
+        function checkPoincareCrossing() {
+            // Detect upward crossing through z = zPlane
+            if (prevZ < zPlane && z >= zPlane && sectionCount < maxSectionPoints) {
+                // Interpolate crossing point
+                const frac = (zPlane - prevZ) / (z - prevZ);
+                const cx = x; // approximate
+                const cy = y;
+                const idx = sectionCount * 3;
+                sectionPositions[idx] = cx;
+                sectionPositions[idx + 1] = cy;
+                sectionPositions[idx + 2] = zPlane;
+                sectionCount++;
+                sectionGeometry.attributes.position.needsUpdate = true;
+                sectionGeometry.setDrawRange(0, sectionCount);
+                document.getElementById('pointCount').textContent = 'Puntos: ' + sectionCount;
+            }
+        }
+
+        function reset() {
+            x = 1 + Math.random() * 0.1;
+            y = 1 + Math.random() * 0.1;
+            z = 1 + Math.random() * 0.1;
+            prevZ = z;
+            trailIndex = 0;
+            sectionCount = 0;
+            trailPositions.fill(0);
+            sectionPositions.fill(0);
+            trailGeometry.attributes.position.needsUpdate = true;
+            trailGeometry.attributes.color.needsUpdate = true;
+            sectionGeometry.attributes.position.needsUpdate = true;
+            sectionGeometry.setDrawRange(0, 0);
+            document.getElementById('pointCount').textContent = 'Puntos: 0';
+        }
+
+        function animate() {
+            animId = requestAnimationFrame(animate);
+            if (paused) return;
+
+            for (let i = 0; i < 20; i++) {
+                prevZ = z;
+                lorenzStep();
+                updateTrail();
+                checkPoincareCrossing();
+            }
+
+            const drawCount = Math.min(trailIndex, maxTrailPoints);
+            trailGeometry.setDrawRange(0, drawCount);
+            trailGeometry.attributes.position.needsUpdate = true;
+            trailGeometry.attributes.color.needsUpdate = true;
+
+            // Auto-rotate camera
+            angle += 0.003;
+            camera.position.x = 70 * Math.cos(angle);
+            camera.position.y = 35 + 10 * Math.sin(angle * 0.5);
+            camera.position.z = 25 + 70 * Math.sin(angle);
+            camera.lookAt(0, 0, 25);
+
+            renderer.render(scene, camera);
+        }
+
+        // Let the trajectory settle before recording
+        for (let i = 0; i < 5000; i++) {
+            prevZ = z;
+            lorenzStep();
+        }
+        trailIndex = 0;
+
+        document.getElementById('btnReset').addEventListener('click', reset);
+        document.getElementById('btnPause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

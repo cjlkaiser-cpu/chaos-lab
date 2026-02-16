@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 05 · Disipatividad y contraccion de volumen | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 01</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 05 / 05</span>
+                <div class="flex gap-2">
+                    <a href="leccion-04.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="../modulo-02/leccion-06.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 01</h2>
+                <p class="text-sm text-gray-400 mt-1">Fundamentos del Caos</p>
+
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>5 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-01.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">01</span>
+                        <span>Que es el caos determinista</span>
+                    </a>
+                    <a href="leccion-02.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">02</span>
+                        <span>Espacio de fases</span>
+                    </a>
+                    <a href="leccion-03.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">03</span>
+                        <span>Atractores</span>
+                    </a>
+                    <a href="leccion-04.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">04</span>
+                        <span>Sensibilidad a condiciones iniciales</span>
+                    </a>
+                    <a href="leccion-05.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">05</span>
+                        <span>Disipatividad</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 05</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Disipatividad y contraccion de volumen</h1>
+                    <p class="text-xl text-gray-400">Por que los atractores existen y por que son fractales</p>
+                </div>
+
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Sistemas disipativos vs conservativos -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Sistemas disipativos vs conservativos</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los sistemas dinamicos se dividen en dos grandes familias segun como tratan los volumenes
+                            en el espacio de fases. Un <strong class="text-white">sistema conservativo</strong> (o hamiltoniano)
+                            preserva los volumenes: si tomamos un conjunto de condiciones iniciales que ocupan un volumen \(V\)
+                            en el espacio de fases, ese volumen permanece constante conforme el sistema evoluciona. Los planetas
+                            orbitando el Sol, el pendulo ideal sin friccion, y las particulas en un gas perfecto son ejemplos
+                            de sistemas conservativos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Un <strong class="text-white">sistema disipativo</strong>, en cambio, contrae los volumenes.
+                            La misma nube de condiciones iniciales que al principio ocupa un volumen \(V\) se va encogiendo
+                            con el tiempo. La energia se disipa &mdash; se pierde como calor, friccion o radiacion &mdash;
+                            y el espacio accesible se reduce. Los atractores solo existen en sistemas disipativos: son las
+                            regiones de volumen cero (o casi cero) a las que colapsan todas las trayectorias.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Un sistema conservativo no puede tener atractores porque no pierde volumen. Las trayectorias
+                            pueden ser caoticas (el problema de tres cuerpos, por ejemplo), pero no convergen a ningun
+                            subconjunto especial del espacio de fases. En cambio, un sistema disipativo "olvida" progresivamente
+                            sus condiciones iniciales y termina confinado en un atractor de dimension inferior al espacio
+                            de fases completo.
+                        </p>
+                    </section>
+
+                    <!-- Divergencia del campo vectorial -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Divergencia del campo vectorial</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La herramienta matematica para cuantificar la contraccion (o expansion) de volumenes es la
+                            <strong class="text-white">divergencia del campo vectorial</strong>. Para un sistema
+                            \(\dot{\mathbf{x}} = \mathbf{F}(\mathbf{x})\), la divergencia es:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\nabla \cdot \mathbf{F} = \sum_{i=1}^{n} \frac{\partial F_i}{\partial x_i}$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Si \(\nabla \cdot \mathbf{F} < 0\) en todo el espacio de fases, el sistema es disipativo:
+                            los volumenes se contraen. Si \(\nabla \cdot \mathbf{F} = 0\), el sistema es conservativo.
+                            Si \(\nabla \cdot \mathbf{F} > 0\), los volumenes crecen (lo cual no es fisicamente realista
+                            en la mayoria de los casos, pues implicaria una fuente infinita de energia).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            La tasa de cambio del volumen es exactamente la integral de la divergencia. Un pequeno volumen
+                            \(\delta V\) evoluciona como \(\frac{d}{dt}\delta V = (\nabla \cdot \mathbf{F}) \delta V\).
+                            Si la divergencia es constante (como ocurre en el sistema de Lorenz), la solucion es una
+                            exponencial decreciente.
+                        </p>
+                    </section>
+
+                    <!-- Teorema de Liouville -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El teorema de Liouville</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">teorema de Liouville</strong> establece que en un sistema
+                            hamiltoniano (conservativo), el flujo en el espacio de fases preserva volumenes. Esto es una
+                            consecuencia directa de las ecuaciones de Hamilton: si \(\dot{q}_i = \partial H/\partial p_i\)
+                            y \(\dot{p}_i = -\partial H/\partial q_i\), la divergencia es:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\nabla \cdot \mathbf{F} = \sum_i \left(\frac{\partial^2 H}{\partial q_i \partial p_i} - \frac{\partial^2 H}{\partial p_i \partial q_i}\right) = 0$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Las derivadas cruzadas se cancelan por la simetria de las derivadas parciales (teorema de Schwarz).
+                            Esto significa que el flujo hamiltoniano es <strong class="text-white">incompresible</strong>:
+                            la "densidad de puntos" en el espacio de fases se conserva, como un fluido incompresible.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            La consecuencia es profunda: un sistema hamiltoniano no puede tener atractores (ni repulsores).
+                            La nube de condiciones iniciales puede deformarse, estirarse y retorcerse, pero su volumen total
+                            permanece constante. Para que existan atractores, necesitamos disipacion.
+                        </p>
+                    </section>
+
+                    <!-- Contraccion en Lorenz -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Contraccion en Lorenz</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema de Lorenz es \(\dot{x} = \sigma(y-x)\), \(\dot{y} = x(\rho-z) - y\),
+                            \(\dot{z} = xy - \beta z\). Calculemos su divergencia:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\nabla \cdot \mathbf{F} = \frac{\partial \dot{x}}{\partial x} + \frac{\partial \dot{y}}{\partial y} + \frac{\partial \dot{z}}{\partial z} = -\sigma + (-1) + (-\beta) = -(\sigma + 1 + \beta)$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con los parametros estandar \(\sigma = 10\), \(\beta = 8/3\):
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\nabla \cdot \mathbf{F} = -(10 + 1 + 8/3) = -\frac{41}{3} \approx -13.67$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La divergencia es <strong class="text-white">constante y negativa</strong> en todo el espacio de fases.
+                            Esto es inusual &mdash; en la mayoria de los sistemas, la divergencia depende del estado. Pero en
+                            Lorenz, la contraccion es uniforme: un volumen \(V(t)\) evoluciona como:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$V(t) = V(0)\, e^{(\nabla \cdot \mathbf{F})\, t} = V(0)\, e^{-13.67\, t}$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed">
+                            El volumen disminuye por un factor de \(e\) cada \(1/13.67 \approx 0.073\) unidades de tiempo.
+                            Despues de una unidad de tiempo, el volumen original se ha reducido a \(e^{-13.67} \approx 1.15 \times 10^{-6}\)
+                            de su valor inicial. La contraccion es brutal.
+                        </p>
+                    </section>
+
+                    <!-- Por que existen atractores -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Por que existen atractores</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Si el volumen se contrae exponencialmente, ¿a que converge? Necesariamente converge a un conjunto
+                            de <strong class="text-white">volumen cero</strong> en el espacio de fases: el atractor. Pero
+                            aqui viene la sorpresa del caos: aunque el volumen es cero, la estructura del atractor puede ser
+                            infinitamente compleja.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El mecanismo es el <strong class="text-white">estiramiento y plegamiento</strong>. Mientras la
+                            contraccion del volumen reduce una dimension, el sistema simultaneamente estira las otras dimensiones
+                            (esto es lo que genera la sensibilidad a condiciones iniciales). Para mantener las trayectorias
+                            acotadas, el sistema debe plegar el espacio estirado, como amasar pan.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El resultado de infinitas iteraciones de estiramiento y plegamiento es una estructura
+                            <strong class="text-white">fractal</strong>: un objeto con autosimilitud a todas las escalas,
+                            con dimension no entera. El atractor de Lorenz, con su dimension fractal de ~2.06, es algo
+                            mas que una superficie (2D) pero infinitamente mas delgado que un volumen (3D). Es un objeto
+                            con infinitas "hojas" infinitamente cercanas entre si.
+                        </p>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                La disipatividad garantiza que existe un atractor de volumen cero. Pero la combinacion de
+                                contraccion en unas direcciones y estiramiento en otras produce un atractor con estructura
+                                fractal: las "cenizas" del volumen original, infinitamente comprimidas y plegadas.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Table: divergence of systems -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Divergencia en sistemas clasicos</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Sistema</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">\(\nabla \cdot \mathbf{F}\)</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Tipo</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Atractor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Lorenz</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(-(\sigma+1+\beta) \approx -13.67\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Disipativo</td>
+                                        <td class="px-4 py-3 text-gray-400">Extrano (d ~2.06)</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Rossler</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(-c\) (depende del estado)</td>
+                                        <td class="px-4 py-3 text-gray-400">Disipativo</td>
+                                        <td class="px-4 py-3 text-gray-400">Extrano (d ~2.01)</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Pendulo ideal</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(0\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Conservativo</td>
+                                        <td class="px-4 py-3 text-gray-400">Ninguno</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Kepler (2 cuerpos)</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(0\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Conservativo</td>
+                                        <td class="px-4 py-3 text-gray-400">Ninguno</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Pendulo amortiguado</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(-\gamma\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Disipativo</td>
+                                        <td class="px-4 py-3 text-gray-400">Punto fijo</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Van der Pol</td>
+                                        <td class="px-4 py-3 text-gray-400 mono">\(-\mu(1-x^2)\)</td>
+                                        <td class="px-4 py-3 text-gray-400">Disipativo (promedio)</td>
+                                        <td class="px-4 py-3 text-gray-400">Ciclo limite</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Calcula la divergencia del sistema de Rossler: \(\dot{x} = -y-z\), \(\dot{y} = x + ay\),
+                                    \(\dot{z} = b + z(x-c)\). Con \(a = 0.2, b = 0.2, c = 5.7\), ¿es la divergencia constante?
+                                    ¿Que implicaciones tiene esto comparado con Lorenz?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Si la divergencia es cero (\(\nabla \cdot \mathbf{F} = 0\)), ¿puede el sistema tener
+                                    un atractor? Explica usando el teorema de Liouville. ¿Que tipo de comportamiento caotico
+                                    es posible en un sistema conservativo?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>En el sistema de Lorenz, ¿cuanto tiempo tarda el volumen en reducirse a la mitad?
+                                    Calcula \(t_{1/2}\) tal que \(V(t_{1/2}) = V(0)/2\). Pista: \(t_{1/2} = \ln 2 / |\nabla \cdot \mathbf{F}|\).</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Contraccion de volumen en Lorenz</h2>
+                        <p class="text-gray-400 mb-4">Una nube de 500 puntos iniciales distribuidos en un cubo pequeno
+                        es integrada a traves del sistema de Lorenz. Observa como el cubo se deforma y colapsa
+                        sobre el atractor. El panel inferior muestra la evolucion del volumen estimado.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::volume-contraction</span>
+                                <div class="flex gap-2">
+                                    <button id="btnReset5" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause5" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                    <button id="btnSpeed5" class="px-3 py-1 text-xs bg-cyan-700 hover:bg-cyan-600 rounded transition">Velocidad: 1x</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas5" width="900" height="550" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-04.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 04: Sensibilidad a condiciones iniciales</span>
+                </a>
+                <a href="../modulo-02/leccion-06.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente modulo</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 06: Lorenz 1963 &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 01 &middot; Leccion 05</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- LAB Script: Volume Contraction -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('labCanvas5');
+        const W = canvas.width;
+        const H = canvas.height;
+        const H3D = Math.floor(H * 0.72);
+        const HPLOT = H - H3D;
+
+        // Three.js setup
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+        renderer.setSize(W, H);
+        renderer.autoClear = false;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, W / H3D, 0.1, 1000);
+        camera.position.set(70, 40, 70);
+        camera.lookAt(0, 0, 25);
+
+        // Lorenz parameters
+        const sigma = 10, rho = 28, beta = 8/3;
+        const divF = -(sigma + 1 + beta); // -13.667
+        const N = 500;
+
+        let paused = false;
+        let speed = 1;
+        let time = 0;
+        let volumeLog = [];
+
+        // Initial conditions: small cube centered at (5, 5, 25)
+        let particles = [];
+        const cubeCenter = { x: 5, y: 5, z: 25 };
+        const cubeSize = 3;
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < N; i++) {
+                particles.push({
+                    x: cubeCenter.x + (Math.random() - 0.5) * cubeSize,
+                    y: cubeCenter.y + (Math.random() - 0.5) * cubeSize,
+                    z: cubeCenter.z + (Math.random() - 0.5) * cubeSize
+                });
+            }
+            time = 0;
+            volumeLog = [];
+        }
+
+        // Three.js particles
+        const pointsGeom = new THREE.BufferGeometry();
+        const positions = new Float32Array(N * 3);
+        const colors = new Float32Array(N * 3);
+        pointsGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        pointsGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const pointsMat = new THREE.PointsMaterial({
+            size: 2.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.85,
+            sizeAttenuation: true
+        });
+        const pointsMesh = new THREE.Points(pointsGeom, pointsMat);
+        scene.add(pointsMesh);
+
+        // Axes
+        const axesMat = new THREE.LineBasicMaterial({ color: 0x374151 });
+        function addAxis(from, to) {
+            const g = new THREE.BufferGeometry().setFromPoints([
+                new THREE.Vector3(...from),
+                new THREE.Vector3(...to)
+            ]);
+            scene.add(new THREE.Line(g, axesMat));
+        }
+        addAxis([-30,0,0],[30,0,0]);
+        addAxis([0,-30,0],[0,30,0]);
+        addAxis([0,0,0],[0,0,55]);
+
+        // Ghost of the attractor (faint reference trail)
+        let ghostTrail = [];
+        let ghostState = { x: 0.1, y: 0.1, z: 0.1 };
+        for (let i = 0; i < 8000; i++) {
+            const dt = 0.005;
+            const dx = sigma * (ghostState.y - ghostState.x);
+            const dy = ghostState.x * (rho - ghostState.z) - ghostState.y;
+            const dz = ghostState.x * ghostState.y - beta * ghostState.z;
+            ghostState.x += dx * dt;
+            ghostState.y += dy * dt;
+            ghostState.z += dz * dt;
+            if (i > 500) ghostTrail.push(new THREE.Vector3(ghostState.x, ghostState.z, ghostState.y));
+        }
+        const ghostGeom = new THREE.BufferGeometry().setFromPoints(ghostTrail);
+        const ghostMat = new THREE.LineBasicMaterial({ color: 0x374151, transparent: true, opacity: 0.15 });
+        scene.add(new THREE.Line(ghostGeom, ghostMat));
+
+        function lorenzRK4(s, dt) {
+            function f(s) {
+                return {
+                    dx: sigma * (s.y - s.x),
+                    dy: s.x * (rho - s.z) - s.y,
+                    dz: s.x * s.y - beta * s.z
+                };
+            }
+            const k1 = f(s);
+            const s2 = { x: s.x+0.5*dt*k1.dx, y: s.y+0.5*dt*k1.dy, z: s.z+0.5*dt*k1.dz };
+            const k2 = f(s2);
+            const s3 = { x: s.x+0.5*dt*k2.dx, y: s.y+0.5*dt*k2.dy, z: s.z+0.5*dt*k2.dz };
+            const k3 = f(s3);
+            const s4 = { x: s.x+dt*k3.dx, y: s.y+dt*k3.dy, z: s.z+dt*k3.dz };
+            const k4 = f(s4);
+            return {
+                x: s.x + (dt/6)*(k1.dx+2*k2.dx+2*k3.dx+k4.dx),
+                y: s.y + (dt/6)*(k1.dy+2*k2.dy+2*k3.dy+k4.dy),
+                z: s.z + (dt/6)*(k1.dz+2*k2.dz+2*k3.dz+k4.dz)
+            };
+        }
+
+        function estimateVolume() {
+            // Simple bounding box volume as rough estimate
+            let minX=Infinity, maxX=-Infinity;
+            let minY=Infinity, maxY=-Infinity;
+            let minZ=Infinity, maxZ=-Infinity;
+            for (const p of particles) {
+                if (p.x<minX) minX=p.x; if (p.x>maxX) maxX=p.x;
+                if (p.y<minY) minY=p.y; if (p.y>maxY) maxY=p.y;
+                if (p.z<minZ) minZ=p.z; if (p.z>maxZ) maxZ=p.z;
+            }
+            return Math.max((maxX-minX)*(maxY-minY)*(maxZ-minZ), 1e-30);
+        }
+
+        function updateParticleGeometry() {
+            const posArr = pointsGeom.getAttribute('position').array;
+            const colArr = pointsGeom.getAttribute('color').array;
+            for (let i = 0; i < N; i++) {
+                const p = particles[i];
+                posArr[i*3] = p.x;
+                posArr[i*3+1] = p.z; // swap y/z for view
+                posArr[i*3+2] = p.y;
+
+                // Color by z-height (normalized)
+                const t = Math.max(0, Math.min(1, (p.z - 5) / 45));
+                colArr[i*3]   = 0.66 * (1-t) + 0.13 * t; // violet to cyan
+                colArr[i*3+1] = 0.33 * (1-t) + 0.83 * t;
+                colArr[i*3+2] = 0.97 * (1-t) + 0.93 * t;
+            }
+            pointsGeom.getAttribute('position').needsUpdate = true;
+            pointsGeom.getAttribute('color').needsUpdate = true;
+        }
+
+        // 2D plot canvas overlay
+        const plotCanvas = document.createElement('canvas');
+        plotCanvas.width = W;
+        plotCanvas.height = HPLOT;
+        plotCanvas.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;pointer-events:none;';
+        canvas.parentElement.style.position = 'relative';
+        canvas.parentElement.appendChild(plotCanvas);
+        const pctx = plotCanvas.getContext('2d');
+
+        function drawVolumePlot() {
+            pctx.fillStyle = '#0a0a0f';
+            pctx.fillRect(0, 0, W, HPLOT);
+            pctx.strokeStyle = '#374151';
+            pctx.lineWidth = 1;
+            pctx.strokeRect(50, 8, W - 70, HPLOT - 28);
+
+            pctx.fillStyle = '#6b7280';
+            pctx.font = '11px JetBrains Mono, monospace';
+            pctx.textAlign = 'left';
+            pctx.fillText('log₁₀(V)', 2, 18);
+
+            if (volumeLog.length < 2) return;
+
+            const plotW = W - 70;
+            const plotH = HPLOT - 28;
+            const plotX = 50;
+            const plotY = 8;
+
+            const maxT = volumeLog[volumeLog.length-1].t;
+            const minT = volumeLog[0].t;
+            let minV = Infinity, maxV = -Infinity;
+            for (const p of volumeLog) {
+                const lv = Math.log10(Math.max(p.v, 1e-30));
+                if (lv < minV) minV = lv;
+                if (lv > maxV) maxV = lv;
+            }
+            minV = Math.floor(minV - 0.5);
+            maxV = Math.ceil(maxV + 0.5);
+            if (maxV - minV < 2) maxV = minV + 2;
+
+            // Grid
+            pctx.strokeStyle = '#1f2937';
+            pctx.lineWidth = 0.5;
+            for (let v = minV; v <= maxV; v += 2) {
+                const y = plotY + plotH - (v - minV) / (maxV - minV) * plotH;
+                pctx.beginPath(); pctx.moveTo(plotX, y); pctx.lineTo(plotX + plotW, y); pctx.stroke();
+                pctx.fillStyle = '#4b5563';
+                pctx.fillText(`${v}`, plotX - 25, y + 4);
+            }
+
+            // Theoretical line
+            if (volumeLog.length > 1) {
+                const V0 = volumeLog[0].v;
+                pctx.beginPath();
+                pctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+                pctx.lineWidth = 1;
+                pctx.setLineDash([4, 4]);
+                for (let i = 0; i < 100; i++) {
+                    const t = minT + (maxT - minT) * i / 99;
+                    const vTheo = Math.log10(V0) + divF * (t - minT) / Math.LN10;
+                    const px = plotX + (t - minT) / (maxT - minT + 0.001) * plotW;
+                    const py = plotY + plotH - (vTheo - minV) / (maxV - minV) * plotH;
+                    if (i === 0) pctx.moveTo(px, py); else pctx.lineTo(px, py);
+                }
+                pctx.stroke();
+                pctx.setLineDash([]);
+            }
+
+            // Actual volume
+            pctx.beginPath();
+            pctx.strokeStyle = '#22d3ee';
+            pctx.lineWidth = 2;
+            let first = true;
+            for (const p of volumeLog) {
+                const lv = Math.log10(Math.max(p.v, 1e-30));
+                const px = plotX + (p.t - minT) / (maxT - minT + 0.001) * plotW;
+                const py = plotY + plotH - (lv - minV) / (maxV - minV) * plotH;
+                if (first) { pctx.moveTo(px, py); first = false; }
+                else pctx.lineTo(px, py);
+            }
+            pctx.stroke();
+
+            // Legend
+            const curr = volumeLog[volumeLog.length-1];
+            pctx.fillStyle = '#22d3ee';
+            pctx.font = '11px JetBrains Mono, monospace';
+            pctx.textAlign = 'right';
+            pctx.fillText(`V = ${curr.v.toExponential(1)}  t = ${curr.t.toFixed(2)}`, W - 25, HPLOT - 8);
+            pctx.fillStyle = '#a855f7';
+            pctx.fillText('--- teorico', W - 200, HPLOT - 8);
+        }
+
+        function reset() {
+            initParticles();
+        }
+
+        document.getElementById('btnReset5').addEventListener('click', reset);
+        document.getElementById('btnPause5').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+        document.getElementById('btnSpeed5').addEventListener('click', function() {
+            speed = speed === 1 ? 3 : speed === 3 ? 6 : 1;
+            this.textContent = `Velocidad: ${speed}x`;
+        });
+
+        let angle = 0;
+        initParticles();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!paused) {
+                const dt = 0.003;
+                const steps = 4 * speed;
+                for (let s = 0; s < steps; s++) {
+                    for (let i = 0; i < N; i++) {
+                        particles[i] = lorenzRK4(particles[i], dt);
+                    }
+                    time += dt;
+                }
+
+                const vol = estimateVolume();
+                volumeLog.push({ t: time, v: vol });
+                if (volumeLog.length > 1500) volumeLog.shift();
+
+                updateParticleGeometry();
+
+                angle += 0.003;
+                camera.position.x = 70 * Math.cos(angle);
+                camera.position.z = 70 * Math.sin(angle) + 25;
+                camera.lookAt(0, 25, 0);
+            }
+
+            // Render 3D
+            renderer.setViewport(0, HPLOT, W, H3D);
+            renderer.setScissor(0, HPLOT, W, H3D);
+            renderer.setScissorTest(true);
+            renderer.setClearColor(0x030712);
+            renderer.clear();
+            renderer.render(scene, camera);
+            renderer.setScissorTest(false);
+
+            // Clear bottom
+            renderer.setViewport(0, 0, W, HPLOT);
+            renderer.setScissor(0, 0, W, HPLOT);
+            renderer.setScissorTest(true);
+            renderer.setClearColor(0x0a0a0f);
+            renderer.clear();
+            renderer.setScissorTest(false);
+
+            drawVolumePlot();
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

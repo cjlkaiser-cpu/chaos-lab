@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 11: De ecuaciones a trayectorias — Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 03</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">11</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">De ecuaciones a trayectorias</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="../modulo-02/leccion-10.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-12.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-lg font-medium text-violet-400">Modulo 03</h2>
+                <p class="text-gray-500 text-sm mb-4">Integracion Numerica</p>
+
+                <!-- Progress -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>1/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 20%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="space-y-1">
+                    <a href="leccion-11.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 text-sm">
+                        <span class="mono text-xs">11</span>
+                        <span>De ecuaciones a trayectorias</span>
+                    </a>
+                    <a href="leccion-12.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">12</span>
+                        <span>Euler vs RK4</span>
+                    </a>
+                    <a href="leccion-13.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">13</span>
+                        <span>Derivacion de RK4</span>
+                    </a>
+                    <a href="leccion-14.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">14</span>
+                        <span>Eleccion del paso temporal</span>
+                    </a>
+                    <a href="leccion-15.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">15</span>
+                        <span>De ecuaciones a pixeles</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 11</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">De ecuaciones</span> a trayectorias
+                    </h1>
+                    <p class="text-gray-500 text-lg">El metodo de Euler y los primeros pasos de la integracion numerica</p>
+                </div>
+
+                <!-- h2: El problema fundamental -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">El problema fundamental</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Todo lo que hemos visto hasta ahora -- el atractor de Lorenz, sus alas de mariposa, la sensibilidad a condiciones
+                    iniciales -- se describe mediante ecuaciones diferenciales. Pero hay un problema: las ecuaciones diferenciales que
+                    gobiernan los sistemas caoticos <em class="text-violet-300">no tienen solucion analitica</em>.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Cuando escribimos \(\frac{dx}{dt} = f(x)\), estamos diciendo: "conozco la velocidad del sistema en cada punto,
+                    pero no conozco la trayectoria". Es como tener un mapa de vientos pero no saber por donde volara la hoja.
+                    Necesitamos convertir esas velocidades instantaneas en una trayectoria paso a paso.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Ese proceso -- convertir una ecuacion diferencial en una secuencia de puntos que aproxima la solucion -- es la
+                    <strong class="text-white">integracion numerica</strong>. Y es la base de todo lo que vemos en ChaosLab.
+                </p>
+
+                <!-- h3: Que significa integrar -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Que significa integrar?</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En calculo, integrar una funcion significa encontrar la funcion original a partir de su derivada. Si sabemos que
+                    \(\frac{dx}{dt} = 2t\), podemos integrar analiticamente y obtener \(x(t) = t^2 + C\). Pero para un sistema como Lorenz:
+                </p>
+
+                $$\frac{dx}{dt} = \sigma(y - x), \quad \frac{dy}{dt} = x(\rho - z) - y, \quad \frac{dz}{dt} = xy - \beta z$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    No existe formula cerrada. Las tres ecuaciones estan acopladas: cada derivada depende de las otras variables.
+                    La unica forma de avanzar es <em class="text-violet-300">discretizar el tiempo</em>. En lugar de tiempo continuo \(t\),
+                    trabajamos con pasos discretos \(t_0, t_1, t_2, \ldots\) separados por un intervalo \(h\) (tambien llamado \(\Delta t\) o \(dt\)).
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    En cada paso, usamos la informacion que tenemos (la posicion actual y la derivada) para <em class="text-violet-300">estimar</em>
+                    donde estara el sistema un instante despues. Acumulando miles de estos pasos, construimos la trayectoria completa.
+                </p>
+
+                <!-- h3: El metodo de Euler -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">El metodo de Euler</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El metodo de Euler es el algoritmo de integracion mas simple que existe. Su idea es directa: si conozco la posicion
+                    actual \(x_n\) y la velocidad \(f(t_n, x_n)\), entonces en un pequeno intervalo de tiempo \(h\), la nueva posicion sera
+                    aproximadamente:
+                </p>
+
+                $$x_{n+1} = x_n + h \cdot f(t_n, x_n)$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esto es simplemente una aproximacion lineal. Estamos diciendo: "sigue recto en la direccion de la derivada actual
+                    durante un tiempo \(h\)". Es como conducir mirando solo un metro adelante: funciona si vas despacio (h pequeno),
+                    pero si la carretera curva bruscamente, te sales del camino.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Leonhard Euler propuso este metodo en 1768. A pesar de su simplicidad, contiene la esencia de toda la integracion
+                    numerica: evaluar la derivada, multiplicar por el paso temporal, sumar al estado actual. Los metodos mas sofisticados
+                    que veremos despues (como RK4) son refinamientos de esta misma idea.
+                </p>
+
+                <!-- Emphasis box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 px-6 py-4 my-8 rounded-r-lg">
+                    <p class="text-gray-200 font-medium">
+                        La integracion numerica convierte ecuaciones continuas en secuencias discretas. Cada paso usa la derivada
+                        actual para estimar el siguiente punto de la trayectoria.
+                    </p>
+                </div>
+
+                <!-- h3: Euler paso a paso -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Euler paso a paso</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Veamos el metodo en accion con la ecuacion diferencial mas simple posible:
+                </p>
+
+                $$\frac{dx}{dt} = x, \quad x(0) = 1$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esta ecuacion dice: "la velocidad de crecimiento es proporcional al valor actual". Su solucion exacta es
+                    \(x(t) = e^t\). Usemos Euler con paso \(h = 0.2\) y veamos los primeros 5 pasos:
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Paso 0:</strong> Partimos de \(x_0 = 1\) en \(t_0 = 0\). La derivada es \(f(x_0) = x_0 = 1\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Paso 1:</strong> \(x_1 = x_0 + h \cdot f(x_0) = 1 + 0.2 \times 1 = 1.200\). Exacto: \(e^{0.2} = 1.2214\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Paso 2:</strong> \(x_2 = 1.200 + 0.2 \times 1.200 = 1.440\). Exacto: \(e^{0.4} = 1.4918\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-2">
+                    <strong class="text-white">Paso 3:</strong> \(x_3 = 1.440 + 0.2 \times 1.440 = 1.728\). Exacto: \(e^{0.6} = 1.8221\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    <strong class="text-white">Paso 4:</strong> \(x_4 = 1.728 + 0.2 \times 1.728 = 2.0736\). Exacto: \(e^{0.8} = 2.2255\).
+                </p>
+
+                <!-- Table -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Paso n</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">\(t_n\)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">\(x_n\) (Euler)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">\(x\) exacto</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Error</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400 mono text-xs">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0</td>
+                                <td class="py-2 px-4">0.0</td>
+                                <td class="py-2 px-4">1.0000</td>
+                                <td class="py-2 px-4">1.0000</td>
+                                <td class="py-2 px-4 text-green-400">0.0000</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">1</td>
+                                <td class="py-2 px-4">0.2</td>
+                                <td class="py-2 px-4">1.2000</td>
+                                <td class="py-2 px-4">1.2214</td>
+                                <td class="py-2 px-4 text-yellow-400">0.0214</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">2</td>
+                                <td class="py-2 px-4">0.4</td>
+                                <td class="py-2 px-4">1.4400</td>
+                                <td class="py-2 px-4">1.4918</td>
+                                <td class="py-2 px-4 text-yellow-400">0.0518</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">3</td>
+                                <td class="py-2 px-4">0.6</td>
+                                <td class="py-2 px-4">1.7280</td>
+                                <td class="py-2 px-4">1.8221</td>
+                                <td class="py-2 px-4 text-orange-400">0.0941</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">4</td>
+                                <td class="py-2 px-4">0.8</td>
+                                <td class="py-2 px-4">2.0736</td>
+                                <td class="py-2 px-4">2.2255</td>
+                                <td class="py-2 px-4 text-red-400">0.1519</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4">5</td>
+                                <td class="py-2 px-4">1.0</td>
+                                <td class="py-2 px-4">2.4883</td>
+                                <td class="py-2 px-4">2.7183</td>
+                                <td class="py-2 px-4 text-red-400">0.2300</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Observa como el error crece con cada paso. Al final de solo 5 pasos, Euler subestima el valor real en un 8.5%.
+                    Y esto es para la ecuacion mas simple posible. Para Lorenz, con sus trayectorias curvadas y caoticas,
+                    el error se amplifica mucho mas rapido.
+                </p>
+
+                <!-- h3: Error de truncamiento -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Error de truncamiento</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para entender por que Euler comete errores, expandimos la solucion exacta en serie de Taylor:
+                </p>
+
+                $$x(t + h) = x(t) + h \cdot x'(t) + \frac{h^2}{2} x''(t) + \frac{h^3}{6} x'''(t) + \cdots$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El metodo de Euler solo usa los dos primeros terminos: \(x(t) + h \cdot x'(t)\). Todo lo demas se descarta.
+                    Esto significa que en <strong class="text-white">cada paso individual</strong>, el error es del orden de \(h^2\):
+                </p>
+
+                $$\text{Error local} = \frac{h^2}{2} x''(t) + \mathcal{O}(h^3) \approx \mathcal{O}(h^2)$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Pero cuidado: para recorrer un intervalo fijo de tiempo \(T\), necesitamos \(N = T/h\) pasos. Cada paso contribuye
+                    un error de \(\mathcal{O}(h^2)\), y hay \(\mathcal{O}(1/h)\) pasos, asi que el <strong class="text-white">error global</strong>
+                    es:
+                </p>
+
+                $$\text{Error global} = N \cdot \mathcal{O}(h^2) = \frac{T}{h} \cdot \mathcal{O}(h^2) = \mathcal{O}(h)$$
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Por eso decimos que Euler es un metodo de <strong class="text-white">orden 1</strong>: el error global es proporcional a \(h\).
+                    Si reducimos el paso a la mitad, el error se reduce a la mitad. Parece razonable, pero para sistemas caoticos donde
+                    los errores se amplifican exponencialmente, necesitamos metodos mucho mas precisos. Esa sera la motivacion de RK4.
+                </p>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-lg font-medium text-violet-400 mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            Aplica el metodo de Euler durante 5 pasos a la ecuacion \(\frac{dx}{dt} = -x\) con \(x_0 = 1\) y \(dt = 0.1\).
+                            Calcula \(x_1, x_2, \ldots, x_5\) a mano.
+                        </li>
+                        <li>
+                            Compara tus resultados con la solucion exacta \(x(t) = e^{-t}\). Cual es el error porcentual en \(t = 0.5\)?
+                        </li>
+                        <li>
+                            Repite el ejercicio 1 con \(dt = 0.5\) (un solo paso para llegar a \(t = 0.5\)). Como cambia el error?
+                            Que concluyes sobre la relacion entre \(dt\) y precision?
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <div class="my-12">
+                    <h2 class="text-2xl font-medium text-violet-400 mb-2">LAB: Euler paso a paso</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Visualiza el metodo de Euler sobre \(dx/dt = x\). La curva azul es la solucion exacta \(e^t\);
+                        los segmentos rojos son los pasos de Euler. Ajusta dt con el slider o avanza paso a paso.
+                    </p>
+
+                    <div class="lab-container">
+                        <!-- Controls bar -->
+                        <div class="bg-gray-950 px-4 py-3 flex items-center gap-4 flex-wrap border-b border-violet-500/30">
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-400">dt:</label>
+                                <input type="range" id="dt-slider" min="0.01" max="0.5" step="0.01" value="0.2"
+                                    class="w-32 accent-violet-500">
+                                <span id="dt-value" class="mono text-xs text-cyan-400 w-10">0.20</span>
+                            </div>
+                            <button id="btn-step" class="px-3 py-1 bg-violet-500/20 text-violet-400 text-xs rounded-lg border border-violet-500/30 hover:bg-violet-500/30 transition">
+                                Paso
+                            </button>
+                            <button id="btn-play" class="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-lg border border-cyan-500/30 hover:bg-cyan-500/30 transition">
+                                Auto
+                            </button>
+                            <button id="btn-reset" class="px-3 py-1 bg-gray-800 text-gray-400 text-xs rounded-lg border border-gray-700 hover:bg-gray-700 transition">
+                                Reset
+                            </button>
+                            <span id="step-info" class="mono text-xs text-gray-500 ml-auto">n=0 | t=0.00 | x=1.000</span>
+                        </div>
+                        <!-- Canvas -->
+                        <canvas id="lab-canvas" class="w-full bg-black" style="height: 400px;"></canvas>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="../modulo-02/leccion-10.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-lg">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm">Bifurcaciones en Lorenz</div>
+                    </div>
+                </a>
+                <a href="leccion-12.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm">Euler vs RK4</div>
+                    </div>
+                    <span class="text-lg">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 03 &middot; Leccion 11</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Integracion Numerica &middot; De ecuaciones a trayectorias</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================
+        // LAB: Euler Step-by-Step
+        // ============================
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        const dtSlider = document.getElementById('dt-slider');
+        const dtValue = document.getElementById('dt-value');
+        const btnStep = document.getElementById('btn-step');
+        const btnPlay = document.getElementById('btn-play');
+        const btnReset = document.getElementById('btn-reset');
+        const stepInfo = document.getElementById('step-info');
+
+        let dpr = window.devicePixelRatio || 1;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        // ODE: dx/dt = x, exact solution x(t) = e^t
+        const f = (x) => x;
+        const exact = (t) => Math.exp(t);
+
+        // State
+        let eulerPoints = [{ t: 0, x: 1 }];
+        let dt = 0.2;
+        let playing = false;
+        let playTimer = null;
+
+        // Coordinate system
+        const tMin = 0, tMax = 3;
+        const xMin = 0, xMax = 22;
+
+        function toScreenX(t) {
+            const rect = canvas.getBoundingClientRect();
+            const margin = 60;
+            return margin + (t - tMin) / (tMax - tMin) * (rect.width - margin - 20);
+        }
+
+        function toScreenY(x) {
+            const rect = canvas.getBoundingClientRect();
+            const margin = 40;
+            return (rect.height - margin) - (x - xMin) / (xMax - xMin) * (rect.height - margin - 20);
+        }
+
+        function draw() {
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid
+            ctx.strokeStyle = '#1a1a2e';
+            ctx.lineWidth = 1;
+            for (let t = 0; t <= tMax; t += 0.5) {
+                const sx = toScreenX(t);
+                ctx.beginPath();
+                ctx.moveTo(sx, 0);
+                ctx.lineTo(sx, h);
+                ctx.stroke();
+            }
+            for (let x = 0; x <= xMax; x += 5) {
+                const sy = toScreenY(x);
+                ctx.beginPath();
+                ctx.moveTo(0, sy);
+                ctx.lineTo(w, sy);
+                ctx.stroke();
+            }
+
+            // Axes labels
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '11px Inter';
+            for (let t = 0; t <= tMax; t += 0.5) {
+                ctx.fillText(t.toFixed(1), toScreenX(t) - 8, h - 12);
+            }
+            for (let x = 0; x <= xMax; x += 5) {
+                ctx.fillText(x.toString(), 8, toScreenY(x) + 4);
+            }
+            ctx.fillText('t', w - 15, h - 12);
+            ctx.fillText('x', 8, 15);
+
+            // Exact solution curve (blue)
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            let first = true;
+            for (let t = 0; t <= tMax; t += 0.01) {
+                const ex = exact(t);
+                if (ex > xMax * 1.2) break;
+                const sx = toScreenX(t);
+                const sy = toScreenY(ex);
+                if (first) { ctx.moveTo(sx, sy); first = false; }
+                else ctx.lineTo(sx, sy);
+            }
+            ctx.stroke();
+
+            // Label exact
+            ctx.fillStyle = '#3b82f6';
+            ctx.font = '12px Inter';
+            const labelT = Math.min(2.5, tMax);
+            const labelEx = exact(labelT);
+            if (labelEx < xMax) {
+                ctx.fillText('e^t (exacta)', toScreenX(labelT) + 5, toScreenY(labelEx) - 8);
+            }
+
+            // Euler steps (red segments)
+            if (eulerPoints.length > 1) {
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([]);
+                for (let i = 1; i < eulerPoints.length; i++) {
+                    const p0 = eulerPoints[i - 1];
+                    const p1 = eulerPoints[i];
+                    ctx.beginPath();
+                    ctx.moveTo(toScreenX(p0.t), toScreenY(p0.x));
+                    ctx.lineTo(toScreenX(p1.t), toScreenY(p1.x));
+                    ctx.stroke();
+                }
+            }
+
+            // Euler points (dots)
+            for (let i = 0; i < eulerPoints.length; i++) {
+                const p = eulerPoints[i];
+                const sx = toScreenX(p.t);
+                const sy = toScreenY(p.x);
+
+                ctx.beginPath();
+                ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+                ctx.fillStyle = i === eulerPoints.length - 1 ? '#f59e0b' : '#ef4444';
+                ctx.fill();
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Show slope arrow at current point
+                if (i === eulerPoints.length - 1 && p.t < tMax) {
+                    const slope = f(p.x);
+                    const arrowLen = 30;
+                    const angle = Math.atan2(-slope * (toScreenY(1) - toScreenY(0)) / (1), (toScreenX(1) - toScreenX(0)));
+                    ctx.strokeStyle = 'rgba(168, 85, 247, 0.8)';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([4, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.lineTo(sx + Math.cos(angle) * arrowLen, sy + Math.sin(angle) * arrowLen);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                // Error line
+                if (p.t > 0) {
+                    const exactVal = exact(p.t);
+                    const ey = toScreenY(exactVal);
+                    ctx.strokeStyle = 'rgba(250, 204, 21, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.lineTo(sx, ey);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            // Label Euler
+            if (eulerPoints.length > 1) {
+                const lastP = eulerPoints[eulerPoints.length - 1];
+                ctx.fillStyle = '#ef4444';
+                ctx.font = '12px Inter';
+                ctx.fillText('Euler', toScreenX(lastP.t) + 8, toScreenY(lastP.x) + 4);
+            }
+        }
+
+        function doStep() {
+            const last = eulerPoints[eulerPoints.length - 1];
+            if (last.t >= tMax - 0.001) return;
+            const newX = last.x + dt * f(last.x);
+            const newT = last.t + dt;
+            eulerPoints.push({ t: Math.min(newT, tMax), x: newX });
+            updateInfo();
+            draw();
+        }
+
+        function updateInfo() {
+            const last = eulerPoints[eulerPoints.length - 1];
+            const n = eulerPoints.length - 1;
+            stepInfo.textContent = `n=${n} | t=${last.t.toFixed(2)} | x=${last.x.toFixed(3)} | exacto=${exact(last.t).toFixed(3)}`;
+        }
+
+        function reset() {
+            eulerPoints = [{ t: 0, x: 1 }];
+            playing = false;
+            btnPlay.textContent = 'Auto';
+            if (playTimer) { clearInterval(playTimer); playTimer = null; }
+            updateInfo();
+            draw();
+        }
+
+        dtSlider.addEventListener('input', () => {
+            dt = parseFloat(dtSlider.value);
+            dtValue.textContent = dt.toFixed(2);
+            reset();
+        });
+
+        btnStep.addEventListener('click', doStep);
+
+        btnPlay.addEventListener('click', () => {
+            if (playing) {
+                playing = false;
+                btnPlay.textContent = 'Auto';
+                if (playTimer) { clearInterval(playTimer); playTimer = null; }
+            } else {
+                playing = true;
+                btnPlay.textContent = 'Pausa';
+                playTimer = setInterval(() => {
+                    const last = eulerPoints[eulerPoints.length - 1];
+                    if (last.t >= tMax - 0.001) {
+                        playing = false;
+                        btnPlay.textContent = 'Auto';
+                        clearInterval(playTimer);
+                        playTimer = null;
+                        return;
+                    }
+                    doStep();
+                }, 400);
+            }
+        });
+
+        btnReset.addEventListener('click', reset);
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            draw();
+        });
+
+        resizeCanvas();
+        updateInfo();
+        draw();
+    </script>
+</body>
+</html>

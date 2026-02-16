@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 09: El efecto mariposa — Curso Teoria del Caos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 02</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">09</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">El efecto mariposa</span>
+                        <span class="text-gray-400 font-light ml-1">— tres trayectorias, una verdad demoledora</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-08.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-10.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-sm font-medium text-violet-400 mb-1">Modulo 02</h2>
+                <p class="text-xs text-gray-500 mb-4">El Atractor de Lorenz</p>
+
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>4/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="leccion-06.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">06</span>
+                        <span>Lorenz 1963</span>
+                    </a>
+                    <a href="leccion-07.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">07</span>
+                        <span>Las ecuaciones</span>
+                    </a>
+                    <a href="leccion-08.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">08</span>
+                        <span>Puntos de equilibrio</span>
+                    </a>
+                    <a href="leccion-09.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
+                        <span class="mono text-xs">09</span>
+                        <span>El efecto mariposa</span>
+                    </a>
+                    <a href="leccion-10.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">10</span>
+                        <span>Bifurcaciones</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 09</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">El efecto mariposa</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 font-light">Tres trayectorias, una verdad demoledora</p>
+                </div>
+
+                <!-- Content -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Perturbaciones infinitesimales</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El efecto mariposa es, posiblemente, la idea mas famosa y malinterpretada de la teoria del caos. Su nombre proviene de la conferencia que Edward Lorenz presento en 1972: <em class="text-violet-300">"Does the Flap of a Butterfly's Wings in Brazil Set Off a Tornado in Texas?"</em>. Pero mas alla de la metafora poetica, hay una afirmacion matematica precisa y cuantificable: en un sistema caotico, trayectorias que comienzan arbitrariamente cerca divergen exponencialmente en el tiempo.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para ver esto en accion, vamos a lanzar tres trayectorias del sistema de Lorenz con condiciones iniciales casi identicas:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8">
+                    <ul class="space-y-2 text-gray-300">
+                        <li class="flex items-center gap-3">
+                            <span class="inline-block w-3 h-3 rounded-full bg-cyan-400"></span>
+                            <span>Trayectoria 1 (referencia): \((x_0, y_0, z_0) = (1,\; 1,\; 1)\)</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="inline-block w-3 h-3 rounded-full bg-violet-400"></span>
+                            <span>Trayectoria 2: \((x_0, y_0, z_0) = (1 + \epsilon,\; 1,\; 1)\) con \(\epsilon = 10^{-3}\)</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="inline-block w-3 h-3 rounded-full bg-rose-400"></span>
+                            <span>Trayectoria 3: \((x_0, y_0, z_0) = (1 + \epsilon/10,\; 1,\; 1)\) con \(\epsilon/10 = 10^{-4}\)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Durante los primeros instantes de tiempo, las tres trayectorias son visualmente indistinguibles. Recorren el mismo camino en el espacio de fases, orbitan los mismos puntos de equilibrio, saltan entre las mismas alas del atractor. Un observador casual no podria separarlas.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Pero despues de un cierto <em class="text-cyan-300">tiempo de divergencia</em>, las trayectorias se separan completamente y pierden toda correlacion. La trayectoria cyan puede estar en el ala izquierda mientras la violeta gira en el ala derecha. El tiempo exacto de divergencia depende del tamano de \(\epsilon\): cuanto mas pequena la perturbacion, mas tarda en manifestarse. Pero independientemente de cuan pequena sea \(\epsilon\), la divergencia siempre ocurre. No existe una precision finita que garantice predictibilidad a largo plazo.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Medicion de la divergencia</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para cuantificar la separacion entre dos trayectorias, calculamos la distancia euclidiana entre sus estados en cada instante de tiempo:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$|\delta(t)| = \sqrt{(x_1(t) - x_2(t))^2 + (y_1(t) - y_2(t))^2 + (z_1(t) - z_2(t))^2}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La evolucion de \(|\delta(t)|\) tiene dos fases claramente distinguibles. En la primera fase, la separacion crece exponencialmente:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 my-6 text-center">
+                    $$|\delta(t)| \approx |\delta(0)|\, e^{\lambda_1 t}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Donde \(\lambda_1\) es el <em class="text-cyan-300">maximo exponente de Lyapunov</em>. Este crecimiento exponencial es la firma del caos. Pero no puede continuar indefinidamente: el atractor de Lorenz tiene un tamano finito (del orden de 30-40 unidades en cada eje). Cuando la separacion alcanza el diametro del atractor, se satura: las trayectorias simplemente estan en partes diferentes e incorreladas del mismo atractor.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Si graficamos \(\ln|\delta(t)|\) versus \(t\), la fase exponencial aparece como una recta cuya pendiente es precisamente \(\lambda_1\). El punto donde la curva se aplana marca el <em class="text-violet-300">horizonte de predictibilidad</em>: despues de ese instante, conocer una trayectoria no dice nada sobre la otra.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Exponente de Lyapunov (intuicion)</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El exponente de Lyapunov maximo \(\lambda_1\) captura la tasa media de divergencia exponencial. Su definicion formal es:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$\lambda_1 = \lim_{t \to \infty}\; \frac{1}{t} \ln \frac{|\delta(t)|}{|\delta(0)|}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La interpretacion es directa y poderosa:
+                </p>
+
+                <ul class="space-y-2 text-gray-300 mb-6 list-disc list-inside">
+                    <li><strong class="text-cyan-400">\(\lambda_1 > 0\)</strong>: divergencia exponencial = <em class="text-violet-300">caos</em>. Las trayectorias cercanas se separan exponencialmente.</li>
+                    <li><strong class="text-cyan-400">\(\lambda_1 = 0\)</strong>: separacion neutra. Tipico de orbitas periodicas y cuasiperiodicas.</li>
+                    <li><strong class="text-cyan-400">\(\lambda_1 < 0\)</strong>: convergencia exponencial. Las trayectorias se atraen mutuamente (punto fijo estable).</li>
+                </ul>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para el sistema de Lorenz con los parametros clasicos (\(\sigma = 10\), \(\rho = 28\), \(\beta = 8/3\)):
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 my-6 text-center">
+                    $$\lambda_1 \approx 0.906$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esto significa que la separacion se multiplica por \(e \approx 2.718\) cada \(1/0.906 \approx 1.1\) unidades de tiempo. O, equivalentemente, se pierde un digito decimal de precision cada \(\ln(10)/\lambda_1 \approx 2.54\) unidades de tiempo. Si conocemos las condiciones iniciales con 6 decimales, toda esa informacion se agota en aproximadamente \(6 \times 2.54 \approx 15\) unidades de tiempo.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Horizonte de prediccion</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Podemos estimar cuanto tiempo dura nuestra capacidad predictiva. Si la incertidumbre inicial es \(\epsilon\) y el tamano del atractor es \(D\), el horizonte de prediccion es:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-4 my-6 text-center">
+                    $$T_p \approx \frac{1}{\lambda_1} \ln\frac{D}{\epsilon}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La dependencia logaritmica es devastadora: duplicar la precision de medicion (\(\epsilon \to \epsilon/2\)) solo anade \(\ln(2)/\lambda_1 \approx 0.77\) unidades de tiempo al horizonte. Para ganar 10 unidades mas de prediccion, necesitariamos mejorar la precision por un factor de \(e^{10\lambda_1} \approx 8100\). La mejora tecnologica crece exponencialmente, pero el beneficio solo crece linealmente.
+                </p>
+
+                <!-- Emphasis Box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 p-6 rounded-r-xl my-8">
+                    <p class="text-violet-200 text-lg font-light italic">
+                        "El efecto mariposa no dice que los sistemas caoticos sean aleatorios. Son completamente deterministas. Dice que la prediccion a largo plazo es imposible en la practica, porque requeriria una precision infinita en las condiciones iniciales."
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Exponentes de Lyapunov en distintos sistemas</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La magnitud de \(\lambda_1\) determina cuan rapido se pierde la informacion sobre las condiciones iniciales. La siguiente tabla compara varios sistemas caoticos clasicos:
+                </p>
+
+                <div class="overflow-x-auto my-6">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Sistema</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">\(\lambda_1\)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Tipo</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Dimension</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Lorenz</td>
+                                <td class="py-3 px-4 mono">0.906</td>
+                                <td class="py-3 px-4">Flujo continuo</td>
+                                <td class="py-3 px-4">3D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Rossler</td>
+                                <td class="py-3 px-4 mono">0.071</td>
+                                <td class="py-3 px-4">Flujo continuo</td>
+                                <td class="py-3 px-4">3D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Mapa logistico (\(r=4\))</td>
+                                <td class="py-3 px-4 mono">0.693</td>
+                                <td class="py-3 px-4">Mapa discreto</td>
+                                <td class="py-3 px-4">1D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Henon</td>
+                                <td class="py-3 px-4 mono">0.420</td>
+                                <td class="py-3 px-4">Mapa discreto</td>
+                                <td class="py-3 px-4">2D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Pendulo doble</td>
+                                <td class="py-3 px-4 mono">~0.5</td>
+                                <td class="py-3 px-4">Flujo hamiltoniano</td>
+                                <td class="py-3 px-4">4D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Chua</td>
+                                <td class="py-3 px-4 mono">0.32</td>
+                                <td class="py-3 px-4">Circuito electronico</td>
+                                <td class="py-3 px-4">3D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Chen</td>
+                                <td class="py-3 px-4 mono">2.027</td>
+                                <td class="py-3 px-4">Flujo continuo</td>
+                                <td class="py-3 px-4">3D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Sprott B</td>
+                                <td class="py-3 px-4 mono">0.20</td>
+                                <td class="py-3 px-4">Flujo continuo</td>
+                                <td class="py-3 px-4">3D</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">Mackey-Glass (\(\tau=17\))</td>
+                                <td class="py-3 px-4 mono">0.007</td>
+                                <td class="py-3 px-4">DDE</td>
+                                <td class="py-3 px-4">\(\infty\)-D</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 mono text-cyan-400">Tres cuerpos</td>
+                                <td class="py-3 px-4 mono">~0.3</td>
+                                <td class="py-3 px-4">Flujo hamiltoniano</td>
+                                <td class="py-3 px-4">6D</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-violet-400 font-medium text-lg mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            <span class="font-medium text-gray-200">Mide el tiempo de divergencia en el LAB.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Observa las tres trayectorias y la grafica de \(x(t)\) abajo. ¿En que instante aproximado dejan de coincidir la trayectoria cyan y la violeta? ¿Y la cyan y la rosa? ¿La diferencia en tiempo de divergencia es proporcional a \(\ln(\epsilon_2/\epsilon_3)\)?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Estima \(\lambda_1\) visualmente.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">En la grafica de series temporales, observa cuanto tarda la separacion en crecer de \(10^{-3}\) a \(10^0\) (un factor 1000). Si ese tiempo es \(\Delta t\), entonces \(\lambda_1 \approx \ln(1000)/\Delta t \approx 6.9/\Delta t\). ¿Coincide con el valor teorico de 0.906?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Cambia epsilon y observa.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Usa el slider de \(\epsilon\) para cambiar la perturbacion. Con \(\epsilon = 10^{-1}\), la divergencia es casi instantanea. Con \(\epsilon = 10^{-6}\), las trayectorias coinciden por mas tiempo. ¿Cuantas unidades de tiempo extra ganas al reducir \(\epsilon\) en un factor de 1000?</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">LAB: Multi-trail Lorenz</h2>
+                <p class="text-gray-400 text-sm mb-4">Tres trayectorias de Lorenz con condiciones iniciales casi identicas. Arriba: proyeccion \(x\text{-}z\) del atractor con las tres trayectorias en colores diferentes. Abajo: series temporales \(x(t)\) que revelan el momento exacto de la divergencia. Usa el slider para controlar el tamano de la perturbacion \(\epsilon\).</p>
+
+                <div class="lab-container my-6">
+                    <div class="bg-gray-900 px-4 py-2 flex items-center gap-2 border-b border-violet-500/30">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="ml-4 text-sm text-gray-400 mono">lorenz-butterfly.js</span>
+                    </div>
+                    <!-- Controls -->
+                    <div class="bg-gray-950 px-4 py-3 flex flex-wrap gap-6 border-b border-gray-800 items-center">
+                        <div class="flex items-center gap-3">
+                            <label class="text-sm text-violet-400 mono">&epsilon;</label>
+                            <input type="range" id="slider-eps" min="-6" max="-1" step="0.5" value="-3" class="w-36 accent-violet-500">
+                            <span id="val-eps" class="text-sm mono text-gray-400 w-20">10^-3</span>
+                        </div>
+                        <button id="btn-reset" class="text-xs text-gray-400 hover:text-violet-400 transition px-3 py-1 border border-gray-700 rounded-lg">Reiniciar</button>
+                        <div class="flex items-center gap-4 text-xs text-gray-600 ml-auto">
+                            <span><span class="inline-block w-2 h-2 rounded-full bg-cyan-400 mr-1"></span>Ref</span>
+                            <span><span class="inline-block w-2 h-2 rounded-full bg-violet-400 mr-1"></span>&epsilon;</span>
+                            <span><span class="inline-block w-2 h-2 rounded-full bg-rose-400 mr-1"></span>&epsilon;/10</span>
+                        </div>
+                    </div>
+                    <canvas id="lab-canvas-09" style="width: 100%; background: #000; display: block;"></canvas>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-08.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-xl">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 08: Puntos de equilibrio</div>
+                    </div>
+                </a>
+                <a href="leccion-10.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 10: Bifurcaciones en Lorenz</div>
+                    </div>
+                    <span class="text-xl">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 02 — Leccion 09</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Teoria del Caos &middot; De Lorenz al Infinito</p>
+        </div>
+    </footer>
+
+    <!-- Canvas2D LAB Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        // === Canvas setup ===
+        const canvas = document.getElementById('lab-canvas-09');
+        const ctx = canvas.getContext('2d');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        function resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = 620 * dpr;
+            canvas.style.height = '620px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const W = () => canvas.width / dpr;
+        const H = () => canvas.height / dpr;
+
+        // === Parameters ===
+        const SIGMA = 10, RHO = 28, BETA = 8/3;
+        const DT = 0.005;
+        const TRAIL_MAX = 6000;
+        const TS_WINDOW = 800;
+        let epsilon = 1e-3;
+
+        // === Controls ===
+        const sliderEps = document.getElementById('slider-eps');
+        const valEps = document.getElementById('val-eps');
+        const btnReset = document.getElementById('btn-reset');
+
+        sliderEps.addEventListener('input', function() {
+            const exp = parseFloat(this.value);
+            epsilon = Math.pow(10, exp);
+            valEps.textContent = '10^' + exp;
+            resetSim();
+        });
+        btnReset.addEventListener('click', resetSim);
+
+        // === RK4 Integrator ===
+        function lorenz(s) {
+            return [
+                SIGMA * (s[1] - s[0]),
+                s[0] * (RHO - s[2]) - s[1],
+                s[0] * s[1] - BETA * s[2]
+            ];
+        }
+
+        function rk4Step(state, dt) {
+            const k1 = lorenz(state);
+            const s2 = [state[0]+k1[0]*dt/2, state[1]+k1[1]*dt/2, state[2]+k1[2]*dt/2];
+            const k2 = lorenz(s2);
+            const s3 = [state[0]+k2[0]*dt/2, state[1]+k2[1]*dt/2, state[2]+k2[2]*dt/2];
+            const k3 = lorenz(s3);
+            const s4 = [state[0]+k3[0]*dt, state[1]+k3[1]*dt, state[2]+k3[2]*dt];
+            const k4 = lorenz(s4);
+            return [
+                state[0] + (k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                state[1] + (k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                state[2] + (k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6
+            ];
+        }
+
+        // === Three trajectory states ===
+        let s1, s2, s3;
+        let trail1, trail2, trail3;
+        let ts1, ts2, ts3;
+
+        function resetSim() {
+            s1 = [1, 1, 1];
+            s2 = [1 + epsilon, 1, 1];
+            s3 = [1 + epsilon / 10, 1, 1];
+            trail1 = []; trail2 = []; trail3 = [];
+            ts1 = []; ts2 = []; ts3 = [];
+        }
+        resetSim();
+
+        // === Coordinate mapping (attractor: top 55%, x-z plane) ===
+        function toAttractor(x, z) {
+            const w = W();
+            const panelH = H() * 0.55;
+            const cx = w / 2;
+            const cy = panelH * 0.88;
+            const sx = w / 70;
+            const sz = panelH / 58;
+            return [cx + x * sx, cy - z * sz];
+        }
+
+        // === Coordinate mapping (time series: bottom 38%) ===
+        function toTimeSeries(i, xVal, total) {
+            const w = W();
+            const panelTop = H() * 0.58;
+            const panelH = H() * 0.38;
+            const px = (i / total) * w;
+            const mid = panelTop + panelH / 2;
+            const scale = panelH / 50;
+            return [px, mid - xVal * scale];
+        }
+
+        // === Draw frame ===
+        function draw() {
+            const w = W();
+            const h = H();
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, w, h);
+
+            const splitY = h * 0.57;
+
+            // Separator
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, splitY);
+            ctx.lineTo(w, splitY);
+            ctx.stroke();
+
+            // === TOP: Phase space x-z ===
+            ctx.strokeStyle = '#0a0a0a';
+            ctx.lineWidth = 0.5;
+            for (let gx = -30; gx <= 30; gx += 10) {
+                const [sx, sy] = toAttractor(gx, 0);
+                const [, sy2] = toAttractor(gx, 50);
+                ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy2); ctx.stroke();
+            }
+            for (let gz = 0; gz <= 50; gz += 10) {
+                const [sx, sy] = toAttractor(-30, gz);
+                const [sx2] = toAttractor(30, gz);
+                ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx2, sy); ctx.stroke();
+            }
+
+            // Draw phase trails
+            function drawTrail(trail, color, alpha) {
+                if (trail.length < 2) return;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                const [sx0, sy0] = toAttractor(trail[0][0], trail[0][2]);
+                ctx.moveTo(sx0, sy0);
+                for (let i = 1; i < trail.length; i++) {
+                    const [sx, sy] = toAttractor(trail[i][0], trail[i][2]);
+                    ctx.lineTo(sx, sy);
+                }
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
+
+            drawTrail(trail1, '#22d3ee', 0.5);
+            drawTrail(trail2, '#a855f7', 0.5);
+            drawTrail(trail3, '#fb7185', 0.5);
+
+            // Draw heads
+            function drawHead(trail, color) {
+                if (trail.length === 0) return;
+                const last = trail[trail.length - 1];
+                const [hx, hy] = toAttractor(last[0], last[2]);
+                ctx.beginPath();
+                ctx.arc(hx, hy, 4, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(hx, hy, 9, 0, Math.PI * 2);
+                ctx.fillStyle = color.slice(0, -1) + ', 0.15)';
+                ctx.fill();
+            }
+
+            drawHead(trail1, 'rgba(34, 211, 238, 1)');
+            drawHead(trail2, 'rgba(168, 85, 247, 1)');
+            drawHead(trail3, 'rgba(251, 113, 133, 1)');
+
+            // Phase label
+            ctx.font = '11px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#555';
+            ctx.textAlign = 'left';
+            ctx.fillText('Plano x-z', 10, 16);
+
+            // === BOTTOM: Time series x(t) ===
+            const panelTop = splitY + 4;
+            ctx.fillStyle = '#555';
+            ctx.fillText('x(t)', 10, panelTop + 14);
+
+            // Zero line
+            const [, zeroY] = toTimeSeries(0, 0, TS_WINDOW);
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(0, zeroY);
+            ctx.lineTo(w, zeroY);
+            ctx.stroke();
+
+            // Draw time series
+            function drawTS(data, color) {
+                if (data.length < 2) return;
+                const start = Math.max(0, data.length - TS_WINDOW);
+                const count = data.length - start;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                for (let i = 0; i < count; i++) {
+                    const [px, py] = toTimeSeries(i, data[start + i], TS_WINDOW);
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+            }
+
+            drawTS(ts1, 'rgba(34, 211, 238, 0.7)');
+            drawTS(ts2, 'rgba(168, 85, 247, 0.7)');
+            drawTS(ts3, 'rgba(251, 113, 133, 0.7)');
+
+            // Divergence info
+            if (trail1.length > 0 && trail2.length > 0) {
+                const l1 = trail1[trail1.length - 1];
+                const l2 = trail2[trail2.length - 1];
+                const l3 = trail3[trail3.length - 1];
+                const d12 = Math.sqrt((l1[0]-l2[0])**2 + (l1[1]-l2[1])**2 + (l1[2]-l2[2])**2);
+                const d13 = Math.sqrt((l1[0]-l3[0])**2 + (l1[1]-l3[1])**2 + (l1[2]-l3[2])**2);
+                const t = trail1.length * DT;
+
+                ctx.font = '11px "JetBrains Mono", monospace';
+                ctx.textAlign = 'right';
+                ctx.fillStyle = '#a855f7';
+                ctx.fillText('|\u03B4\u2081\u2082| = ' + d12.toFixed(4), w - 10, panelTop + 14);
+                ctx.fillStyle = '#fb7185';
+                ctx.fillText('|\u03B4\u2081\u2083| = ' + d13.toFixed(4), w - 10, panelTop + 30);
+                ctx.fillStyle = '#666';
+                ctx.fillText('t = ' + t.toFixed(1), w - 10, panelTop + 46);
+                ctx.fillText('\u03B5 = ' + epsilon.toExponential(0), w - 10, panelTop + 62);
+            }
+        }
+
+        // === Animation loop ===
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const stepsPerFrame = 12;
+            for (let s = 0; s < stepsPerFrame; s++) {
+                s1 = rk4Step(s1, DT);
+                s2 = rk4Step(s2, DT);
+                s3 = rk4Step(s3, DT);
+
+                if (isNaN(s1[0]) || Math.abs(s1[0]) > 500) { resetSim(); break; }
+
+                trail1.push(s1.slice());
+                trail2.push(s2.slice());
+                trail3.push(s3.slice());
+                ts1.push(s1[0]);
+                ts2.push(s2[0]);
+                ts3.push(s3[0]);
+
+                if (trail1.length > TRAIL_MAX) {
+                    trail1.shift(); trail2.shift(); trail3.shift();
+                }
+                const tsMax = TS_WINDOW * 3;
+                if (ts1.length > tsMax) {
+                    ts1.shift(); ts2.shift(); ts3.shift();
+                }
+            }
+
+            draw();
+        }
+
+        animate();
+
+    })();
+    </script>
+
+</body>
+</html>

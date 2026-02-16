@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 19 · Aizawa y Sprott: minimalismo | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 04</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 19 / 20</span>
+                <div class="flex gap-2">
+                    <a href="leccion-18.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-20.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 04</h2>
+                <p class="text-sm text-gray-400 mt-1">Familia de Atractores</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>4 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-16.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">16</span>
+                        <span>Rossler: la ruta de Feigenbaum</span>
+                    </a>
+                    <a href="leccion-17.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">17</span>
+                        <span>Chen y Lu</span>
+                    </a>
+                    <a href="leccion-18.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">18</span>
+                        <span>Thomas y Halvorsen</span>
+                    </a>
+                    <a href="leccion-19.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">19</span>
+                        <span>Aizawa y Sprott</span>
+                    </a>
+                    <a href="leccion-20.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">20</span>
+                        <span>Dadras y Rabinovich-Fabrikant</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 19</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Aizawa y Sprott: minimalismo</h1>
+                    <p class="text-xl text-gray-400">La busqueda del sistema caotico mas simple posible</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Minimalism -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Minimalismo en el caos</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Una de las preguntas mas fundamentales en la teoria de sistemas dinamicos es:
+                            ¿cual es la <strong class="text-white">minima complejidad</strong> necesaria para
+                            generar caos? El teorema de Poincare-Bendixson nos dice que en dos dimensiones,
+                            el caos es imposible en sistemas continuos autonomos: las trayectorias solo pueden
+                            converger a puntos fijos o a ciclos limite. Se necesitan al menos tres dimensiones.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Pero dentro del mundo tridimensional, ¿cuantos terminos necesita un sistema de EDOs
+                            para ser caotico? El atractor de Lorenz tiene 7 terminos (contando cada termino en
+                            las ecuaciones). El de Rossler tambien tiene 7. ¿Se puede hacer con menos? Esta
+                            pregunta motivo una busqueda sistematica que produjo resultados sorprendentes.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los sistemas minimalistas no son meras curiosidades matematicas. Revelan la
+                            <strong class="text-white">esencia algebraica del caos</strong>: los ingredientes
+                            minimos que un sistema de ecuaciones debe tener para que sus soluciones exhiban
+                            sensibilidad a condiciones iniciales, aperiodicidad y confinamiento en un atractor
+                            extrano. Entender estos ingredientes minimos es entender el caos en su forma mas pura.
+                        </p>
+                    </section>
+
+                    <!-- Aizawa -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El sistema de Aizawa</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El atractor de Aizawa es un sistema con 6 parametros que posee simetria rotacional
+                            \(SO(2)\) alrededor del eje \(z\). Esta simetria significa que si rotamos el sistema
+                            alrededor del eje vertical, las ecuaciones no cambian (a diferencia de la simetria
+                            discreta \(Z_2\) de Lorenz, esta es una simetria continua).
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = (z-b)x - dy, \quad \dot{y} = dx + (z-b)y, \quad \dot{z} = c + az - \frac{z^3}{3} - (x^2+y^2)(1+ez) + fzx^3$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con los parametros clasicos \(a = 0.95\), \(b = 0.7\), \(c = 0.6\), \(d = 3.5\),
+                            \(e = 0.25\), \(f = 0.1\), el sistema produce un atractor con forma de esfera
+                            deformada o "cebolla". Las trayectorias espiralizan alrededor del eje \(z\)
+                            mientras suben y bajan, creando una envoltura tridimensional con capas.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La estructura de las dos primeras ecuaciones revela la simetria rotacional: los
+                            terminos \(-dy\) y \(dx\) son una rotacion en el plano \((x,y)\), mientras que
+                            \((z-b)\) modula la amplitud. El termino cubico \(z^3/3\) en la tercera ecuacion
+                            proporciona el confinamiento necesario para que el atractor sea acotado.
+                        </p>
+                    </section>
+
+                    <!-- Sprott -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Sprott y la busqueda sistematica</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Julien Clinton Sprott, fisico de la Universidad de Wisconsin-Madison, adopto un
+                            enfoque radicalmente diferente para estudiar el caos. En lugar de disenar sistemas
+                            con propiedades especificas, decidio hacer una <strong class="text-white">busqueda
+                            exhaustiva por computadora</strong>.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En 1994, Sprott programo un algoritmo que generaba aleatoriamente sistemas de tres
+                            EDOs con coeficientes enteros o sencillos, los integraba numericamente, y verificaba
+                            si las soluciones mostraban caos (mediante el calculo del exponente de Lyapunov
+                            maximo). Examino millones de sistemas candidatos y descubrio una coleccion de
+                            19 sistemas caoticos simples, catalogados como Sprott A, B, C, ..., S.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El resultado mas impactante fue que algunos de estos sistemas tienen solo
+                            <strong class="text-white">5 terminos</strong> y un solo parametro no lineal.
+                            Esto establece un limite inferior practico para la complejidad del caos:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = y + axy + xz, \quad \dot{y} = 1 - bx^2 + yz, \quad \dot{z} = x - x^2 - y^2$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Este es uno de los sistemas de Sprott mas conocidos. Con parametros adecuados
+                            (por ejemplo \(a = 2.07\), \(b = 1.79\)), produce un atractor extrano con
+                            estructura fractal. La economia de terminos es notable: cada ecuacion tiene
+                            como maximo 3 terminos, y el sistema completo tiene solo 9 terminos.
+                        </p>
+                    </section>
+
+                    <!-- Minimal Sprott -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El atractor de Sprott</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Entre todos los sistemas descubiertos por Sprott, el caso A es particularmente
+                            notable por su minimalismo extremo. Conocido como el "Sprott case A", tiene la
+                            forma mas simple posible compatible con el caos:
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los sistemas de Sprott demostraron que la frontera entre orden y caos esta
+                            mucho mas cerca de lo que se pensaba. No se necesitan ecuaciones elaboradas ni
+                            muchos parametros. Un punado de terminos no lineales, correctamente dispuestos,
+                            basta para que un sistema determinista genere comportamiento impredecible.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Sprott tambien descubrio sistemas caoticos <strong class="text-white">conservativos</strong>
+                            (sin disipacion) con solo 5 terminos. Estos son aun mas interesantes desde el punto
+                            de vista teorico, porque en los sistemas conservativos el volumen del espacio de fases
+                            se conserva, lo que impone restricciones adicionales sobre la topologia del atractor.
+                        </p>
+                    </section>
+
+                    <!-- Fundamental question -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">La pregunta fundamental</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            ¿Cual es el <strong class="text-white">minimo absoluto</strong> de terminos para un
+                            sistema caotico 3D de flujo continuo? El trabajo de Sprott muestra que 5 terminos
+                            son suficientes para sistemas disipativos. Para sistemas conservativos, tambien se
+                            han encontrado ejemplos con 5 terminos. ¿Podrian bastar 4?
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La respuesta parece ser negativa para sistemas polinomiales autonomos en 3D.
+                            Se conjetura que 5 es el minimo, aunque una demostracion rigurosa sigue siendo
+                            un problema abierto. Esta cuestion conecta la teoria del caos con problemas
+                            fundamentales de algebra y topologia: ¿que propiedades algebraicas de un sistema
+                            de ecuaciones determinan si sus soluciones pueden ser caoticas?
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Sistema</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Terminos</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Parametros</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Descubierto</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Propiedad clave</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Lorenz</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">7</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">3</td>
+                                        <td class="px-4 py-3 text-gray-300">1963</td>
+                                        <td class="px-4 py-3 text-gray-300">Meteorologia, simetria \(Z_2\)</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Rossler</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">7</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">3</td>
+                                        <td class="px-4 py-3 text-gray-300">1976</td>
+                                        <td class="px-4 py-3 text-gray-300">1 no linealidad, single-wing</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Aizawa</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">11</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">6</td>
+                                        <td class="px-4 py-3 text-gray-300">~1982</td>
+                                        <td class="px-4 py-3 text-gray-300">Simetria SO(2), forma de cebolla</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Sprott (A-S)</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">5-6</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">1-2</td>
+                                        <td class="px-4 py-3 text-gray-300">1994</td>
+                                        <td class="px-4 py-3 text-gray-300">Minimalismo, busqueda computacional</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                Sprott demostro que bastan 5 terminos para generar caos en un sistema de ecuaciones
+                                diferenciales ordinarias tridimensional. Esta economia extrema revela que el caos
+                                no es una propiedad de sistemas complejos, sino una propiedad fundamental que emerge
+                                en cuanto se satisfacen condiciones algebraicas minimas: no linealidad, acoplamiento
+                                y al menos tres dimensiones.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Cuenta los terminos en las ecuaciones del sistema de Sprott mostrado arriba
+                                    y comparalos con los del sistema de Lorenz. ¿Cuantos terminos tiene cada uno?
+                                    ¿Cuantos de esos terminos son no lineales?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Examina las ecuaciones del sistema de Aizawa. ¿Que tipo de simetria tiene?
+                                    Pista: escribe las primeras dos ecuaciones en coordenadas polares
+                                    \((r, \theta)\) donde \(x = r\cos\theta\), \(y = r\sin\theta\).
+                                    ¿Dependen las ecuaciones del angulo \(\theta\)?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>¿Puede un sistema con 4 terminos producir caos? Investiga el teorema de
+                                    Poincare-Bendixson y explica por que el caos requiere al menos 3 dimensiones
+                                    en sistemas continuos autonomos. ¿Que analogia hay con el minimo de terminos?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Sprott y Aizawa 3D</h2>
+                        <p class="text-gray-400 mb-4">Compara el minimalismo de Sprott (rosa) con la riqueza parametrica de Aizawa (ambar).
+                        Dos filosofias del caos, dos esteticas diferentes.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex flex-wrap items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30 gap-2">
+                                <span class="mono text-xs text-violet-400">chaos-lab::sprott-aizawa-3d</span>
+                                <div class="flex items-center gap-3">
+                                    <button id="btnSprott" class="px-3 py-1 text-xs bg-pink-600 hover:bg-pink-500 rounded transition">Sprott</button>
+                                    <button id="btnAizawa" class="px-3 py-1 text-xs bg-gray-700 hover:bg-amber-600 rounded transition">Aizawa</button>
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="900" height="500" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-18.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 18: Thomas y Halvorsen</span>
+                </a>
+                <a href="leccion-20.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 20: Dadras y Rabinovich-Fabrikant &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 04 &middot; Leccion 19</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Sprott & Aizawa 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    (function() {
+        // --- RK4 integrator ---
+        function rk4(f, s, p, dt) {
+            const k1 = f(s, p);
+            const k2 = f([s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2], p);
+            const k3 = f([s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2], p);
+            const k4 = f([s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt], p);
+            return [s[0]+(k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                    s[1]+(k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                    s[2]+(k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6];
+        }
+
+        // --- Sprott system (case B variant) ---
+        function sprott(s, p) {
+            const [x, y, z] = s;
+            const { a, b } = p;
+            return [
+                y + a * x * y + x * z,
+                1 - b * x * x + y * z,
+                x - x * x - y * y
+            ];
+        }
+
+        // --- Aizawa system ---
+        function aizawa(s, p) {
+            const [x, y, z] = s;
+            const { a, b, c, d, e, f } = p;
+            return [
+                (z - b) * x - d * y,
+                d * x + (z - b) * y,
+                c + a * z - (z * z * z) / 3 - (x * x + y * y) * (1 + e * z) + f * z * x * x * x
+            ];
+        }
+
+        // --- Three.js setup ---
+        const canvas = document.getElementById('labCanvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(canvas.width, canvas.height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x030712);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, canvas.width / canvas.height, 0.1, 1000);
+        camera.position.set(4, 3, 4);
+        camera.lookAt(0, 0, 0);
+
+        // Trail
+        const MAX_POINTS = 15000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(MAX_POINTS * 3);
+        const colorsArr = new Float32Array(MAX_POINTS * 3);
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colorsArr, 3));
+        geometry.setDrawRange(0, 0);
+
+        const material = new THREE.LineBasicMaterial({ vertexColors: true, linewidth: 1 });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+
+        const axesHelper = new THREE.AxesHelper(1);
+        scene.add(axesHelper);
+
+        // State
+        let isSprott = true;
+        let state = [0.1, 0.1, 0.1];
+        let sprottParams = { a: 2.07, b: 1.79 };
+        let aizawaParams = { a: 0.95, b: 0.7, c: 0.6, d: 3.5, e: 0.25, f: 0.1 };
+        let pointCount = 0;
+        let paused = false;
+        let angle = 0;
+
+        const pinkColor = new THREE.Color(0xec4899);
+        const violetColor = new THREE.Color(0xa855f7);
+        const amberColor = new THREE.Color(0xf59e0b);
+        const orangeColor = new THREE.Color(0xf97316);
+
+        function resetSim() {
+            if (isSprott) {
+                state = [0.1, 0.1, 0.1];
+            } else {
+                state = [0.1, 0.0, 0.0];
+            }
+            pointCount = 0;
+            geometry.setDrawRange(0, 0);
+            angle = 0;
+        }
+
+        function addPoint(x, y, z) {
+            if (pointCount >= MAX_POINTS) {
+                for (let i = 0; i < (MAX_POINTS - 1) * 3; i++) {
+                    positions[i] = positions[i + 3];
+                    colorsArr[i] = colorsArr[i + 3];
+                }
+                pointCount = MAX_POINTS - 1;
+            }
+            const idx = pointCount * 3;
+            positions[idx] = x;
+            positions[idx + 1] = y;
+            positions[idx + 2] = z;
+
+            const t = pointCount / MAX_POINTS;
+            const c1 = isSprott ? pinkColor : amberColor;
+            const c2 = isSprott ? violetColor : orangeColor;
+            const c = c1.clone().lerp(c2, t);
+            colorsArr[idx] = c.r;
+            colorsArr[idx + 1] = c.g;
+            colorsArr[idx + 2] = c.b;
+
+            pointCount++;
+            geometry.setDrawRange(0, pointCount);
+            geometry.attributes.position.needsUpdate = true;
+            geometry.attributes.color.needsUpdate = true;
+        }
+
+        // Controls
+        const btnSprott = document.getElementById('btnSprott');
+        const btnAizawa = document.getElementById('btnAizawa');
+
+        btnSprott.addEventListener('click', function() {
+            if (!isSprott) {
+                isSprott = true;
+                btnSprott.className = 'px-3 py-1 text-xs bg-pink-600 hover:bg-pink-500 rounded transition';
+                btnAizawa.className = 'px-3 py-1 text-xs bg-gray-700 hover:bg-amber-600 rounded transition';
+                resetSim();
+            }
+        });
+
+        btnAizawa.addEventListener('click', function() {
+            if (isSprott) {
+                isSprott = false;
+                btnAizawa.className = 'px-3 py-1 text-xs bg-amber-600 hover:bg-amber-500 rounded transition';
+                btnSprott.className = 'px-3 py-1 text-xs bg-gray-700 hover:bg-pink-600 rounded transition';
+                resetSim();
+            }
+        });
+
+        document.getElementById('btnReset').addEventListener('click', resetSim);
+        document.getElementById('btnPause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!paused) {
+                const dt = isSprott ? 0.008 : 0.01;
+                const sys = isSprott ? sprott : aizawa;
+                const p = isSprott ? sprottParams : aizawaParams;
+                const steps = isSprott ? 15 : 15;
+
+                for (let i = 0; i < steps; i++) {
+                    state = rk4(sys, state, p, dt);
+                    if (isNaN(state[0]) || isNaN(state[1]) || isNaN(state[2]) ||
+                        Math.abs(state[0]) > 100 || Math.abs(state[1]) > 100 || Math.abs(state[2]) > 100) {
+                        resetSim();
+                        break;
+                    }
+                    addPoint(state[0], state[2], state[1]);
+                }
+
+                angle += 0.003;
+                const radius = isSprott ? 5 : 4;
+                camera.position.x = radius * Math.cos(angle);
+                camera.position.z = radius * Math.sin(angle);
+                camera.position.y = radius * 0.6;
+                camera.lookAt(0, isSprott ? 0 : 0.5, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Warm up
+        for (let i = 0; i < 500; i++) {
+            const dt = isSprott ? 0.008 : 0.01;
+            const sys = isSprott ? sprott : aizawa;
+            const p = isSprott ? sprottParams : aizawaParams;
+            state = rk4(sys, state, p, dt);
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

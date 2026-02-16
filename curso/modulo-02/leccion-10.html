@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 10: Bifurcaciones en Lorenz — Curso Teoria del Caos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 02</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">10</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Bifurcaciones en Lorenz</span>
+                        <span class="text-gray-400 font-light ml-1">— de la calma al caos</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-09.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="../modulo-03/leccion-11.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-sm font-medium text-violet-400 mb-1">Modulo 02</h2>
+                <p class="text-xs text-gray-500 mb-4">El Atractor de Lorenz</p>
+
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>5/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="leccion-06.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">06</span>
+                        <span>Lorenz 1963</span>
+                    </a>
+                    <a href="leccion-07.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">07</span>
+                        <span>Las ecuaciones</span>
+                    </a>
+                    <a href="leccion-08.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">08</span>
+                        <span>Puntos de equilibrio</span>
+                    </a>
+                    <a href="leccion-09.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">09</span>
+                        <span>El efecto mariposa</span>
+                    </a>
+                    <a href="leccion-10.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
+                        <span class="mono text-xs">10</span>
+                        <span>Bifurcaciones</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 10</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~35 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Bifurcaciones en Lorenz</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 font-light">De la calma al caos: el parametro \(\rho\) decide todo</p>
+                </div>
+
+                <!-- Content -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">¿Que es una bifurcacion?</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Una bifurcacion es un cambio <em class="text-cyan-300">cualitativo</em> en el comportamiento de un sistema dinamico que ocurre cuando un parametro cruza un valor critico. No es un cambio gradual en la amplitud o frecuencia del movimiento, sino una transformacion estructural: el tipo de atractor cambia, nuevos equilibrios nacen o mueren, orbitas periodicas aparecen o desaparecen. La palabra proviene del latin <em class="text-violet-300">bifurcus</em> ("dos horquillas"), porque en el caso mas simple, un camino unico se divide en dos.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Los principales tipos de bifurcacion son:
+                </p>
+                <ul class="space-y-2 text-gray-300 mb-6 list-disc list-inside">
+                    <li><strong class="text-cyan-400">Saddle-node (nodo-silla):</strong> Dos equilibrios (uno estable, uno inestable) colisionan y se aniquilan mutuamente.</li>
+                    <li><strong class="text-cyan-400">Pitchfork (horquilla):</strong> Un equilibrio pierde estabilidad y nacen dos nuevos equilibrios simetricos.</li>
+                    <li><strong class="text-cyan-400">Hopf:</strong> Un equilibrio pierde estabilidad y nace (o muere) un ciclo limite, una orbita periodica cerrada.</li>
+                    <li><strong class="text-cyan-400">Duplicacion de periodo:</strong> Una orbita periodica duplica su periodo, generando una cascada que conduce al caos.</li>
+                </ul>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El sistema de Lorenz exhibe al menos dos de estos tipos al variar \(\rho\), y el resultado es una de las secuencias de bifurcaciones mas ricas de la dinamica no lineal.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">El viaje de \(\rho\)</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Al variar \(\rho\) desde 0 hasta valores grandes (manteniendo \(\sigma = 10\) y \(\beta = 8/3\) fijos), el sistema de Lorenz atraviesa una secuencia fascinante de regimenes dinamicos. Cada transicion es una bifurcacion.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">\(\rho < 1\): el reposo absoluto</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Para \(\rho < 1\), el unico equilibrio es el origen y es globalmente estable. Toda trayectoria, independientemente de su condicion inicial, converge asintoticamente a \((0, 0, 0)\). No hay conveccion, no hay oscilaciones, no hay caos. El gradiente termico es insuficiente para vencer la disipacion viscosa. En el diagrama de bifurcacion, este regimen aparece como un unico punto en \(z = 0\).
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">\(\rho = 1\): bifurcacion de horquilla</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En \(\rho = 1\) exactamente, el origen sufre una <em class="text-cyan-300">bifurcacion de horquilla supercritica</em> (supercritical pitchfork). Uno de los eigenvalores del origen cruza cero: el origen se vuelve inestable y nacen simultaneamente dos nuevos equilibrios, \(C^+\) y \(C^-\).
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    <p class="text-gray-400 text-sm mb-3">Condicion de la bifurcacion de horquilla</p>
+                    $$\rho = 1: \quad \lambda = \frac{-(\sigma+1) + \sqrt{(\sigma+1)^2 + 4\sigma(\rho-1)}}{2} = 0$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Los nuevos equilibrios \(C^{\pm} = (\pm\sqrt{\beta(\rho-1)}, \pm\sqrt{\beta(\rho-1)}, \rho-1)\) nacen con tamano cero en \(\rho = 1\) y crecen continuamente con \(\rho\). Son estables: las trayectorias convergen a uno u otro en espiral, representando conveccion estacionaria en una de las dos direcciones.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">\(1 < \rho < \rho_H \approx 24.74\): espirales estables</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    En este rango, \(C^+\) y \(C^-\) son puntos fijos estables con eigenvalores complejos: las trayectorias espiralan hacia ellos con oscilaciones decrecientes. A medida que \(\rho\) aumenta, la parte imaginaria de los eigenvalores crece (oscilaciones mas rapidas) y la parte real negativa se acerca a cero (oscilaciones que decaen mas lentamente). El sistema se aproxima peligrosamente al umbral de inestabilidad.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">\(\rho = \rho_H \approx 24.74\): bifurcacion de Hopf</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En el valor critico \(\rho_H\), la parte real de los eigenvalores complejos de \(C^{\pm}\) cruza cero. Esta es una <em class="text-cyan-300">bifurcacion de Hopf subcritica</em>: los equilibrios pierden estabilidad, pero no nace un ciclo limite estable. En cambio, las trayectorias son expulsadas directamente hacia el atractor extrano que ya existe como estructura global.
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    <p class="text-gray-400 text-sm mb-3">Valor critico de Hopf</p>
+                    $$\rho_H = \sigma\,\frac{\sigma + \beta + 3}{\sigma - \beta - 1} = 10 \times \frac{10 + 8/3 + 3}{10 - 8/3 - 1} \approx 24.74$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Hay un detalle sutil: el atractor caotico ya existe para valores de \(\rho\) ligeramente menores que \(\rho_H\) (desde \(\rho \approx 24.06\)), pero coexiste con los puntos fijos estables. En ese rango, la cuenca de atraccion de \(C^{\pm}\) se encoge progresivamente, y perturbaciones grandes pueden enviar la trayectoria al atractor caotico. Este es el regimen de <em class="text-violet-300">caos transitorio</em> y metaestabilidad.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">\(\rho > \rho_H\): el atractor extrano</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Para \(\rho > \rho_H\), los tres equilibrios son inestables. No hay puntos fijos ni ciclos limites estables. Las trayectorias viven sobre el <em class="text-violet-300">atractor extrano de Lorenz</em>: una estructura fractal que atrae todas las trayectorias pero sobre la cual el movimiento es caotico. La trayectoria espiralea alrededor de \(C^+\) y \(C^-\), saltando entre ambos de forma aperiodica y sensible a las condiciones iniciales.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Diagrama de bifurcacion</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El diagrama de bifurcacion es una herramienta visual poderosa: para cada valor de \(\rho\), integramos el sistema, descartamos un transitorio largo, y registramos los maximos locales de \(z(t)\). Si el movimiento converge a un punto fijo, obtenemos un unico punto. Si es periodico, obtenemos unos pocos puntos discretos. Si es caotico, obtenemos una nube densa de puntos.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El eje horizontal del diagrama es \(\rho\) (de 0 a 200) y el eje vertical muestra los valores de \(z\) en los maximos locales. El resultado revela toda la estructura de bifurcaciones del sistema de una sola vista: la transicion del punto fijo al caos, las ventanas periodicas, las cascadas de duplicacion de periodo.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Ventanas de periodicidad</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Dentro del regimen caotico, existen islas de orden. Para ciertos rangos estrechos de \(\rho\), el movimiento caotico da paso a orbitas periodicas estables. Estas son las <em class="text-cyan-300">ventanas periodicas</em>, analogas a las que se observan en el mapa logistico.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La ventana periodica mas notable ocurre alrededor de \(\rho \approx 100\), donde aparece una orbita periodica estable de periodo largo. Tambien hay ventanas prominentes cerca de \(\rho \approx 145\) y \(\rho \approx 166\). En el diagrama de bifurcacion, las ventanas aparecen como bandas estrechas donde los puntos se condensan en unas pocas lineas discretas, en contraste con las bandas anchas del caos donde los puntos llenan regiones densas.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La alternancia entre caos y periodicidad demuestra que el caos no es un estado permanente e irreversible: el sistema puede entrar y salir del caos al variar un parametro de forma continua. Esta estructura intrincada, con ventanas periodicas anidadas dentro del caos, es una de las huellas universales de los sistemas dinamicos no lineales.
+                </p>
+
+                <!-- Emphasis Box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 p-6 rounded-r-xl my-8">
+                    <p class="text-violet-200 text-lg font-light italic">
+                        "Las bifurcaciones son las puertas entre mundos dinamicos. Cada transicion revela una nueva faceta del sistema. El parametro rho es la llave que abre todas esas puertas, desde la calma del punto fijo hasta la tormenta del caos."
+                    </p>
+                </div>
+
+                <!-- Regimes Table -->
+                <div class="overflow-x-auto my-6">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Rango de \(\rho\)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Bifurcacion</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Comportamiento</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Tipo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(0 < \rho < 1\)</td>
+                                <td class="py-3 px-4">—</td>
+                                <td class="py-3 px-4">Convergencia al origen</td>
+                                <td class="py-3 px-4 text-green-400">Estable</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(\rho = 1\)</td>
+                                <td class="py-3 px-4">Pitchfork supercritica</td>
+                                <td class="py-3 px-4">Nacen \(C^+\) y \(C^-\)</td>
+                                <td class="py-3 px-4 text-yellow-400">Bifurcacion</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(1 < \rho < 24.06\)</td>
+                                <td class="py-3 px-4">—</td>
+                                <td class="py-3 px-4">Espirales estables en \(C^{\pm}\)</td>
+                                <td class="py-3 px-4 text-green-400">Estable</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(24.06 < \rho < 24.74\)</td>
+                                <td class="py-3 px-4">—</td>
+                                <td class="py-3 px-4">Coexistencia: caos transitorio + \(C^{\pm}\)</td>
+                                <td class="py-3 px-4 text-yellow-400">Metaestable</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(\rho \approx 24.74\)</td>
+                                <td class="py-3 px-4">Hopf subcritica</td>
+                                <td class="py-3 px-4">\(C^{\pm}\) pierden estabilidad</td>
+                                <td class="py-3 px-4 text-red-400">Bifurcacion</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">\(24.74 < \rho \lesssim 313\)</td>
+                                <td class="py-3 px-4">—</td>
+                                <td class="py-3 px-4">Caos con ventanas periodicas</td>
+                                <td class="py-3 px-4 text-red-400">Caotico</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 mono text-cyan-400">\(\rho \approx 100, 145, 166\)</td>
+                                <td class="py-3 px-4">Saddle-node de orbitas</td>
+                                <td class="py-3 px-4">Ventanas periodicas</td>
+                                <td class="py-3 px-4 text-green-400">Periodico</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-violet-400 font-medium text-lg mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            <span class="font-medium text-gray-200">Identifica las bifurcaciones en el diagrama.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">En el LAB, pasa el cursor lentamente por el diagrama de bifurcacion. ¿Puedes ver la transicion en \(\rho = 1\) donde aparecen los puntos fijos? ¿Y la explosion de caos en \(\rho \approx 24.74\)?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Encuentra una ventana periodica.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Busca una region dentro del caos donde los puntos se condensan en pocas lineas discretas. Haz clic en esa region para ver el atractor correspondiente en el panel derecho. ¿Cuantas ramas tiene la orbita periodica?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Calcula \(\rho_H\) para otros parametros.</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Usa la formula \(\rho_H = \sigma(\sigma + \beta + 3)/(\sigma - \beta - 1)\). ¿Que pasa si \(\sigma = 5\)? ¿Y si \(\sigma = 20\)? ¿El caos aparece antes o despues?</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">LAB: Diagrama de bifurcacion de Lorenz</h2>
+                <p class="text-gray-400 text-sm mb-4">Diagrama de bifurcacion: maximos locales de \(z(t)\) vs \(\rho\), barriendo de 0 a 200. El panel izquierdo muestra el diagrama completo. Haz clic en cualquier punto del diagrama para ver la proyeccion \(x\text{-}z\) del atractor correspondiente a ese valor de \(\rho\) en el panel derecho.</p>
+
+                <div class="lab-container my-6">
+                    <div class="bg-gray-900 px-4 py-2 flex items-center gap-2 border-b border-violet-500/30">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="ml-4 text-sm text-gray-400 mono">bifurcation-diagram.js</span>
+                        <span class="ml-auto text-xs text-gray-600 mono" id="rho-display">&rho; = &mdash;</span>
+                    </div>
+                    <canvas id="lab-canvas-10" style="width: 100%; background: #000; display: block; cursor: crosshair;"></canvas>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-09.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-xl">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 09: El efecto mariposa</div>
+                    </div>
+                </a>
+                <a href="../modulo-03/leccion-11.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 11: De ecuaciones a trayectorias</div>
+                    </div>
+                    <span class="text-xl">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 02 — Leccion 10</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Teoria del Caos &middot; De Lorenz al Infinito</p>
+        </div>
+    </footer>
+
+    <!-- Canvas2D LAB Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        // === Canvas setup ===
+        const canvas = document.getElementById('lab-canvas-10');
+        const ctx = canvas.getContext('2d');
+        const rhoDisplay = document.getElementById('rho-display');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        function resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = 560 * dpr;
+            canvas.style.height = '560px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+
+        const W = () => canvas.width / dpr;
+        const H = () => canvas.height / dpr;
+
+        // === Parameters ===
+        const SIGMA = 10, BETA = 8/3;
+        const RHO_MIN = 0, RHO_MAX = 200;
+        const DT = 0.005;
+
+        // === Layout: left 65% = bifurcation, right 35% = attractor preview ===
+        const BIF_FRAC = 0.63;
+        const MARGIN = { top: 30, bottom: 40, left: 50, gap: 20, right: 15 };
+
+        function bifW() { return W() * BIF_FRAC - MARGIN.left - MARGIN.gap / 2; }
+        function attW() { return W() * (1 - BIF_FRAC) - MARGIN.gap / 2 - MARGIN.right; }
+        function bifLeft() { return MARGIN.left; }
+        function attLeft() { return W() * BIF_FRAC + MARGIN.gap / 2; }
+        function plotH() { return H() - MARGIN.top - MARGIN.bottom; }
+
+        // === RK4 ===
+        function lorenz(s, rho) {
+            return [
+                SIGMA * (s[1] - s[0]),
+                s[0] * (rho - s[2]) - s[1],
+                s[0] * s[1] - BETA * s[2]
+            ];
+        }
+
+        function rk4Step(state, dt, rho) {
+            const k1 = lorenz(state, rho);
+            const s2 = [state[0]+k1[0]*dt/2, state[1]+k1[1]*dt/2, state[2]+k1[2]*dt/2];
+            const k2 = lorenz(s2, rho);
+            const s3 = [state[0]+k2[0]*dt/2, state[1]+k2[1]*dt/2, state[2]+k2[2]*dt/2];
+            const k3 = lorenz(s3, rho);
+            const s4 = [state[0]+k3[0]*dt, state[1]+k3[1]*dt, state[2]+k3[2]*dt];
+            const k4 = lorenz(s4, rho);
+            return [
+                state[0] + (k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                state[1] + (k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                state[2] + (k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6
+            ];
+        }
+
+        // === Pre-compute bifurcation diagram ===
+        const bifData = []; // [{rho, z}]
+        const rhoSteps = 500;
+        const Z_MIN = 0, Z_MAX = 300;
+        let computed = false;
+
+        function computeBifurcation() {
+            for (let i = 0; i <= rhoSteps; i++) {
+                const rho = RHO_MIN + (RHO_MAX - RHO_MIN) * (i / rhoSteps);
+                let state = [1, 1, 1];
+
+                // Transient: discard first 1000 steps
+                for (let t = 0; t < 4000; t++) {
+                    state = rk4Step(state, DT, rho);
+                    if (isNaN(state[0])) { state = [0.1, 0.1, 0.1]; break; }
+                }
+
+                // Record z-maxima for next 2000 steps
+                let prevZ = state[2];
+                let prevPrevZ = prevZ;
+                for (let t = 0; t < 6000; t++) {
+                    state = rk4Step(state, DT, rho);
+                    if (isNaN(state[0])) break;
+                    const z = state[2];
+                    if (prevZ > prevPrevZ && prevZ > z && prevZ > 0.5) {
+                        bifData.push({ rho: rho, z: prevZ });
+                    }
+                    prevPrevZ = prevZ;
+                    prevZ = z;
+                }
+            }
+            computed = true;
+        }
+
+        // === Compute attractor preview for a given rho ===
+        function computeAttractor(rho) {
+            let state = [1, 1, 1];
+            const points = [];
+            // Transient
+            for (let t = 0; t < 3000; t++) {
+                state = rk4Step(state, DT, rho);
+                if (isNaN(state[0])) return [];
+            }
+            // Record
+            for (let t = 0; t < 5000; t++) {
+                state = rk4Step(state, DT, rho);
+                if (isNaN(state[0])) break;
+                points.push([state[0], state[2]]); // x, z
+            }
+            return points;
+        }
+
+        // === State ===
+        let hoverRho = null;
+        let selectedRho = 28;
+        let attPoints = computeAttractor(28);
+        let scanRho = 0;
+        let scanning = true;
+
+        // === Draw ===
+        function drawAll() {
+            const w = W();
+            const h = H();
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, w, h);
+
+            if (!computed) {
+                ctx.fillStyle = '#a855f7';
+                ctx.font = '14px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Calculando diagrama de bifurcacion...', w/2, h/2);
+                return;
+            }
+
+            const bW = bifW();
+            const bL = bifLeft();
+            const pH = plotH();
+            const aW = attW();
+            const aL = attLeft();
+
+            // === Separator ===
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(W() * BIF_FRAC, MARGIN.top);
+            ctx.lineTo(W() * BIF_FRAC, h - MARGIN.bottom);
+            ctx.stroke();
+
+            // === LEFT: Bifurcation diagram ===
+            // Axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(bL, MARGIN.top);
+            ctx.lineTo(bL, h - MARGIN.bottom);
+            ctx.lineTo(bL + bW, h - MARGIN.bottom);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('\u03C1', bL + bW / 2, h - 6);
+            ctx.save();
+            ctx.translate(12, MARGIN.top + pH / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('z maxima', 0, 0);
+            ctx.restore();
+
+            // Ticks
+            ctx.font = '9px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#555';
+            ctx.textAlign = 'center';
+            for (let r = 0; r <= 200; r += 50) {
+                const x = bL + (r - RHO_MIN) / (RHO_MAX - RHO_MIN) * bW;
+                ctx.fillText(r.toString(), x, h - MARGIN.bottom + 14);
+                ctx.strokeStyle = '#111';
+                ctx.beginPath();
+                ctx.moveTo(x, MARGIN.top);
+                ctx.lineTo(x, h - MARGIN.bottom);
+                ctx.stroke();
+            }
+            ctx.textAlign = 'right';
+            for (let z = 0; z <= 300; z += 50) {
+                const y = h - MARGIN.bottom - (z - Z_MIN) / (Z_MAX - Z_MIN) * pH;
+                if (y >= MARGIN.top && y <= h - MARGIN.bottom) {
+                    ctx.fillStyle = '#555';
+                    ctx.fillText(z.toString(), bL - 6, y + 3);
+                    ctx.strokeStyle = '#111';
+                    ctx.beginPath();
+                    ctx.moveTo(bL, y);
+                    ctx.lineTo(bL + bW, y);
+                    ctx.stroke();
+                }
+            }
+
+            // Plot bifurcation points
+            for (let i = 0; i < bifData.length; i++) {
+                const { rho, z } = bifData[i];
+                const x = bL + (rho - RHO_MIN) / (RHO_MAX - RHO_MIN) * bW;
+                const y = h - MARGIN.bottom - (z - Z_MIN) / (Z_MAX - Z_MIN) * pH;
+                if (y < MARGIN.top || y > h - MARGIN.bottom) continue;
+
+                const hue = 270 + (rho / RHO_MAX) * 60;
+                ctx.fillStyle = `hsla(${hue}, 70%, 60%, 0.15)`;
+                ctx.fillRect(x, y, 1.5, 1.5);
+            }
+
+            // Critical rho lines
+            const criticals = [
+                { rho: 1, label: '\u03C1=1', color: '#4ade80' },
+                { rho: 24.74, label: '\u03C1\u224824.74', color: '#facc15' }
+            ];
+            for (const c of criticals) {
+                const x = bL + (c.rho - RHO_MIN) / (RHO_MAX - RHO_MIN) * bW;
+                ctx.strokeStyle = c.color + '44';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(x, MARGIN.top);
+                ctx.lineTo(x, h - MARGIN.bottom);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = c.color;
+                ctx.font = '9px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(c.label, x, MARGIN.top - 4);
+            }
+
+            // Hover / scan line
+            const activeRho = hoverRho !== null ? hoverRho : (scanning ? scanRho : selectedRho);
+            if (activeRho !== null) {
+                const x = bL + (activeRho - RHO_MIN) / (RHO_MAX - RHO_MIN) * bW;
+                ctx.strokeStyle = 'rgba(168, 85, 247, 0.6)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x, MARGIN.top);
+                ctx.lineTo(x, h - MARGIN.bottom);
+                ctx.stroke();
+                rhoDisplay.textContent = '\u03C1 = ' + activeRho.toFixed(1);
+            }
+
+            // Title
+            ctx.fillStyle = '#888';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Diagrama de bifurcacion', bL, MARGIN.top - 12);
+
+            // === RIGHT: Attractor preview ===
+            ctx.fillStyle = '#888';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Atractor (\u03C1=' + selectedRho.toFixed(1) + ')', aL, MARGIN.top - 12);
+
+            // Attractor border
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(aL, MARGIN.top, aW, pH);
+
+            if (attPoints.length > 1) {
+                // Find bounds
+                let xMin = Infinity, xMax = -Infinity, zMin = Infinity, zMax = -Infinity;
+                for (const [x, z] of attPoints) {
+                    if (x < xMin) xMin = x;
+                    if (x > xMax) xMax = x;
+                    if (z < zMin) zMin = z;
+                    if (z > zMax) zMax = z;
+                }
+                const xRange = Math.max(xMax - xMin, 1);
+                const zRange = Math.max(zMax - zMin, 1);
+                const pad = 0.1;
+                const xPad = xRange * pad;
+                const zPad = zRange * pad;
+
+                ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
+                ctx.lineWidth = 0.6;
+                ctx.beginPath();
+                for (let i = 0; i < attPoints.length; i++) {
+                    const px = aL + ((attPoints[i][0] - xMin + xPad) / (xRange + 2*xPad)) * aW;
+                    const py = MARGIN.top + pH - ((attPoints[i][1] - zMin + zPad) / (zRange + 2*zPad)) * pH;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+
+                // Equilibria
+                if (selectedRho > 1) {
+                    const cpx = Math.sqrt(BETA * (selectedRho - 1));
+                    const cpz = selectedRho - 1;
+                    // C+
+                    const c1x = aL + ((cpx - xMin + xPad) / (xRange + 2*xPad)) * aW;
+                    const c1y = MARGIN.top + pH - ((cpz - zMin + zPad) / (zRange + 2*zPad)) * pH;
+                    ctx.beginPath();
+                    ctx.arc(c1x, c1y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#22d3ee';
+                    ctx.fill();
+                    // C-
+                    const c2x = aL + ((-cpx - xMin + xPad) / (xRange + 2*xPad)) * aW;
+                    ctx.beginPath();
+                    ctx.arc(c2x, c1y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#a855f7';
+                    ctx.fill();
+                }
+                // Origin
+                const ox = aL + ((0 - xMin + xPad) / (xRange + 2*xPad)) * aW;
+                const oy = MARGIN.top + pH - ((0 - zMin + zPad) / (zRange + 2*zPad)) * pH;
+                ctx.beginPath();
+                ctx.arc(ox, oy, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+
+                // Axis labels
+                ctx.font = '9px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#444';
+                ctx.textAlign = 'center';
+                ctx.fillText('x', aL + aW / 2, MARGIN.top + pH + 14);
+                ctx.save();
+                ctx.translate(aL - 4, MARGIN.top + pH / 2);
+                ctx.rotate(-Math.PI / 2);
+                ctx.fillText('z', 0, 0);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = '#444';
+                ctx.font = '11px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Punto fijo', aL + aW/2, MARGIN.top + pH/2);
+            }
+        }
+
+        // === Interaction ===
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const bL = bifLeft();
+            const bW2 = bifW();
+            if (mx >= bL && mx <= bL + bW2) {
+                hoverRho = RHO_MIN + (mx - bL) / bW2 * (RHO_MAX - RHO_MIN);
+                hoverRho = Math.max(RHO_MIN, Math.min(RHO_MAX, hoverRho));
+                scanning = false;
+            } else {
+                hoverRho = null;
+            }
+            drawAll();
+        });
+
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const bL = bifLeft();
+            const bW2 = bifW();
+            if (mx >= bL && mx <= bL + bW2) {
+                selectedRho = RHO_MIN + (mx - bL) / bW2 * (RHO_MAX - RHO_MIN);
+                selectedRho = Math.max(0.1, Math.min(RHO_MAX, selectedRho));
+                attPoints = computeAttractor(selectedRho);
+                scanning = false;
+                drawAll();
+            }
+        });
+
+        canvas.addEventListener('mouseleave', function() {
+            hoverRho = null;
+            scanning = true;
+        });
+
+        // === Initialize ===
+        drawAll(); // Loading message
+
+        setTimeout(function() {
+            computeBifurcation();
+            drawAll();
+
+            // Slow scanning animation
+            function animateScan() {
+                if (scanning) {
+                    scanRho += 0.25;
+                    if (scanRho > RHO_MAX) scanRho = RHO_MIN;
+                    drawAll();
+                }
+                requestAnimationFrame(animateScan);
+            }
+            animateScan();
+        }, 50);
+
+        window.addEventListener('resize', function() {
+            resize();
+            drawAll();
+        });
+
+    })();
+    </script>
+
+</body>
+</html>

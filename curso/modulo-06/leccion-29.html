@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 29 · Visualizacion avanzada: color y bloom | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 06</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 29 / 30</span>
+                <div class="flex gap-2">
+                    <a href="leccion-28.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-30.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 06</h2>
+                <p class="text-sm text-gray-400 mt-1">Mas Alla</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>4 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-26.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">26</span>
+                        <span>Secciones de Poincare</span>
+                    </a>
+                    <a href="leccion-27.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">27</span>
+                        <span>Mapa logistico</span>
+                    </a>
+                    <a href="leccion-28.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">28</span>
+                        <span>Caos en la naturaleza</span>
+                    </a>
+                    <a href="leccion-29.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">29</span>
+                        <span>Visualizacion avanzada</span>
+                    </a>
+                    <a href="leccion-30.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">30</span>
+                        <span>Fronteras abiertas</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 29</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Visualizacion avanzada: color y bloom</h1>
+                    <p class="text-xl text-gray-400">Haciendo visible la belleza matematica invisible</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- El arte de visualizar -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">El arte de visualizar el caos</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Un atractor extrano es un objeto matematico de extraordinaria complejidad geometrica. Vive
+                            en un espacio de fases multidimensional, tiene dimension fractal no entera, y contiene una
+                            cantidad infinita de orbitas. Representarlo en una pantalla bidimensional es un acto de
+                            traduccion que requiere decisiones deliberadas: que informacion codificamos en el color,
+                            en el brillo, en la transparencia.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La visualizacion no es solo estetica. Cada eleccion de mapeo visual revela diferentes
+                            propiedades del sistema. Colorear por velocidad muestra donde la dinamica es rapida o lenta.
+                            Colorear por tiempo muestra el orden de la trayectoria. Desvanecer por edad muestra la
+                            estructura instantanea del atractor. Cada modo de color es una pregunta diferente que le
+                            hacemos al sistema, y el sistema responde con una imagen diferente.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            En esta leccion exploraremos las tecnicas de visualizacion que transforman datos numericos
+                            en arte matematico. No se trata de decorar: se trata de codificar informacion de manera
+                            que el sistema visual humano &mdash; el procesador de patrones mas potente que conocemos
+                            &mdash; pueda extraer estructura de la complejidad.
+                        </p>
+                    </section>
+
+                    <!-- Color por velocidad -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Mapeo de color por velocidad</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En cada punto de la trayectoria del atractor, podemos calcular la velocidad instantanea
+                            como la magnitud del vector de derivadas:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$v = \sqrt{\dot{x}^2 + \dot{y}^2 + \dot{z}^2}$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Para el sistema de Lorenz, \(\dot{x} = \sigma(y-x)\), \(\dot{y} = x(\rho-z)-y\),
+                            \(\dot{z} = xy - \beta z\). La velocidad varia enormemente a lo largo del atractor:
+                            es alta cuando la trayectoria transita entre las dos alas (el "puente" central) y
+                            baja cuando orbita lentamente alrededor de un punto de equilibrio.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El mapeo clasico es una rampa termica: azul para velocidades bajas (frio, lento),
+                            pasando por verde y amarillo para velocidades medias, hasta blanco incandescente para
+                            las velocidades maximas. Este esquema aprovecha la intuicion humana sobre temperatura
+                            y energia: los puntos "calientes" del atractor son aquellos donde la dinamica es mas
+                            intensa.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            ¿Que revela este modo? Muestra la <strong class="text-white">distribucion de energia
+                            cinetica</strong> sobre el atractor. Las regiones de baja velocidad son las que la
+                            trayectoria visita mas frecuentemente (pasa mas tiempo alli), mientras que las regiones
+                            de alta velocidad se cruzan rapidamente. El color por velocidad convierte el atractor
+                            en un mapa de intensidad dinamica.
+                        </p>
+                    </section>
+
+                    <!-- Color por tiempo -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Mapeo de color por tiempo</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Otro mapeo poderoso es asignar color segun el <strong class="text-white">momento
+                            temporal</strong> en que se genera cada punto. Usamos un gradiente de arcoiris que
+                            recorre todo el espectro visible: los primeros puntos son rojos, luego naranjas,
+                            amarillos, verdes, azules, y los mas recientes son violetas.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Este modo revela el <strong class="text-white">orden de la trayectoria</strong>:
+                            podemos seguir visualmente como la orbita navega por el atractor. En el Lorenz,
+                            vemos como la trayectoria alterna entre las dos alas, creando bandas de color
+                            que se entrelazan. Las transiciones entre alas producen mezclas de colores, mientras
+                            que las vueltas estables dentro de un ala muestran gradientes suaves.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            El color temporal es especialmente util para detectar
+                            <strong class="text-white">casi-periodicidad</strong>: si la trayectoria pasa
+                            por la misma region en momentos diferentes, veremos colores distintos superpuestos.
+                            La cantidad de colores diferentes en una region nos dice cuantas veces la trayectoria
+                            ha visitado esa zona del espacio de fases.
+                        </p>
+                    </section>
+
+                    <!-- Desvanecimiento por edad -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Desvanecimiento por edad</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En lugar de mostrar toda la historia de la trayectoria con igual intensidad, podemos
+                            hacer que los puntos mas antiguos se desvanezcan progresivamente. Si tenemos \(N\)
+                            puntos en la trayectoria y el i-esimo punto tiene indice \(i\) (de 0 a \(N-1\)),
+                            su opacidad se calcula como:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\alpha = 0.05 + 0.95 \cdot \left(\frac{i}{N}\right)^2$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El exponente cuadratico hace que el desvanecimiento sea gradual al principio pero
+                            rapido al final: la mayor parte de la cola vieja es muy tenue, mientras que la
+                            punta reciente brilla con intensidad completa. El termino \(0.05\) asegura que
+                            incluso los puntos mas antiguos no desaparecen completamente, preservando la
+                            "huella" del atractor.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            ¿Por que usar desvanecimiento cuadratico en lugar de lineal? Porque el sistema
+                            visual humano es logaritmico: percibimos la diferencia entre 10% y 20% de brillo
+                            mucho mas que entre 80% y 90%. El desvanecimiento cuadratico aprovecha esta
+                            propiedad para crear una sensacion suave de profundidad temporal, como la cola
+                            luminosa de un cometa.
+                        </p>
+                    </section>
+
+                    <!-- Bloom -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Post-procesamiento: bloom</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El efecto <strong class="text-white">bloom</strong> (florecimiento) simula como
+                            las fuentes de luz intensa "sangran" en los pixeles circundantes en una camara
+                            real o en el ojo humano. Cuando un punto del atractor es muy brillante, su luz
+                            se difunde creando un halo suave a su alrededor.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En Three.js, el bloom se implementa con el <strong class="text-white">UnrealBloomPass</strong>,
+                            un shader de post-procesamiento que: (1) extrae los pixeles mas brillantes de la
+                            imagen, (2) los difumina con un filtro gaussiano a multiples escalas, y (3) los
+                            suma de vuelta a la imagen original. El resultado es un resplandor etéreo que da
+                            a los atractores una cualidad casi organica.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Los parametros clave del bloom son: <strong class="text-white">strength</strong>
+                            (intensidad del resplandor), <strong class="text-white">radius</strong> (extension
+                            espacial del halo), y <strong class="text-white">threshold</strong> (brillo minimo
+                            para activar el bloom). Un threshold bajo hace que todo brille; uno alto reserva
+                            el bloom para los puntos mas intensos, creando un contraste dramatico.
+                        </p>
+                    </section>
+
+                    <!-- Tone mapping -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Tone mapping</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Cuando combinamos multiples efectos de iluminacion, los valores de color pueden
+                            exceder el rango [0,1] que un monitor puede mostrar. El
+                            <strong class="text-white">tone mapping</strong> comprime el rango dinamico
+                            alto (HDR) al rango estandar (LDR) de forma perceptualmente agradable.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El operador de Reinhard es uno de los mas simples y efectivos: mapea un valor
+                            de luminancia \(L\) a \(L/(1+L)\). Esto preserva las sombras (valores bajos
+                            apenas cambian) pero comprime los highlights (valores altos se saturan suavemente
+                            hacia 1). El resultado es una imagen que "respira", con un rango tonal amplio
+                            pero sin regiones quemadas.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            En Three.js, el tone mapping se configura en el renderer:
+                            <code class="mono text-cyan-300 text-sm">renderer.toneMapping = THREE.ReinhardToneMapping</code>.
+                            Combinado con bloom, produce visualizaciones donde los puntos de alta velocidad
+                            brillan con intensidad contenida, las zonas lentas tienen un resplandor sutil, y
+                            el fondo negro proporciona contraste maximo.
+                        </p>
+                    </section>
+
+                    <!-- Emphasis box -->
+                    <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                        <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                        <p class="text-gray-300">
+                            La visualizacion no es solo estetica: revela estructura matematica invisible. Cada
+                            eleccion de color, opacidad y post-procesamiento es una forma de hacer una pregunta
+                            al sistema. El arte de la visualizacion cientifica consiste en elegir las preguntas
+                            correctas.
+                        </p>
+                    </div>
+
+                    <!-- Table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Modos de color y su significado</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Modo de color</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Que revela</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Cuando usar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Velocidad</td>
+                                        <td class="px-4 py-3 text-gray-400">Distribucion de energia cinetica sobre el atractor</td>
+                                        <td class="px-4 py-3 text-gray-400">Identificar regiones de transicion rapida vs. estancamiento</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Tiempo</td>
+                                        <td class="px-4 py-3 text-gray-400">Orden cronologico de la trayectoria</td>
+                                        <td class="px-4 py-3 text-gray-400">Seguir el recorrido de la orbita, detectar patrones</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Dimension (z)</td>
+                                        <td class="px-4 py-3 text-gray-400">Posicion en la coordenada vertical</td>
+                                        <td class="px-4 py-3 text-gray-400">Distinguir las dos alas del Lorenz, ver estructura 3D</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Solido</td>
+                                        <td class="px-4 py-3 text-gray-400">Forma geometrica pura del atractor</td>
+                                        <td class="px-4 py-3 text-gray-400">Apreciar la estructura fractal sin distracciones</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Curvatura</td>
+                                        <td class="px-4 py-3 text-gray-400">Tasa de cambio de direccion</td>
+                                        <td class="px-4 py-3 text-gray-400">Localizar puntos de inflexion y giros bruscos</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>En el LAB de abajo, cambia entre los modos de color "Velocidad", "Tiempo" y
+                                    "Dimension z". Para cada modo, describe que regiones del atractor son mas
+                                    brillantes/coloridas y que significado fisico tiene esa diferencia.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>¿Por que usamos desvanecimiento cuadratico \((\frac{i}{N})^2\) en lugar de
+                                    lineal \(\frac{i}{N}\)? Pista: piensa en como el sistema visual humano percibe
+                                    diferencias de brillo (ley de Weber-Fechner).</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>En el modo "Velocidad", identifica visualmente donde esta la velocidad maxima
+                                    en el atractor de Lorenz. ¿Corresponde a la transicion entre alas o a la orbita
+                                    dentro de un ala? ¿Por que tiene sentido fisicamente?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Lorenz con modos de color</h2>
+                        <p class="text-gray-400 mb-4">Atractor de Lorenz con cuatro modos de color intercambiables.
+                        Usa los botones para explorar como cada mapeo de color revela distintas propiedades del sistema.
+                        El bloom simula un efecto de brillo cinematografico.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::color-modes</span>
+                                <div class="flex gap-2">
+                                    <button data-mode="velocity" class="color-btn px-3 py-1 text-xs bg-violet-600 rounded transition">Velocidad</button>
+                                    <button data-mode="time" class="color-btn px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Tiempo</button>
+                                    <button data-mode="dimension" class="color-btn px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Dimension z</button>
+                                    <button data-mode="solid" class="color-btn px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Solido</button>
+                                    <button id="btnReset29" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition ml-2">Reset</button>
+                                </div>
+                            </div>
+                            <div id="labCanvas29" style="width:100%; height:520px;"></div>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-28.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">&larr; Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 28: Caos en la naturaleza</span>
+                </a>
+                <a href="leccion-30.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente &rarr;</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 30: Fronteras abiertas</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 06 &middot; Leccion 29</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Lorenz with Color Modes -->
+    <script>
+    (function() {
+        const container = document.getElementById('labCanvas29');
+        let colorMode = 'velocity';
+
+        // Three.js setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x030712);
+        const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(55, 35, 55);
+        camera.lookAt(0, 0, 25);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.5;
+        container.appendChild(renderer.domElement);
+
+        // Generate Lorenz attractor data
+        const sigma = 10, rho = 28, beta = 8/3;
+        const dt = 0.003;
+        const numPoints = 30000;
+        const points = [];
+        const velocities = [];
+        let x = 1, y = 1, z = 1;
+
+        // Warm up
+        for (let i = 0; i < 5000; i++) {
+            const dx = sigma * (y - x) * dt;
+            const dy = (x * (rho - z) - y) * dt;
+            const dz = (x * y - beta * z) * dt;
+            x += dx; y += dy; z += dz;
+        }
+
+        // Collect points
+        for (let i = 0; i < numPoints; i++) {
+            const dxdt = sigma * (y - x);
+            const dydt = x * (rho - z) - y;
+            const dzdt = x * y - beta * z;
+            const v = Math.sqrt(dxdt * dxdt + dydt * dydt + dzdt * dzdt);
+            velocities.push(v);
+            points.push(new THREE.Vector3(x, y, z));
+            x += dxdt * dt;
+            y += dydt * dt;
+            z += dzdt * dt;
+        }
+
+        // Find velocity range
+        let vMin = Infinity, vMax = -Infinity, zMin = Infinity, zMax = -Infinity;
+        for (let i = 0; i < numPoints; i++) {
+            if (velocities[i] < vMin) vMin = velocities[i];
+            if (velocities[i] > vMax) vMax = velocities[i];
+            if (points[i].z < zMin) zMin = points[i].z;
+            if (points[i].z > zMax) zMax = points[i].z;
+        }
+
+        // Color functions
+        function hslToRgb(h, s, l) {
+            let r, g, b;
+            if (s === 0) { r = g = b = l; }
+            else {
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                function hue2rgb(p, q, t) {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1/6) return p + (q - p) * 6 * t;
+                    if (t < 1/2) return q;
+                    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                    return p;
+                }
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            return { r, g, b };
+        }
+
+        function getVelocityColor(v) {
+            const t = (v - vMin) / (vMax - vMin);
+            // Cold blue -> cyan -> yellow -> white
+            if (t < 0.25) {
+                const s = t / 0.25;
+                return { r: 0.05, g: 0.1 + 0.4 * s, b: 0.6 + 0.4 * s };
+            } else if (t < 0.5) {
+                const s = (t - 0.25) / 0.25;
+                return { r: 0.05 + 0.65 * s, g: 0.5 + 0.4 * s, b: 1.0 - 0.3 * s };
+            } else if (t < 0.75) {
+                const s = (t - 0.5) / 0.25;
+                return { r: 0.7 + 0.3 * s, g: 0.9 + 0.1 * s, b: 0.7 - 0.4 * s };
+            } else {
+                const s = (t - 0.75) / 0.25;
+                return { r: 1.0, g: 1.0, b: 0.3 + 0.7 * s };
+            }
+        }
+
+        function getTimeColor(i) {
+            const t = i / numPoints;
+            return hslToRgb(t * 0.85, 0.9, 0.5 + 0.2 * t);
+        }
+
+        function getDimensionColor(z) {
+            const t = (z - zMin) / (zMax - zMin);
+            // Blue-violet at bottom to cyan-white at top
+            return {
+                r: 0.3 + 0.7 * t * t,
+                g: 0.1 + 0.6 * t,
+                b: 0.8 + 0.2 * t
+            };
+        }
+
+        function getSolidColor() {
+            return { r: 0.66, g: 0.33, b: 0.97 }; // Violet
+        }
+
+        // Build geometry
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(numPoints * 3);
+        const colors = new Float32Array(numPoints * 3);
+
+        for (let i = 0; i < numPoints; i++) {
+            positions[i * 3] = points[i].x;
+            positions[i * 3 + 1] = points[i].y;
+            positions[i * 3 + 2] = points[i].z;
+        }
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        function updateColors(mode) {
+            for (let i = 0; i < numPoints; i++) {
+                let c;
+                const age = 0.05 + 0.95 * Math.pow(i / numPoints, 2);
+                switch (mode) {
+                    case 'velocity': c = getVelocityColor(velocities[i]); break;
+                    case 'time': c = getTimeColor(i); break;
+                    case 'dimension': c = getDimensionColor(points[i].z); break;
+                    case 'solid': c = getSolidColor(); break;
+                    default: c = getVelocityColor(velocities[i]);
+                }
+                colors[i * 3] = c.r * age;
+                colors[i * 3 + 1] = c.g * age;
+                colors[i * 3 + 2] = c.b * age;
+            }
+            geometry.attributes.color.needsUpdate = true;
+        }
+
+        updateColors('velocity');
+
+        const material = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.85,
+            linewidth: 1
+        });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+
+        // Bloom glow sphere at bright region (simulated bloom with sprite)
+        const glowTexture = (function() {
+            const size = 64;
+            const c = document.createElement('canvas');
+            c.width = c.height = size;
+            const ctx = c.getContext('2d');
+            const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+            grad.addColorStop(0, 'rgba(168, 85, 247, 0.3)');
+            grad.addColorStop(0.5, 'rgba(168, 85, 247, 0.05)');
+            grad.addColorStop(1, 'rgba(168, 85, 247, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, size, size);
+            return new THREE.CanvasTexture(c);
+        })();
+
+        // Add subtle glow sprites at key locations
+        const glowPositions = [
+            new THREE.Vector3(-8.5, -8.5, 27),
+            new THREE.Vector3(8.5, 8.5, 27),
+            new THREE.Vector3(0, 0, 30)
+        ];
+        for (const pos of glowPositions) {
+            const spriteMat = new THREE.SpriteMaterial({
+                map: glowTexture, transparent: true, opacity: 0.4,
+                blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.position.copy(pos);
+            sprite.scale.set(30, 30, 1);
+            scene.add(sprite);
+        }
+
+        let angle = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            angle += 0.003;
+            camera.position.x = 65 * Math.cos(angle);
+            camera.position.y = 30 + 15 * Math.sin(angle * 0.4);
+            camera.position.z = 25 + 65 * Math.sin(angle);
+            camera.lookAt(0, 0, 25);
+            renderer.render(scene, camera);
+        }
+
+        // Color mode buttons
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.color-btn').forEach(b => {
+                    b.classList.remove('bg-violet-600');
+                    b.classList.add('bg-gray-700', 'hover:bg-gray-600');
+                });
+                this.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                this.classList.add('bg-violet-600');
+                colorMode = this.dataset.mode;
+                updateColors(colorMode);
+            });
+        });
+
+        document.getElementById('btnReset29').addEventListener('click', function() {
+            angle = 0;
+            updateColors(colorMode);
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 18 · Thomas y Halvorsen: simetria ciclica | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 04</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 18 / 20</span>
+                <div class="flex gap-2">
+                    <a href="leccion-17.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-19.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 04</h2>
+                <p class="text-sm text-gray-400 mt-1">Familia de Atractores</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>3 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-16.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">16</span>
+                        <span>Rossler: la ruta de Feigenbaum</span>
+                    </a>
+                    <a href="leccion-17.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">17</span>
+                        <span>Chen y Lu</span>
+                    </a>
+                    <a href="leccion-18.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">18</span>
+                        <span>Thomas y Halvorsen</span>
+                    </a>
+                    <a href="leccion-19.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">19</span>
+                        <span>Aizawa y Sprott</span>
+                    </a>
+                    <a href="leccion-20.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">20</span>
+                        <span>Dadras y Rabinovich-Fabrikant</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 18</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Thomas y Halvorsen</h1>
+                    <p class="text-xl text-gray-400">Simetria ciclica: cuando x, y, z son intercambiables</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Cyclic Symmetry Z3 -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Simetria Z&#8323; (ciclica)</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Hasta ahora hemos estudiado atractores con distintos tipos de simetria. El atractor de Lorenz
+                            posee simetria \(Z_2\): es invariante bajo la transformacion \((x,y,z) \to (-x,-y,z)\), lo que
+                            explica su iconica forma de mariposa con dos lobulos simetricos. El atractor de Rossler, en
+                            cambio, no tiene ninguna simetria discreta evidente, lo que produce su geometria de ala unica.
+                            ¿Que ocurre cuando elevamos el grado de simetria?
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En esta leccion exploraremos dos atractores que comparten un tipo de simetria mas rico: la
+                            <strong class="text-white">simetria ciclica \(Z_3\)</strong>. Un sistema tiene simetria \(Z_3\)
+                            cuando la permutacion ciclica de las variables deja las ecuaciones invariantes. Formalmente,
+                            si aplicamos la sustitucion:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$(x, y, z) \;\longrightarrow\; (y, z, x)$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            y las ecuaciones resultantes son identicas a las originales (con las variables renombradas),
+                            decimos que el sistema tiene simetria ciclica de orden tres. Geometricamente, esto significa
+                            que el atractor se ve "igual" desde los tres ejes coordenados. Las tres direcciones del espacio
+                            juegan roles completamente intercambiables, lo que produce formas tridimensionales de una
+                            elegancia notable, similares a nudos o trenzas que flotan sin privilegiar ninguna direccion.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La simetria \(Z_3\) es mas restrictiva que la \(Z_2\): impone que la primera ecuacion determine
+                            completamente la segunda y la tercera por permutacion ciclica. Esto reduce drasticamente la
+                            libertad de diseno del sistema, pero a cambio garantiza una estructura geometrica extraordinariamente
+                            equilibrada. Los dos atractores que estudiaremos &mdash;Thomas y Halvorsen&mdash; explotan esta
+                            simetria de maneras muy diferentes.
+                        </p>
+                    </section>
+
+                    <!-- Thomas attractor -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El atractor de Thomas (1999)</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Rene Thomas fue un biologo teorico belga, pionero en el estudio de redes regulatorias geneticas.
+                            Su interes no era el caos per se, sino comprender que estructuras de retroalimentacion minimas
+                            pueden generar comportamiento complejo en sistemas biologicos. En 1999 propuso un sistema
+                            caotico que refleja esta filosofia reduccionista: usa la funcion seno como unica no linealidad,
+                            lo que produce un sistema conceptualmente transparente.
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = \sin(y) - bx, \quad \dot{y} = \sin(z) - by, \quad \dot{z} = \sin(x) - bz$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La estructura es elegante y transparente. Cada variable recibe un impulso del seno de la
+                            variable siguiente (en orden ciclico \(x \to y \to z \to x\)) y es frenada por un termino de
+                            disipacion lineal proporcional a \(b\). La simetria ciclica es inmediata: si sustituimos
+                            \((x,y,z) \to (y,z,x)\), la primera ecuacion se convierte en la segunda, la segunda en la
+                            tercera, y la tercera en la primera.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El unico parametro libre es \(b\), que controla la <strong class="text-white">disipacion</strong>.
+                            Para valores grandes de \(b\) la friccion domina y el sistema converge a un punto fijo. A medida
+                            que \(b\) disminuye, la inyeccion de energia sinusoidal compite con la disipacion. En un valor
+                            critico emerge una orbita periodica; al seguir reduciendo \(b\), esta orbita se complica hasta
+                            convertirse en un atractor extrano. El valor clasico para caos es \(b = 0.208186\).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Una virtud fundamental de las funciones seno es que actuan como <strong class="text-white">confinamiento
+                            natural</strong>. Dado que \(|\sin(\theta)| \leq 1\) para todo \(\theta\), las fuerzas impulsoras
+                            estan siempre acotadas. El atractor permanece en una region finita del espacio sin necesidad de
+                            mecanismos adicionales de reinjeccion. Esto contrasta con sistemas como Lorenz o Chen, donde los
+                            terminos cuadraticos pueden crecer sin limite y la acotacion del atractor requiere demostraciones
+                            no triviales. Para la simulacion numerica, la consecuencia practica es que el sistema de Thomas
+                            jamas diverge: no hay riesgo de desbordamiento ni de inestabilidad numerica.
+                        </p>
+                    </section>
+
+                    <!-- Halvorsen attractor -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El atractor de Halvorsen</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El atractor de Halvorsen comparte la simetria ciclica \(Z_3\) con Thomas, pero reemplaza
+                            la no linealidad suave del seno por terminos cuadraticos. El resultado es un sistema con una
+                            dinamica mucho mas agresiva y una geometria angular que recuerda a las aspas de una helice
+                            o a un triskelion tridimensional:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = -ax - 4y - 4z - y^2$$
+                            $$\dot{y} = -ay - 4z - 4x - z^2$$
+                            $$\dot{z} = -az - 4x - 4y - x^2$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con el parametro clasico \(a = 1.89\), el sistema genera un atractor con una estructura
+                            tridimensional en forma de cruz o estrella de tres puntas. La verificacion de la simetria
+                            \(Z_3\) es directa: si sustituimos \((x,y,z) \to (y,z,x)\), la primera ecuacion se transforma
+                            en \(\dot{y} = -ay - 4z - 4x - z^2\), que es exactamente la segunda ecuacion original.
+                            Analogamente para las demas.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La diferencia estetica respecto a Thomas es marcada. Donde Thomas produce trayectorias suaves y
+                            ondulantes, como cintas flotando en el espacio, Halvorsen genera curvas mas angulosas con
+                            cambios de direccion bruscos. Esto refleja la naturaleza de sus respectivas no linealidades:
+                            el seno es una funcion suave y acotada, mientras que los terminos cuadraticos crecen sin
+                            limite y producen aceleraciones mas violentas.
+                        </p>
+                    </section>
+
+                    <!-- Comparison -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Comparacion: mecanismos y geometria</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Ambos sistemas comparten la simetria \(Z_3\), pero sus mecanismos de generacion de caos son
+                            fundamentalmente diferentes. En Thomas, el caos surge de la competencia entre la inyeccion
+                            periodica del seno y la disipacion lineal. En Halvorsen, los terminos cuadraticos proporcionan
+                            una retroalimentacion mas intensa que amplifica pequenas diferencias de manera mas agresiva.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Podemos calcular la divergencia de cada campo vectorial para cuantificar la tasa de contraccion
+                            del volumen en el espacio de fases. Para Thomas:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\nabla \cdot \mathbf{F}_{\text{Thomas}} = \frac{\partial \dot{x}}{\partial x} + \frac{\partial \dot{y}}{\partial y} + \frac{\partial \dot{z}}{\partial z} = -b - b - b = -3b$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La divergencia es constante e igual a \(-3b\). Esto indica una contraccion uniforme del
+                            volumen a una tasa que depende unicamente del parametro de disipacion. Para \(b = 0.208\),
+                            la divergencia vale \(-0.624\). Para Halvorsen:
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\nabla \cdot \mathbf{F}_{\text{Halvorsen}} = -a - a - a = -3a$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Tambien constante, con valor \(-3a = -5.67\) para \(a = 1.89\). Halvorsen disipa volumen casi
+                            diez veces mas rapido que Thomas, lo que explica que sus trayectorias se compriman mas
+                            fuertemente hacia el atractor y que la estructura final sea mas compacta y definida.
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Propiedad</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Thomas</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Halvorsen</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Simetria</td>
+                                        <td class="px-4 py-3 text-gray-300">\(Z_3\) ciclica</td>
+                                        <td class="px-4 py-3 text-gray-300">\(Z_3\) ciclica</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">No linealidad</td>
+                                        <td class="px-4 py-3 text-gray-300">\(\sin(x)\) &mdash; acotada</td>
+                                        <td class="px-4 py-3 text-gray-300">\(x^2\) &mdash; cuadratica</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Parametros</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">b (1 param)</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">a (1 param)</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Divergencia</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">-3b = -0.624</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">-3a = -5.67</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">dt tipico</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">0.04</td>
+                                        <td class="px-4 py-3 text-gray-300 mono">0.005</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Estetica</td>
+                                        <td class="px-4 py-3 text-gray-300">Suave, organica</td>
+                                        <td class="px-4 py-3 text-gray-300">Angular, geometrica</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                La simetria ciclica \(Z_3\) produce atractores de belleza tridimensional notable. Las tres
+                                direcciones del espacio son intercambiables, produciendo formas equilibradas que no privilegian
+                                ningun eje. El tipo de no linealidad &mdash;seno acotado en Thomas, cuadratica en
+                                Halvorsen&mdash; determina el caracter visual: curvas fluidas frente a geometria angular.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Verifica algebraicamente la simetria \(Z_3\) del sistema de Thomas. Realiza la
+                                    sustitucion \((x,y,z) \to (y,z,x)\) en las tres ecuaciones y comprueba que recuperas
+                                    las mismas ecuaciones ciclicamente permutadas. Repite el procedimiento para el sistema
+                                    de Halvorsen.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Calcula la divergencia del campo vectorial de Thomas y de Halvorsen partiendo de las
+                                    definiciones. ¿Por que ambas divergencias son constantes? ¿Que relacion hay entre
+                                    la divergencia y la tasa de contraccion del volumen en el espacio de fases?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>En el LAB, usa el slider para variar el parametro \(b\) de Thomas desde 0.30 hasta
+                                    0.10. Describe como cambia la forma del atractor. ¿Para que valor aproximado de \(b\)
+                                    comienza a aparecer estructura caotica? ¿Que ocurre cuando \(b\) se acerca a cero
+                                    (limite conservativo)?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Thomas vs Halvorsen</h2>
+                        <p class="text-gray-400 mb-4">Vista dividida: Thomas (izquierda, proyeccion x-y, trazo cyan) y
+                        Halvorsen (derecha, proyeccion x-y, trazo violeta). Ambos integrados con RK4.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex flex-wrap items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30 gap-2">
+                                <span class="mono text-xs text-violet-400">chaos-lab::thomas-vs-halvorsen</span>
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <label class="text-xs text-gray-400 flex items-center gap-1">
+                                        b<sub>T</sub> = <span id="paramBVal" class="mono text-cyan-400">0.208</span>
+                                        <input type="range" id="paramB" min="0.05" max="0.30" step="0.001" value="0.208"
+                                            class="w-24 accent-violet-500">
+                                    </label>
+                                    <label class="text-xs text-gray-400 flex items-center gap-1">
+                                        a<sub>H</sub> = <span id="paramAVal" class="mono text-cyan-400">1.89</span>
+                                        <input type="range" id="paramA" min="1.00" max="2.50" step="0.01" value="1.89"
+                                            class="w-24 accent-violet-500">
+                                    </label>
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="900" height="500" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-17.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 17: Chen y Lu</span>
+                </a>
+                <a href="leccion-19.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 19: Aizawa y Sprott &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 04 &middot; Leccion 18</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Thomas vs Halvorsen (Canvas 2D split view) -->
+    <script>
+    (function() {
+        'use strict';
+
+        // --- RK4 integrator ---
+        function rk4(f, s, p, dt) {
+            const k1 = f(s, p);
+            const k2 = f([s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2], p);
+            const k3 = f([s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2], p);
+            const k4 = f([s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt], p);
+            return [
+                s[0] + (k1[0] + 2*k2[0] + 2*k3[0] + k4[0]) * dt / 6,
+                s[1] + (k1[1] + 2*k2[1] + 2*k3[1] + k4[1]) * dt / 6,
+                s[2] + (k1[2] + 2*k2[2] + 2*k3[2] + k4[2]) * dt / 6
+            ];
+        }
+
+        // --- Thomas system ---
+        function thomas(s, p) {
+            const [x, y, z] = s;
+            return [
+                Math.sin(y) - p.b * x,
+                Math.sin(z) - p.b * y,
+                Math.sin(x) - p.b * z
+            ];
+        }
+
+        // --- Halvorsen system ---
+        function halvorsen(s, p) {
+            const [x, y, z] = s;
+            return [
+                -p.a * x - 4 * y - 4 * z - y * y,
+                -p.a * y - 4 * z - 4 * x - z * z,
+                -p.a * z - 4 * x - 4 * y - x * x
+            ];
+        }
+
+        // --- Canvas setup ---
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        const halfW = W / 2;
+
+        // --- Trail buffers ---
+        const MAX_TRAIL = 8000;
+        let thomasTrail = [];
+        let halvorsenTrail = [];
+
+        // --- State ---
+        let thomasState = [0.1, 0.0, 0.0];
+        let halvorsenState = [-1.48, -1.51, 2.04];
+        let thomasParams = { b: 0.208186 };
+        let halvorsenParams = { a: 1.89 };
+        let paused = false;
+
+        // --- Projection & scale ---
+        const thomasScale = 50;
+        const halvorsenScale = 18;
+        const thomasOx = halfW / 2;
+        const thomasOy = H / 2;
+        const halvorsenOx = halfW + halfW / 2;
+        const halvorsenOy = H / 2;
+
+        function resetSim() {
+            thomasState = [0.1, 0.0, 0.0];
+            halvorsenState = [-1.48, -1.51, 2.04];
+            thomasTrail = [];
+            halvorsenTrail = [];
+            // Warm up both systems
+            for (let i = 0; i < 300; i++) {
+                thomasState = rk4(thomas, thomasState, thomasParams, 0.04);
+                halvorsenState = rk4(halvorsen, halvorsenState, halvorsenParams, 0.005);
+            }
+        }
+
+        // --- Controls ---
+        const paramBSlider = document.getElementById('paramB');
+        const paramBVal = document.getElementById('paramBVal');
+        paramBSlider.addEventListener('input', function() {
+            thomasParams.b = parseFloat(this.value);
+            paramBVal.textContent = thomasParams.b.toFixed(3);
+            resetSim();
+        });
+
+        const paramASlider = document.getElementById('paramA');
+        const paramAVal = document.getElementById('paramAVal');
+        paramASlider.addEventListener('input', function() {
+            halvorsenParams.a = parseFloat(this.value);
+            paramAVal.textContent = halvorsenParams.a.toFixed(2);
+            resetSim();
+        });
+
+        document.getElementById('btnReset').addEventListener('click', resetSim);
+        document.getElementById('btnPause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        // --- Drawing helpers ---
+        function drawTrail(trail, ox, oy, scale, startColor, endColor) {
+            if (trail.length < 2) return;
+            for (let i = 1; i < trail.length; i++) {
+                const t = i / trail.length;
+                const alpha = 0.15 + 0.85 * t;
+                const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * t);
+                const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * t);
+                const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * t);
+                ctx.strokeStyle = `rgba(${r},${g},${b},${alpha})`;
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(ox + trail[i - 1][0] * scale, oy - trail[i - 1][1] * scale);
+                ctx.lineTo(ox + trail[i][0] * scale, oy - trail[i][1] * scale);
+                ctx.stroke();
+            }
+        }
+
+        function drawLabels() {
+            ctx.font = '13px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#22d3ee';
+            ctx.textAlign = 'center';
+            ctx.fillText('Thomas (x-y)', halfW / 2, 24);
+
+            ctx.fillStyle = '#a855f7';
+            ctx.fillText('Halvorsen (x-y)', halfW + halfW / 2, 24);
+
+            // Divider line
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(halfW, 0);
+            ctx.lineTo(halfW, H);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Parameter readouts
+            ctx.font = '11px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#6b7280';
+            ctx.textAlign = 'left';
+            ctx.fillText('b = ' + thomasParams.b.toFixed(3), 12, H - 12);
+            ctx.textAlign = 'right';
+            ctx.fillText('a = ' + halvorsenParams.a.toFixed(2), W - 12, H - 12);
+        }
+
+        // --- Animation loop ---
+        const thomasDt = 0.04;
+        const halvorsenDt = 0.005;
+        const stepsPerFrame = 12;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!paused) {
+                // Integrate Thomas
+                for (let i = 0; i < stepsPerFrame; i++) {
+                    thomasState = rk4(thomas, thomasState, thomasParams, thomasDt);
+                    thomasTrail.push([thomasState[0], thomasState[1]]);
+                    if (thomasTrail.length > MAX_TRAIL) thomasTrail.shift();
+                }
+
+                // Integrate Halvorsen
+                for (let i = 0; i < stepsPerFrame * 4; i++) {
+                    halvorsenState = rk4(halvorsen, halvorsenState, halvorsenParams, halvorsenDt);
+                    if (isNaN(halvorsenState[0])) {
+                        halvorsenState = [-1.48, -1.51, 2.04];
+                        halvorsenTrail = [];
+                    }
+                    halvorsenTrail.push([halvorsenState[0], halvorsenState[1]]);
+                    if (halvorsenTrail.length > MAX_TRAIL) halvorsenTrail.shift();
+                }
+            }
+
+            // Clear
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, W, H);
+
+            // Draw trails (x-y projections)
+            // Thomas: cyan gradient
+            drawTrail(thomasTrail, thomasOx, thomasOy, thomasScale, [6, 78, 100], [34, 211, 238]);
+            // Halvorsen: violet gradient
+            drawTrail(halvorsenTrail, halvorsenOx, halvorsenOy, halvorsenScale, [88, 28, 135], [168, 85, 247]);
+
+            // Labels & divider
+            drawLabels();
+        }
+
+        // Warm up
+        resetSim();
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

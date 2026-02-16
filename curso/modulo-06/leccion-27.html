@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 27 · Caos discreto: mapa logistico | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 06</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 27 / 30</span>
+                <div class="flex gap-2">
+                    <a href="leccion-26.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-28.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 06</h2>
+                <p class="text-sm text-gray-400 mt-1">Mas Alla</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>2 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-26.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">26</span>
+                        <span>Secciones de Poincare</span>
+                    </a>
+                    <a href="leccion-27.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">27</span>
+                        <span>Mapa logistico</span>
+                    </a>
+                    <a href="leccion-28.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">28</span>
+                        <span>Caos en la naturaleza</span>
+                    </a>
+                    <a href="leccion-29.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">29</span>
+                        <span>Visualizacion avanzada</span>
+                    </a>
+                    <a href="leccion-30.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">30</span>
+                        <span>Fronteras abiertas</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 27</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Caos discreto: mapa logistico</h1>
+                    <p class="text-xl text-gray-400">Toda la teoria del caos comprimida en una sola ecuacion</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Caos sin ecuaciones diferenciales -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Caos sin ecuaciones diferenciales</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En la leccion anterior aprendimos como Poincare transformo flujos continuos en mapas discretos.
+                            Pero existe una clase de sistemas que son discretos desde el principio: sistemas donde el
+                            estado se actualiza en pasos, no de forma continua. Estos sistemas se describen con
+                            <strong class="text-white">ecuaciones en diferencias</strong>, no ecuaciones diferenciales.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El ejemplo mas celebre es el <strong class="text-white">mapa logistico</strong>, una ecuacion
+                            de apariencia tan simple que parece imposible que contenga caos. Y sin embargo, contiene toda
+                            la riqueza de la teoria del caos: bifurcaciones, periodos, universalidad de Feigenbaum,
+                            sensibilidad a condiciones iniciales y atractores extranos. Es el microscopio perfecto para
+                            estudiar el caos, porque elimina toda complejidad accesoria y deja solo la esencia.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Los mapas discretos aparecen naturalmente en biologia (poblaciones con generaciones discretas),
+                            economia (ciclos anuales), ecologia y, como vimos, como secciones de Poincare de flujos
+                            continuos. Estudiarlos no es un desvio: es ir al corazon del caos.
+                        </p>
+                    </section>
+
+                    <!-- El mapa logistico -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El mapa logistico</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En 1976, el biologo matematico Robert May publico un articulo seminal en <em>Nature</em> titulado
+                            "Simple mathematical models with very complicated dynamics". En el, mostraba que una ecuacion
+                            increiblemente simple puede generar comportamiento de complejidad arbitraria:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$x_{n+1} = rx_n(1-x_n)$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            donde \(x_n \in [0,1]\) representa la fraccion de la capacidad de carga de una poblacion en
+                            la generacion \(n\), y \(r \in [0,4]\) es la tasa de crecimiento. La funcion \(f(x) = rx(1-x)\)
+                            es una parabola que mapea el intervalo \([0,1]\) en si mismo (para \(r \leq 4\)).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El termino \(rx\) representa el crecimiento proporcional a la poblacion actual. El termino
+                            \((1-x)\) representa la competencia por recursos limitados: cuanto mayor es la poblacion,
+                            menor es el factor de crecimiento. Es el modelo mas simple posible de crecimiento con
+                            retroalimentacion negativa.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Lo asombroso es que este modelo, a pesar de su simplicidad, genera toda la gama de
+                            comportamientos dinamicos: puntos fijos estables, ciclos periodicos de todo periodo,
+                            cascadas de duplicacion de periodo, ventanas de periodicidad dentro del caos, y caos
+                            completamente desarrollado. May mostro que la complejidad no requiere complicacion.
+                        </p>
+                    </section>
+
+                    <!-- Iteracion -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Iteracion</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El proceso de iteracion es mecanicamente trivial: elegimos un valor inicial \(x_0\),
+                            aplicamos la funcion \(f(x) = rx(1-x)\) para obtener \(x_1 = f(x_0)\), luego
+                            \(x_2 = f(x_1)\), y asi sucesivamente. La secuencia \(\{x_0, x_1, x_2, \ldots\}\)
+                            se llama la <strong class="text-white">orbita</strong> de \(x_0\).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Para \(r < 1\), toda orbita converge a 0: la poblacion se extingue. Para
+                            \(1 < r < 3\), toda orbita converge a un punto fijo positivo \(x^* = 1 - 1/r\):
+                            la poblacion se estabiliza. En \(r = 3\), este punto fijo pierde estabilidad y nace
+                            un ciclo de periodo 2: la poblacion oscila entre dos valores de generacion en generacion.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            A medida que \(r\) crece, el ciclo de periodo 2 se bifurca en un ciclo de periodo 4,
+                            luego 8, 16, 32... Las bifurcaciones se aceleran, ocurriendo a intervalos cada vez
+                            menores de \(r\), hasta que en \(r_\infty \approx 3.5699\) llegamos al
+                            <strong class="text-white">borde del caos</strong>. Mas alla de este punto, el
+                            sistema es caotico para la mayoria de valores de \(r\), con ventanas de periodicidad
+                            intercaladas.
+                        </p>
+                    </section>
+
+                    <!-- Diagrama de telarana -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Diagrama de telarana</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">diagrama de telarana</strong> (cobweb diagram) es una
+                            tecnica grafica elegante para visualizar la iteracion de un mapa unidimensional. Se
+                            dibujan dos curvas: la parabola \(y = rx(1-x)\) y la recta identidad \(y = x\). Los
+                            puntos fijos del mapa estan en las intersecciones de ambas curvas.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Para iterar graficamente, partimos de \(x_0\) en el eje horizontal, subimos
+                            verticalmente hasta la parabola (obteniendo \(x_1 = f(x_0)\)), luego nos movemos
+                            horizontalmente hasta la recta \(y = x\) (transfiriendo \(x_1\) al eje horizontal),
+                            subimos otra vez hasta la parabola (obteniendo \(x_2\)), y repetimos. El patrón de
+                            lineas verticales y horizontales que resulta tiene forma de telarana.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Cuando el sistema converge a un punto fijo, la telarana se enrolla en espiral hacia
+                            la interseccion. Cuando hay un ciclo de periodo 2, la telarana forma un rectangulo.
+                            Y cuando hay caos, la telarana salta erraticamente por toda la parabola, nunca
+                            repitiendose exactamente. El diagrama de telarana convierte la dinamica abstracta
+                            en geometria visible.
+                        </p>
+                    </section>
+
+                    <!-- Periodo 3 implica caos -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Periodo 3 implica caos</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En 1975, Tien-Yien Li y James Yorke publicaron un articulo con uno de los titulos mas
+                            memorables de la historia de las matematicas: <em>"Period Three Implies Chaos"</em>.
+                            Su teorema establece un resultado sorprendente:
+                        </p>
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Teorema de Li-Yorke (1975)</p>
+                            <p class="text-gray-300">
+                                Si un mapa continuo del intervalo en si mismo tiene una orbita periodica de periodo 3,
+                                entonces tiene orbitas periodicas de <strong class="text-white">todo periodo</strong>.
+                                Ademas, existe un conjunto no numerable de condiciones iniciales cuyas orbitas son
+                                aperiodicas (caoticas).
+                            </p>
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Este fue el articulo que introdujo la palabra "caos" en matematicas. La implicacion es
+                            profunda: la mera existencia de un ciclo de periodo 3 garantiza una complejidad dinamica
+                            infinita. Para el mapa logistico, el periodo 3 aparece en \(r = 1 + \sqrt{8} \approx 3.8284\),
+                            confirmando que el caos no es un fenomeno marginal sino una consecuencia inevitable de
+                            la no linealidad.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            El resultado de Li-Yorke fue luego refinado por el teorema de Sarkovskii (1964, redescubierto
+                            en Occidente despues de Li-Yorke), que establece un orden total de los periodos: si un mapa
+                            tiene una orbita de periodo \(n\), entonces tiene orbitas de todos los periodos que siguen a
+                            \(n\) en el ordenamiento de Sarkovskii. El periodo 3 es el ultimo en este orden, por lo que
+                            implica todos los demas.
+                        </p>
+                    </section>
+
+                    <!-- Conexion con Lorenz -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Conexion con Lorenz</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Ahora podemos cerrar el circulo con la leccion anterior. El atractor de Lorenz es un flujo
+                            continuo en tres dimensiones. Su seccion de Poincare produce un mapa bidimensional. Y si
+                            proyectamos ese mapa sobre una variable (por ejemplo, el maximo de \(z\) en cada vuelta),
+                            obtenemos un mapa unidimensional que se parece notablemente al mapa logistico.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esta no es una coincidencia. Los mecanismos que generan caos &mdash; el estiramiento y
+                            plegamiento del espacio de fases &mdash; son universales. Un mapa logistico estira el
+                            intervalo (la parabola tiene pendiente mayor que 1 en partes) y lo pliega (la parabola
+                            tiene un maximo). El atractor de Lorenz hace lo mismo en tres dimensiones. La esencia
+                            del caos es la misma en ambos casos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            La <strong class="text-white">universalidad de Feigenbaum</strong> lo confirma: la razon
+                            entre intervalos sucesivos de bifurcacion converge al mismo numero
+                            \(\delta = 4.6692\ldots\) para <em>todos</em> los mapas unimodales con un unico maximo
+                            cuadratico. Esta constante es tan universal como \(\pi\) o \(e\): no depende de los
+                            detalles del sistema, solo de su estructura topologica.
+                        </p>
+                    </section>
+
+                    <!-- Emphasis box -->
+                    <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                        <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                        <p class="text-gray-300">
+                            El mapa logistico es el microscopio perfecto: toda la teoria del caos en una sola formula.
+                            Bifurcaciones, universalidad, sensibilidad a condiciones iniciales, atractores extranos,
+                            el teorema de Li-Yorke &mdash; todo esta contenido en \(x_{n+1} = rx_n(1-x_n)\).
+                        </p>
+                    </div>
+
+                    <!-- Table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Comportamiento segun r</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Valor de r</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Puntos fijos</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Estabilidad</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Comportamiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 mono">0 &lt; r &lt; 1</td>
+                                        <td class="px-4 py-3 text-gray-400">x* = 0</td>
+                                        <td class="px-4 py-3 text-gray-400">Estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Extincion</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 mono">1 &lt; r &lt; 3</td>
+                                        <td class="px-4 py-3 text-gray-400">x* = 1 - 1/r</td>
+                                        <td class="px-4 py-3 text-gray-400">Estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Convergencia a punto fijo</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 mono">3.0 &lt; r &lt; 3.449</td>
+                                        <td class="px-4 py-3 text-gray-400">Ciclo periodo 2</td>
+                                        <td class="px-4 py-3 text-gray-400">Estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Oscilacion entre 2 valores</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 mono">3.449 &lt; r &lt; 3.544</td>
+                                        <td class="px-4 py-3 text-gray-400">Ciclo periodo 4</td>
+                                        <td class="px-4 py-3 text-gray-400">Estable</td>
+                                        <td class="px-4 py-3 text-gray-400">Duplicacion de periodo</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 mono">3.570 &lt; r &lt; 4</td>
+                                        <td class="px-4 py-3 text-gray-400">Infinitos</td>
+                                        <td class="px-4 py-3 text-gray-400">Inestables (mayoria)</td>
+                                        <td class="px-4 py-3 text-gray-400">Caos con ventanas periodicas</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 mono">r = 4</td>
+                                        <td class="px-4 py-3 text-gray-400">Densos en [0,1]</td>
+                                        <td class="px-4 py-3 text-gray-400">Todos inestables</td>
+                                        <td class="px-4 py-3 text-gray-400">Caos completo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Encuentra algebraicamente los puntos fijos del mapa logistico resolviendo
+                                    \(x = rx(1-x)\). ¿Cuantos hay? ¿Para que valores de \(r\) son estables?
+                                    Pista: analiza la derivada \(f'(x^*)\).</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Usa el LAB de abajo para dibujar el diagrama de telarana con \(r = 3.2\).
+                                    Describe la orbita. ¿A que converge? ¿Cuantas iteraciones necesitas para
+                                    que la telarana se estabilice visualmente?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>Encuentra numericamente (usando el slider del LAB) el valor de \(r\) donde
+                                    aparece el primer ciclo de periodo 3. Verifica que para ese \(r\), la orbita
+                                    de la telarana visita exactamente 3 puntos antes de repetirse.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Mapa logistico interactivo</h2>
+                        <p class="text-gray-400 mb-4">Izquierda: diagrama de telarana mostrando la iteracion grafica.
+                        Derecha: diagrama de bifurcacion. Usa el slider para explorar como cambia la dinamica con r.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::logistic-map</span>
+                                <div class="flex items-center gap-4">
+                                    <label class="text-xs text-gray-400">r = <span id="rVal" class="mono text-cyan-400">3.50</span></label>
+                                    <input id="rSlider" type="range" min="0" max="4" step="0.001" value="3.5" class="w-40 accent-violet-500">
+                                    <button id="btnAnimate" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Animar</button>
+                                    <button id="btnReset27" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Reset</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="1000" height="480" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-26.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">&larr; Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 26: Secciones de Poincare</span>
+                </a>
+                <a href="leccion-28.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente &rarr;</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 28: Caos en la naturaleza</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 06 &middot; Leccion 27</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Logistic Map -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        const cobwebW = Math.floor(W * 0.45);
+        const bifW = W - cobwebW;
+        const pad = 40;
+
+        const rSlider = document.getElementById('rSlider');
+        const rValSpan = document.getElementById('rVal');
+
+        let r = parseFloat(rSlider.value);
+        let animating = false;
+        let animStep = 0;
+        const maxAnimSteps = 100;
+        let x0 = 0.2;
+
+        function logistic(x, r) { return r * x * (1 - x); }
+
+        // Precompute bifurcation diagram
+        const bifData = [];
+        const bifResolution = 800;
+        for (let ri = 0; ri < bifResolution; ri++) {
+            const rr = (ri / bifResolution) * 4;
+            let x = 0.1 + Math.random() * 0.1;
+            // Transient
+            for (let i = 0; i < 300; i++) x = logistic(x, rr);
+            const pts = [];
+            for (let i = 0; i < 200; i++) {
+                x = logistic(x, rr);
+                pts.push(x);
+            }
+            bifData.push({ r: rr, pts });
+        }
+
+        function drawBifurcation() {
+            const ox = cobwebW + 10;
+            const oy = pad;
+            const w = bifW - pad - 10;
+            const h = H - 2 * pad;
+
+            // Background
+            ctx.fillStyle = '#0a0a12';
+            ctx.fillRect(ox, 0, bifW, H);
+
+            // Axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ox + pad - 10, oy);
+            ctx.lineTo(ox + pad - 10, oy + h);
+            ctx.lineTo(ox + pad - 10 + w, oy + h);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('r', ox + pad - 10 + w / 2, oy + h + 30);
+            ctx.save();
+            ctx.translate(ox + 8, oy + h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('x', 0, 0);
+            ctx.restore();
+
+            // Tick marks
+            for (let rv = 0; rv <= 4; rv++) {
+                const px = ox + pad - 10 + (rv / 4) * w;
+                ctx.fillStyle = '#555';
+                ctx.fillText(rv.toString(), px, oy + h + 15);
+            }
+
+            // Plot bifurcation
+            for (const bd of bifData) {
+                const px = ox + pad - 10 + (bd.r / 4) * w;
+                for (const xv of bd.pts) {
+                    const py = oy + h - xv * h;
+                    ctx.fillStyle = 'rgba(168, 85, 247, 0.15)';
+                    ctx.fillRect(px, py, 1, 1);
+                }
+            }
+
+            // Current r indicator
+            const rPx = ox + pad - 10 + (r / 4) * w;
+            ctx.strokeStyle = '#22d3ee';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 3]);
+            ctx.beginPath();
+            ctx.moveTo(rPx, oy);
+            ctx.lineTo(rPx, oy + h);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Title
+            ctx.fillStyle = '#a855f7';
+            ctx.font = '13px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Diagrama de Bifurcacion', ox + pad - 10 + w / 2, 20);
+        }
+
+        function drawCobweb(steps) {
+            const ox = pad;
+            const oy = pad;
+            const w = cobwebW - 2 * pad;
+            const h = H - 2 * pad;
+
+            // Background
+            ctx.fillStyle = '#050510';
+            ctx.fillRect(0, 0, cobwebW, H);
+
+            // Axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ox, oy);
+            ctx.lineTo(ox, oy + h);
+            ctx.lineTo(ox + w, oy + h);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('x_n', ox + w / 2, oy + h + 30);
+            ctx.fillText('0', ox - 10, oy + h + 5);
+            ctx.fillText('1', ox + w, oy + h + 15);
+            ctx.fillText('1', ox - 10, oy + 5);
+
+            // y = x line
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ox, oy + h);
+            ctx.lineTo(ox + w, oy);
+            ctx.stroke();
+
+            // Parabola y = rx(1-x)
+            ctx.strokeStyle = '#22d3ee';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i <= 200; i++) {
+                const xv = i / 200;
+                const yv = logistic(xv, r);
+                const px = ox + xv * w;
+                const py = oy + h - yv * h;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.stroke();
+
+            // Cobweb iteration
+            let x = x0;
+            ctx.strokeStyle = 'rgba(168, 85, 247, 0.8)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            const startPx = ox + x * w;
+            ctx.moveTo(startPx, oy + h);
+
+            const n = steps || maxAnimSteps;
+            for (let i = 0; i < n; i++) {
+                const xNew = logistic(x, r);
+                const xPx = ox + x * w;
+                const xNewPx = ox + xNew * w;
+                const yPx = oy + h - xNew * h;
+
+                // Vertical to parabola
+                ctx.lineTo(xPx, yPx);
+                // Horizontal to y=x
+                ctx.lineTo(xNewPx, yPx);
+
+                x = xNew;
+                if (x < 0 || x > 1 || !isFinite(x)) break;
+            }
+            ctx.stroke();
+
+            // Start point
+            ctx.beginPath();
+            ctx.arc(ox + x0 * w, oy + h, 4, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff5555';
+            ctx.fill();
+
+            // Title
+            ctx.fillStyle = '#22d3ee';
+            ctx.font = '13px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Diagrama de Telarana', ox + w / 2, 20);
+        }
+
+        function drawAll(steps) {
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, W, H);
+
+            // Divider
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(cobwebW + 5, 0);
+            ctx.lineTo(cobwebW + 5, H);
+            ctx.stroke();
+
+            drawCobweb(steps);
+            drawBifurcation();
+        }
+
+        rSlider.addEventListener('input', function() {
+            r = parseFloat(this.value);
+            rValSpan.textContent = r.toFixed(3);
+            animating = false;
+            animStep = 0;
+            drawAll(maxAnimSteps);
+        });
+
+        let animId = null;
+        document.getElementById('btnAnimate').addEventListener('click', function() {
+            animating = !animating;
+            this.textContent = animating ? 'Detener' : 'Animar';
+            animStep = 0;
+            if (animating) runAnim();
+        });
+
+        function runAnim() {
+            if (!animating) return;
+            animStep++;
+            if (animStep > maxAnimSteps) {
+                animating = false;
+                document.getElementById('btnAnimate').textContent = 'Animar';
+                return;
+            }
+            drawAll(animStep);
+            animId = requestAnimationFrame(runAnim);
+        }
+
+        document.getElementById('btnReset27').addEventListener('click', function() {
+            animating = false;
+            animStep = 0;
+            x0 = 0.1 + Math.random() * 0.3;
+            document.getElementById('btnAnimate').textContent = 'Animar';
+            drawAll(maxAnimSteps);
+        });
+
+        drawAll(maxAnimSteps);
+    })();
+    </script>
+
+</body>
+</html>

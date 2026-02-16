@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 14: Eleccion del paso temporal — Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 03</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">14</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Eleccion del paso temporal</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-13.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-15.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-lg font-medium text-violet-400">Modulo 03</h2>
+                <p class="text-gray-500 text-sm mb-4">Integracion Numerica</p>
+
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>4/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="leccion-11.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">11</span>
+                        <span>De ecuaciones a trayectorias</span>
+                    </a>
+                    <a href="leccion-12.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">12</span>
+                        <span>Euler vs RK4</span>
+                    </a>
+                    <a href="leccion-13.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">13</span>
+                        <span>Derivacion de RK4</span>
+                    </a>
+                    <a href="leccion-14.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 text-sm">
+                        <span class="mono text-xs">14</span>
+                        <span>Eleccion del paso temporal</span>
+                    </a>
+                    <a href="leccion-15.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">15</span>
+                        <span>De ecuaciones a pixeles</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 14</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Eleccion</span> del paso temporal
+                    </h1>
+                    <p class="text-gray-500 text-lg">El equilibrio entre precision, estabilidad y velocidad de computo</p>
+                </div>
+
+                <!-- h2: El dilema del paso temporal -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">El dilema del paso temporal</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Ya sabemos que RK4 es mucho mas preciso que Euler. Pero incluso con RK4, la eleccion del paso temporal \(dt\)
+                    es critica. Demasiado grande y la simulacion se vuelve inestable. Demasiado pequeno y desperdiciamos poder
+                    de computo sin ganar calidad visual perceptible.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Este dilema no es abstracto: tiene consecuencias directas en ChaosLab. Si la simulacion usa un \(dt\) muy pequeno,
+                    la animacion avanza lentamente y necesitamos mas pasos por frame. Si usamos un \(dt\) grande, ahorramos computo
+                    pero la trayectoria puede explotar o mostrar artefactos visibles.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Para cada sistema caotico, existe un rango de valores de \(dt\) que producen resultados aceptables. Encontrar
+                    ese rango es una mezcla de teoria, experiencia y experimentacion. Veamos los tres regimenes.
+                </p>
+
+                <!-- h3: dt demasiado grande -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">dt demasiado grande</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Cuando \(dt\) es demasiado grande, los pasos de integracion "saltan" por encima de la curvatura de la solucion.
+                    En un sistema como Lorenz, donde la trayectoria hace giros cerrados alrededor de los dos puntos fijos,
+                    un paso grande puede lanzar el punto numerico fuera del atractor por completo.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El resultado es <strong class="text-white">inestabilidad numerica</strong>: los valores de \(x, y, z\) crecen sin limite
+                    y la simulacion "explota". Para Lorenz con parametros clasicos (\(\sigma=10, \rho=28, \beta=8/3\)),
+                    incluso RK4 se vuelve inestable alrededor de \(dt \approx 0.03\).
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La inestabilidad no es gradual: hay un umbral bastante definido. Por debajo, la trayectoria se ve normal.
+                    Por encima, en pocas iteraciones los valores se van a infinito. En el LAB puedes observar este fenomeno
+                    moviendo el slider de \(dt\) hacia la derecha.
+                </p>
+
+                <!-- h3: dt demasiado pequeno -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">dt demasiado pequeno</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En el otro extremo, un \(dt\) muy pequeno produce resultados correctos pero desperdicia recursos.
+                    Si usamos \(dt = 0.0001\) en lugar de \(dt = 0.005\), necesitamos 50 veces mas pasos para cubrir
+                    el mismo intervalo de tiempo. Cada paso requiere 4 evaluaciones de la funcion (en RK4), asi que
+                    estamos haciendo 200 veces mas trabajo.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En una aplicacion de tiempo real como ChaosLab, esto tiene consecuencias directas: si el integrador
+                    es demasiado lento, la animacion no puede mantenerse a 60 fps. El presupuesto de computo por frame
+                    es de aproximadamente 16 milisegundos (1000ms / 60fps). Todo lo que exceda ese presupuesto causa
+                    caidas de framerate visibles.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Ademas, despues de cierto punto, reducir \(dt\) no produce mejoras visibles. La precision del punto
+                    flotante de 64 bits (IEEE 754) limita la precision util a unos \(10^{-15}\). Si el error de RK4 ya
+                    esta cerca de ese limite, reducir \(dt\) no ayuda y solo desperdicia ciclos de CPU.
+                </p>
+
+                <!-- h3: El punto dulce -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">El punto dulce</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para la mayoria de los atractores caoticos 3D, el "punto dulce" de \(dt\) con RK4 esta en el rango:
+                </p>
+
+                $$dt \in [0.001, \; 0.01]$$
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Una estimacion rapida viene de considerar las escalas temporales del sistema. El atractor de Lorenz tiene
+                    un periodo orbital caracteristico de aproximadamente \(T \approx 1.5\) unidades de tiempo. Para que
+                    RK4 resuelva bien la curvatura de cada orbita, necesitamos al menos ~100-300 pasos por periodo:
+                </p>
+
+                $$dt \approx \frac{T}{200} \approx \frac{1.5}{200} = 0.0075$$
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    ChaosLab usa \(dt = 0.005\) como valor predeterminado para Lorenz. Con 20 pasos por frame a 60 fps,
+                    esto avanza el tiempo simulado a una tasa de \(20 \times 0.005 \times 60 = 6\) unidades de tiempo por segundo.
+                    Suficientemente rapido para ver la dinamica, suficientemente preciso para mantener la fidelidad.
+                </p>
+
+                <!-- Emphasis box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 px-6 py-4 my-8 rounded-r-lg">
+                    <p class="text-gray-200 font-medium">
+                        La eleccion del dt es un compromiso entre precision y velocidad. Para simulaciones en tiempo real,
+                        el valor optimo es aquel que mantiene la estabilidad con el minimo de pasos por frame.
+                    </p>
+                </div>
+
+                <!-- h3: Paso adaptativo -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso adaptativo (preview)</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En vez de elegir un \(dt\) fijo para toda la simulacion, los metodos adaptativos cambian el paso
+                    automaticamente segun la dificultad de cada tramo. La idea: en regiones donde la solucion es suave,
+                    usar pasos grandes; en regiones donde cambia rapido, usar pasos pequenos.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El algoritmo mas popular es <strong class="text-white">Dormand-Prince (RK45)</strong>, que calcula
+                    simultaneamente soluciones de orden 4 y orden 5. La diferencia entre ambas da una estimacion del error
+                    local. Si el error es demasiado grande, se reduce \(dt\); si es pequeno, se aumenta.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Una condicion tipo CFL (Courant-Friedrichs-Lewy) para la estabilidad aproximada es:
+                </p>
+
+                $$dt \leq \frac{C}{\max|\lambda_i|}$$
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    donde \(\lambda_i\) son los valores propios del Jacobiano del sistema y \(C\) es una constante
+                    que depende del metodo (~2.8 para RK4). Para Lorenz, el valor propio mas grande en magnitud es
+                    aproximadamente 13.9, dando \(dt \leq 2.8/13.9 \approx 0.2\). En la practica se usa un factor
+                    de seguridad, resultando en \(dt \approx 0.01\), consistente con nuestra eleccion empirica.
+                </p>
+
+                <!-- Table -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">dt</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Lorenz (RK4)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Pasos/seg (60fps)</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Calidad</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400 mono text-xs">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0.001</td>
+                                <td class="py-2 px-4 text-green-400">Excelente precision</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-green-400">Perfecta (innecesaria)</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0.005</td>
+                                <td class="py-2 px-4 text-green-400">Estable, preciso</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-green-400">Optima</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0.01</td>
+                                <td class="py-2 px-4 text-green-400">Estable</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-yellow-400">Buena</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0.02</td>
+                                <td class="py-2 px-4 text-yellow-400">Marginal</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-yellow-400">Artefactos visibles</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4">0.03</td>
+                                <td class="py-2 px-4 text-orange-400">Limite de estabilidad</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-orange-400">Deformacion del atractor</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4">0.05+</td>
+                                <td class="py-2 px-4 text-red-400">Explosion numerica</td>
+                                <td class="py-2 px-4">1200</td>
+                                <td class="py-2 px-4 text-red-400">Inestable</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-lg font-medium text-violet-400 mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            Usando el LAB, encuentra experimentalmente el mayor valor de \(dt\) para el que
+                            el atractor de Lorenz sigue viendose estable con RK4. Anota el valor.
+                        </li>
+                        <li>
+                            Que ocurre visualmente cuando pones \(dt = 0.05\)? Describe lo que ves en la
+                            pantalla y explica por que sucede.
+                        </li>
+                        <li>
+                            Si necesitas simular 100 unidades de tiempo de Lorenz con \(dt = 0.005\),
+                            cuantos pasos de RK4 necesitas? Cuantas evaluaciones de la funcion en total?
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <div class="my-12">
+                    <h2 class="text-2xl font-medium text-violet-400 mb-2">LAB: Estabilidad del paso temporal</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Atractor de Lorenz integrado con RK4 en tiempo real. Mueve el slider de dt y observa:
+                        estable a la izquierda, artefactos en el centro, explosion a la derecha.
+                        El contador muestra los pasos por segundo.
+                    </p>
+
+                    <div class="lab-container">
+                        <div class="bg-gray-950 px-4 py-3 flex items-center gap-4 flex-wrap border-b border-violet-500/30">
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs text-gray-400">dt:</label>
+                                <input type="range" id="dt-slider" min="0.001" max="0.1" step="0.001" value="0.005"
+                                    class="w-40 accent-violet-500">
+                                <span id="dt-value" class="mono text-xs text-cyan-400 w-12">0.005</span>
+                            </div>
+                            <button id="btn-reset" class="px-3 py-1 bg-gray-800 text-gray-400 text-xs rounded-lg border border-gray-700 hover:bg-gray-700 transition">
+                                Reset
+                            </button>
+                            <div class="ml-auto flex items-center gap-4 mono text-xs">
+                                <span id="steps-sec" class="text-gray-500">pasos/s: 0</span>
+                                <span id="sim-time" class="text-gray-500">t: 0.00</span>
+                                <span id="status" class="text-green-400">ESTABLE</span>
+                            </div>
+                        </div>
+                        <canvas id="lab-canvas" class="w-full bg-black" style="height: 500px;"></canvas>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-13.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-lg">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm">Derivacion de RK4</div>
+                    </div>
+                </a>
+                <a href="leccion-15.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm">De ecuaciones a pixeles</div>
+                    </div>
+                    <span class="text-lg">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 03 &middot; Leccion 14</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Integracion Numerica &middot; Eleccion del paso temporal</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================
+        // LAB: Lorenz with adjustable dt
+        // ============================
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        const dtSlider = document.getElementById('dt-slider');
+        const dtValueEl = document.getElementById('dt-value');
+        const btnReset = document.getElementById('btn-reset');
+        const stepsSecEl = document.getElementById('steps-sec');
+        const simTimeEl = document.getElementById('sim-time');
+        const statusEl = document.getElementById('status');
+
+        const dpr = window.devicePixelRatio || 1;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        // Lorenz
+        const sigma = 10, rho = 28, beta = 8 / 3;
+        function lorenz([x, y, z]) {
+            return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z];
+        }
+
+        function rk4Step(state, dt) {
+            const k1 = lorenz(state);
+            const s2 = [state[0] + k1[0] * dt / 2, state[1] + k1[1] * dt / 2, state[2] + k1[2] * dt / 2];
+            const k2 = lorenz(s2);
+            const s3 = [state[0] + k2[0] * dt / 2, state[1] + k2[1] * dt / 2, state[2] + k2[2] * dt / 2];
+            const k3 = lorenz(s3);
+            const s4 = [state[0] + k3[0] * dt, state[1] + k3[1] * dt, state[2] + k3[2] * dt];
+            const k4 = lorenz(s4);
+            return [
+                state[0] + (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) * dt / 6,
+                state[1] + (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) * dt / 6,
+                state[2] + (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]) * dt / 6
+            ];
+        }
+
+        // 3D projection with rotation
+        let angle = 0;
+        function project(x, y, z, w, h) {
+            const ca = Math.cos(angle), sa = Math.sin(angle);
+            const rx = x * ca - y * sa;
+            const ry = x * sa + y * ca;
+            const perspective = 4 / (5 - (z - 25) * 0.015);
+            return [
+                w / 2 + rx * w * 0.012 * perspective,
+                h * 0.55 - (z - 25) * h * 0.008 * perspective + ry * h * 0.003 * perspective
+            ];
+        }
+
+        // State
+        let state = [1, 1, 1];
+        let trail = [];
+        const MAX_TRAIL = 10000;
+        let dt = 0.005;
+        let simTime = 0;
+        let totalSteps = 0;
+        let diverged = false;
+        let lastSecond = performance.now();
+        let stepsThisSecond = 0;
+        let displayStepsSec = 0;
+
+        function reset() {
+            state = [1, 1, 1];
+            trail = [];
+            simTime = 0;
+            totalSteps = 0;
+            diverged = false;
+            stepsThisSecond = 0;
+            statusEl.textContent = 'ESTABLE';
+            statusEl.className = 'text-green-400';
+        }
+
+        function animate() {
+            const rect = canvas.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+
+            // Integration
+            if (!diverged) {
+                const stepsPerFrame = 20;
+                for (let i = 0; i < stepsPerFrame; i++) {
+                    state = rk4Step(state, dt);
+                    simTime += dt;
+                    totalSteps++;
+                    stepsThisSecond++;
+
+                    // Check divergence
+                    if (Math.abs(state[0]) > 500 || Math.abs(state[1]) > 500 || Math.abs(state[2]) > 500 ||
+                        isNaN(state[0]) || isNaN(state[1]) || isNaN(state[2])) {
+                        diverged = true;
+                        statusEl.textContent = 'DIVERGENCIA';
+                        statusEl.className = 'text-red-400';
+                        break;
+                    }
+
+                    trail.push([...state]);
+                    if (trail.length > MAX_TRAIL) trail.shift();
+                }
+            }
+
+            // Update steps/sec counter
+            const now = performance.now();
+            if (now - lastSecond > 1000) {
+                displayStepsSec = stepsThisSecond;
+                stepsThisSecond = 0;
+                lastSecond = now;
+            }
+            stepsSecEl.textContent = `pasos/s: ${displayStepsSec}`;
+            simTimeEl.textContent = `t: ${simTime.toFixed(2)}`;
+
+            // Detect marginal stability
+            if (!diverged) {
+                const mag = Math.sqrt(state[0] ** 2 + state[1] ** 2 + state[2] ** 2);
+                if (mag > 100) {
+                    statusEl.textContent = 'INESTABLE';
+                    statusEl.className = 'text-orange-400';
+                } else if (dt > 0.02) {
+                    statusEl.textContent = 'MARGINAL';
+                    statusEl.className = 'text-yellow-400';
+                } else {
+                    statusEl.textContent = 'ESTABLE';
+                    statusEl.className = 'text-green-400';
+                }
+            }
+
+            // Rotation
+            angle += 0.004;
+
+            // Draw
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
+            ctx.fillRect(0, 0, w, h);
+
+            if (trail.length > 1) {
+                for (let i = 1; i < trail.length; i += 1) {
+                    const alpha = 0.03 + (i / trail.length) * 0.7;
+                    const p0 = project(trail[i - 1][0], trail[i - 1][1], trail[i - 1][2], w, h);
+                    const p1 = project(trail[i][0], trail[i][1], trail[i][2], w, h);
+
+                    if (isNaN(p1[0]) || isNaN(p1[1]) || Math.abs(p1[0]) > w * 3) continue;
+
+                    // Color based on z-position
+                    const z = trail[i][2];
+                    const hue = 260 + (z - 10) * 2; // violet to cyan range
+                    ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${alpha})`;
+                    ctx.lineWidth = 1.2;
+                    ctx.beginPath();
+                    ctx.moveTo(p0[0], p0[1]);
+                    ctx.lineTo(p1[0], p1[1]);
+                    ctx.stroke();
+                }
+
+                // Head point
+                if (!diverged) {
+                    const last = trail[trail.length - 1];
+                    const pl = project(last[0], last[1], last[2], w, h);
+                    ctx.beginPath();
+                    ctx.arc(pl[0], pl[1], 3, 0, Math.PI * 2);
+                    ctx.fillStyle = '#fff';
+                    ctx.fill();
+                }
+            }
+
+            // Divergence message
+            if (diverged) {
+                ctx.fillStyle = 'rgba(0,0,0,0.6)';
+                ctx.fillRect(0, h / 2 - 30, w, 60);
+                ctx.fillStyle = '#ef4444';
+                ctx.font = 'bold 20px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('EXPLOSION NUMERICA - dt demasiado grande', w / 2, h / 2 + 7);
+                ctx.textAlign = 'start';
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        dtSlider.addEventListener('input', () => {
+            dt = parseFloat(dtSlider.value);
+            dtValueEl.textContent = dt.toFixed(3);
+            reset();
+        });
+
+        btnReset.addEventListener('click', reset);
+
+        window.addEventListener('resize', resizeCanvas);
+
+        resizeCanvas();
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 03 · Atractores | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 01</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 03 / 05</span>
+                <div class="flex gap-2">
+                    <a href="leccion-02.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="leccion-04.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 01</h2>
+                <p class="text-sm text-gray-400 mt-1">Fundamentos del Caos</p>
+
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>3 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-01.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">01</span>
+                        <span>Que es el caos determinista</span>
+                    </a>
+                    <a href="leccion-02.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">02</span>
+                        <span>Espacio de fases</span>
+                    </a>
+                    <a href="leccion-03.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">03</span>
+                        <span>Atractores</span>
+                    </a>
+                    <a href="leccion-04.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">04</span>
+                        <span>Sensibilidad a condiciones iniciales</span>
+                    </a>
+                    <a href="leccion-05.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">05</span>
+                        <span>Disipatividad</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 03</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Atractores: punto fijo, ciclo limite, extrano</h1>
+                    <p class="text-xl text-gray-400">Los destinos inevitables de los sistemas dinamicos</p>
+                </div>
+
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Que es un atractor -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Que es un atractor</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En la leccion anterior aprendimos que el espacio de fases es un mapa de todos los estados posibles
+                            de un sistema. Ahora nos preguntamos: ¿hacia donde van las trayectorias? En muchos sistemas disipativos,
+                            las trayectorias convergen hacia regiones especificas del espacio de fases llamadas
+                            <strong class="text-white">atractores</strong>.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Formalmente, un atractor es un conjunto cerrado \(A\) en el espacio de fases con tres propiedades:
+                            (1) es <strong class="text-white">invariante</strong> &mdash; cualquier trayectoria que empieza en \(A\)
+                            permanece en \(A\) para siempre; (2) <strong class="text-white">atrae</strong> un conjunto abierto de
+                            condiciones iniciales (su cuenca de atraccion); y (3) es <strong class="text-white">minimal</strong>
+                            &mdash; no contiene ningun subconjunto propio con las propiedades anteriores.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La <strong class="text-white">cuenca de atraccion</strong> de un atractor es el conjunto de todos
+                            los puntos iniciales cuyas trayectorias eventualmente convergen al atractor. Para un sistema con
+                            un unico atractor, la cuenca es todo el espacio de fases (menos un conjunto de medida cero).
+                            Cuando hay multiples atractores, el espacio se divide en cuencas, y la frontera entre ellas puede
+                            ser extraordinariamente complicada &mdash; de hecho, fractal.
+                        </p>
+                    </section>
+
+                    <!-- Punto fijo -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Punto fijo</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El atractor mas simple es un <strong class="text-white">punto fijo</strong> estable. Es un estado
+                            de equilibrio donde todas las velocidades son cero y todas las fuerzas se cancelan. Las trayectorias
+                            cercanas convergen hacia el, como un pendulo amortiguado que eventualmente se detiene en la vertical.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Matematicamente, un punto fijo \(x^*\) satisface \(\dot{x} = f(x^*) = 0\). Su estabilidad se determina
+                            linealizando el sistema alrededor del punto fijo y examinando los autovalores de la matriz jacobiana.
+                            Si todos los autovalores tienen parte real negativa, el punto es <strong class="text-white">asintoticamente
+                            estable</strong>: todas las perturbaciones pequenas decaen exponencialmente.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            En el espacio de fases del oscilador amortiguado, el punto fijo es el origen \((x, v) = (0, 0)\):
+                            el sistema en reposo en su posicion de equilibrio. Las trayectorias espiralan hacia adentro hasta
+                            alcanzar este punto. La dimension topologica de un punto fijo es <strong class="text-white">cero</strong>.
+                        </p>
+                    </section>
+
+                    <!-- Ciclo limite -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Ciclo limite</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Un <strong class="text-white">ciclo limite</strong> es una orbita periodica cerrada aislada que atrae
+                            (o repele) trayectorias cercanas. A diferencia de las orbitas del oscilador armonico conservativo
+                            (donde cada orbita es cerrada), un ciclo limite es unico: las trayectorias que empiezan dentro
+                            del ciclo espiralan hacia afuera hasta llegar a el, y las que empiezan fuera espiralan hacia adentro.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El ejemplo clasico es el <strong class="text-white">oscilador de Van der Pol</strong>, que modela
+                            circuitos electronicos oscilantes y ciertos fenomenos biologicos como el latido cardiaco:
+                        </p>
+                        <div class="bg-gray-900/50 p-4 rounded-lg text-center my-4">
+                            $$\ddot{x} - \mu(1-x^2)\dot{x} + x = 0$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El parametro \(\mu\) controla la no linealidad. Cuando \(\mu > 0\), el termino \(-\mu(1-x^2)\dot{x}\)
+                            actua como amortiguamiento negativo para \(|x| < 1\) (inyecta energia) y amortiguamiento positivo
+                            para \(|x| > 1\) (disipa energia). El resultado es que el sistema se autoregula hacia una oscilacion
+                            estable de amplitud fija, independientemente de las condiciones iniciales.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            La dimension topologica de un ciclo limite es <strong class="text-white">uno</strong>: es una curva cerrada.
+                            Los ciclos limite solo pueden existir en sistemas no lineales; los sistemas lineales no los poseen
+                            (teorema de Bendixson).
+                        </p>
+                    </section>
+
+                    <!-- Atractor extrano -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Atractor extrano</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Y ahora llegamos al corazon de la teoria del caos. Un <strong class="text-white">atractor extrano</strong>
+                            es un atractor con estructura fractal. No es un punto, no es una curva, no es una superficie. Tiene
+                            dimension fractal &mdash; un numero no entero que mide su complejidad geometrica.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El atractor de Lorenz, por ejemplo, tiene dimension fractal aproximadamente \(2.06\). Es algo mas
+                            que una superficie (\(d = 2\)) pero menos que un volumen (\(d = 3\)). Este numero refleja el hecho
+                            de que el atractor tiene estructura infinita a todas las escalas: si ampliamos cualquier region,
+                            encontramos mas estructura, como una especie de origami infinito.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Las trayectorias sobre un atractor extrano nunca se repiten (son aperiodicas) y son sensibles
+                            a las condiciones iniciales (dos trayectorias cercanas divergen exponencialmente). Sin embargo,
+                            permanecen confinadas en una region acotada del espacio de fases. Este es el sello del caos:
+                            <strong class="text-white">estiramiento y plegamiento simultaneo</strong>. El sistema estira
+                            las distancias (divergencia exponencial) pero al mismo tiempo pliega el espacio para mantener
+                            las trayectorias acotadas.
+                        </p>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                Un atractor extrano tiene dimension fractal: no es una linea, no es una superficie.
+                                Es un objeto geometrico de complejidad infinita, producto del estiramiento y plegamiento
+                                continuo del flujo en el espacio de fases.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Classification table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Clasificacion de atractores</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Tipo</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Dimension</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Ejemplo</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Comportamiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Punto fijo</td>
+                                        <td class="px-4 py-3 text-gray-400">0</td>
+                                        <td class="px-4 py-3 text-gray-400">Pendulo amortiguado</td>
+                                        <td class="px-4 py-3 text-gray-400">Convergencia al equilibrio</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Ciclo limite</td>
+                                        <td class="px-4 py-3 text-gray-400">1</td>
+                                        <td class="px-4 py-3 text-gray-400">Van der Pol, latido cardiaco</td>
+                                        <td class="px-4 py-3 text-gray-400">Oscilacion periodica estable</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Toro</td>
+                                        <td class="px-4 py-3 text-gray-400">2</td>
+                                        <td class="px-4 py-3 text-gray-400">Osciladores acoplados</td>
+                                        <td class="px-4 py-3 text-gray-400">Cuasi-periodico</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300 font-medium">Atractor extrano</td>
+                                        <td class="px-4 py-3 text-gray-400">Fractal (~2.06 Lorenz)</td>
+                                        <td class="px-4 py-3 text-gray-400">Lorenz, Rossler, clima</td>
+                                        <td class="px-4 py-3 text-gray-400">Caotico, aperiodico, acotado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Clasifica cada uno de los tres atractores visualizados en el LAB por su dimension
+                                    topologica. ¿Que relacion hay entre la dimension del atractor y la complejidad del
+                                    comportamiento dinamico?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>¿Por que se llama "extrano" al atractor de Lorenz? ¿Que lo diferencia geometricamente
+                                    de un punto fijo o un ciclo limite? Pista: piensa en la estructura a diferentes escalas.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>¿Puede un sistema bidimensional (2D) tener un atractor extrano? Investiga el
+                                    teorema de Poincare-Bendixson y argumenta tu respuesta. ¿Cual es la dimension minima
+                                    del espacio de fases necesaria para el caos continuo?</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Los tres atractores</h2>
+                        <p class="text-gray-400 mb-4">Izquierda: punto fijo (oscilador amortiguado convergiendo al origen).
+                        Centro: ciclo limite (Van der Pol). Derecha: atractor extrano (Lorenz proyectado en 2D).</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::three-attractors</span>
+                                <div class="flex gap-2">
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-0">
+                                <div class="relative">
+                                    <canvas id="canvasPoint" width="300" height="350" class="w-full"></canvas>
+                                    <div class="absolute top-2 left-1/2 -translate-x-1/2 mono text-xs text-cyan-400 bg-black/60 px-2 py-1 rounded">Punto fijo</div>
+                                </div>
+                                <div class="relative border-x border-gray-800">
+                                    <canvas id="canvasCycle" width="300" height="350" class="w-full"></canvas>
+                                    <div class="absolute top-2 left-1/2 -translate-x-1/2 mono text-xs text-cyan-400 bg-black/60 px-2 py-1 rounded">Ciclo limite</div>
+                                </div>
+                                <div class="relative">
+                                    <canvas id="canvasStrange" width="300" height="350" class="w-full"></canvas>
+                                    <div class="absolute top-2 left-1/2 -translate-x-1/2 mono text-xs text-cyan-400 bg-black/60 px-2 py-1 rounded">Atractor extrano</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-02.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 02: Espacio de fases</span>
+                </a>
+                <a href="leccion-04.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 04: Sensibilidad a condiciones iniciales &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 01 &middot; Leccion 03</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Three Attractors -->
+    <script>
+    (function() {
+        // ===== POINT ATTRACTOR: Damped oscillator =====
+        const c1 = document.getElementById('canvasPoint');
+        const ctx1 = c1.getContext('2d');
+        const W1 = c1.width, H1 = c1.height;
+        const cx1 = W1/2, cy1 = H1/2;
+        const sc1 = 50;
+
+        let pt = { x: 2.5, v: 1.5, trail: [] };
+        const gamma1 = 0.08;
+        const omega1 = 1.0;
+
+        function stepPoint(dt) {
+            const ax = pt.v;
+            const av = -omega1*omega1*pt.x - gamma1*pt.v;
+            pt.x += ax*dt;
+            pt.v += av*dt;
+            pt.trail.push({x: pt.x, v: pt.v});
+            if (pt.trail.length > 1200) pt.trail.shift();
+        }
+
+        function drawPoint() {
+            ctx1.fillStyle = '#030712';
+            ctx1.fillRect(0,0,W1,H1);
+            // Axes
+            ctx1.strokeStyle = '#1f2937'; ctx1.lineWidth = 1;
+            ctx1.beginPath(); ctx1.moveTo(0,cy1); ctx1.lineTo(W1,cy1); ctx1.stroke();
+            ctx1.beginPath(); ctx1.moveTo(cx1,0); ctx1.lineTo(cx1,H1); ctx1.stroke();
+            // Trail
+            for (let i=1; i<pt.trail.length; i++) {
+                const a = i/pt.trail.length;
+                ctx1.beginPath();
+                ctx1.strokeStyle = `rgba(34,211,238,${a*0.7})`;
+                ctx1.lineWidth = 1.5;
+                ctx1.moveTo(cx1+pt.trail[i-1].x*sc1, cy1-pt.trail[i-1].v*sc1);
+                ctx1.lineTo(cx1+pt.trail[i].x*sc1, cy1-pt.trail[i].v*sc1);
+                ctx1.stroke();
+            }
+            // Dot
+            ctx1.beginPath();
+            ctx1.arc(cx1+pt.x*sc1, cy1-pt.v*sc1, 3, 0, Math.PI*2);
+            ctx1.fillStyle = '#22d3ee';
+            ctx1.fill();
+            // Fixed point marker
+            ctx1.beginPath();
+            ctx1.arc(cx1, cy1, 4, 0, Math.PI*2);
+            ctx1.fillStyle = '#a855f7';
+            ctx1.fill();
+        }
+
+        // ===== LIMIT CYCLE: Van der Pol =====
+        const c2 = document.getElementById('canvasCycle');
+        const ctx2 = c2.getContext('2d');
+        const W2 = c2.width, H2 = c2.height;
+        const cx2 = W2/2, cy2 = H2/2;
+        const sc2 = 40;
+
+        const mu = 1.5;
+        let vdp1 = { x: 0.1, v: 0.1, trail: [] };
+        let vdp2 = { x: 4.0, v: 0.0, trail: [] };
+
+        function stepVDP(s, dt) {
+            const k1x = s.v;
+            const k1v = mu*(1-s.x*s.x)*s.v - s.x;
+            const mx = s.x + 0.5*dt*k1x;
+            const mv = s.v + 0.5*dt*k1v;
+            const k2x = mv;
+            const k2v = mu*(1-mx*mx)*mv - mx;
+            const mx2 = s.x + 0.5*dt*k2x;
+            const mv2 = s.v + 0.5*dt*k2v;
+            const k3x = mv2;
+            const k3v = mu*(1-mx2*mx2)*mv2 - mx2;
+            const mx3 = s.x + dt*k3x;
+            const mv3 = s.v + dt*k3v;
+            const k4x = mv3;
+            const k4v = mu*(1-mx3*mx3)*mv3 - mx3;
+            s.x += (dt/6)*(k1x+2*k2x+2*k3x+k4x);
+            s.v += (dt/6)*(k1v+2*k2v+2*k3v+k4v);
+            s.trail.push({x: s.x, v: s.v});
+            if (s.trail.length > 1200) s.trail.shift();
+        }
+
+        function drawTrail2(trail, color) {
+            for (let i=1; i<trail.length; i++) {
+                const a = i/trail.length;
+                ctx2.beginPath();
+                ctx2.strokeStyle = color.replace('A', (a*0.7).toFixed(3));
+                ctx2.lineWidth = 1.5;
+                ctx2.moveTo(cx2+trail[i-1].x*sc2, cy2-trail[i-1].v*sc2);
+                ctx2.lineTo(cx2+trail[i].x*sc2, cy2-trail[i].v*sc2);
+                ctx2.stroke();
+            }
+        }
+
+        function drawCycle() {
+            ctx2.fillStyle = '#030712';
+            ctx2.fillRect(0,0,W2,H2);
+            ctx2.strokeStyle = '#1f2937'; ctx2.lineWidth = 1;
+            ctx2.beginPath(); ctx2.moveTo(0,cy2); ctx2.lineTo(W2,cy2); ctx2.stroke();
+            ctx2.beginPath(); ctx2.moveTo(cx2,0); ctx2.lineTo(cx2,H2); ctx2.stroke();
+
+            drawTrail2(vdp1.trail, 'rgba(168,85,247,A)');
+            drawTrail2(vdp2.trail, 'rgba(34,211,238,A)');
+
+            ctx2.beginPath();
+            ctx2.arc(cx2+vdp1.x*sc2, cy2-vdp1.v*sc2, 3, 0, Math.PI*2);
+            ctx2.fillStyle = '#a855f7'; ctx2.fill();
+            ctx2.beginPath();
+            ctx2.arc(cx2+vdp2.x*sc2, cy2-vdp2.v*sc2, 3, 0, Math.PI*2);
+            ctx2.fillStyle = '#22d3ee'; ctx2.fill();
+        }
+
+        // ===== STRANGE ATTRACTOR: Lorenz 2D projection =====
+        const c3 = document.getElementById('canvasStrange');
+        const ctx3 = c3.getContext('2d');
+        const W3 = c3.width, H3 = c3.height;
+        const cx3 = W3/2, cy3 = H3*0.65;
+        const sc3 = 5;
+
+        const sigma = 10, rho = 28, beta = 8/3;
+        let lz = { x: 1, y: 1, z: 1, trail: [] };
+
+        function stepLorenz(s, dt) {
+            const dx = sigma*(s.y - s.x);
+            const dy = s.x*(rho - s.z) - s.y;
+            const dz = s.x*s.y - beta*s.z;
+            s.x += dx*dt;
+            s.y += dy*dt;
+            s.z += dz*dt;
+            s.trail.push({x: s.x, z: s.z});
+            if (s.trail.length > 2000) s.trail.shift();
+        }
+
+        function drawStrange() {
+            ctx3.fillStyle = '#030712';
+            ctx3.fillRect(0,0,W3,H3);
+
+            for (let i=1; i<lz.trail.length; i++) {
+                const a = i/lz.trail.length;
+                ctx3.beginPath();
+                const hue = 270 + (lz.trail[i].z / 50) * 40;
+                ctx3.strokeStyle = `hsla(${hue}, 80%, 65%, ${a*0.6})`;
+                ctx3.lineWidth = 1;
+                ctx3.moveTo(cx3+lz.trail[i-1].x*sc3, cy3-lz.trail[i-1].z*sc3*0.8 + 80);
+                ctx3.lineTo(cx3+lz.trail[i].x*sc3, cy3-lz.trail[i].z*sc3*0.8 + 80);
+                ctx3.stroke();
+            }
+            ctx3.beginPath();
+            ctx3.arc(cx3+lz.x*sc3, cy3-lz.z*sc3*0.8+80, 2.5, 0, Math.PI*2);
+            ctx3.fillStyle = '#e879f9'; ctx3.fill();
+        }
+
+        // ===== RESET =====
+        function resetAll() {
+            pt = { x: 2.5, v: 1.5, trail: [] };
+            vdp1 = { x: 0.1, v: 0.1, trail: [] };
+            vdp2 = { x: 4.0, v: 0.0, trail: [] };
+            lz = { x: 1, y: 1, z: 1, trail: [] };
+        }
+
+        document.getElementById('btnReset').addEventListener('click', resetAll);
+
+        // ===== ANIMATION LOOP =====
+        function animate() {
+            const dt = 0.01;
+            for (let i = 0; i < 4; i++) {
+                stepPoint(dt);
+                stepVDP(vdp1, dt);
+                stepVDP(vdp2, dt);
+                stepLorenz(lz, dt);
+            }
+            drawPoint();
+            drawCycle();
+            drawStrange();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

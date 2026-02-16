@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 24: Cascada de duplicacion de periodo — Curso Teoria del Caos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 05</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">24</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Cascada de duplicacion</span>
+                        <span class="text-gray-400 font-light ml-1">— la ruta universal al caos</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-23.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-25.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-sm font-medium text-violet-400 mb-1">Modulo 05</h2>
+                <p class="text-xs text-gray-500 mb-4">Herramientas de Analisis</p>
+
+                <!-- Progress -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>4/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="space-y-1">
+                    <a href="leccion-21.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">21</span>
+                        <span>Exponente de Lyapunov</span>
+                    </a>
+                    <a href="leccion-22.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">22</span>
+                        <span>Perturbacion-renormalizacion</span>
+                    </a>
+                    <a href="leccion-23.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">23</span>
+                        <span>Diagramas de bifurcacion</span>
+                    </a>
+                    <a href="leccion-24.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
+                        <span class="mono text-xs">24</span>
+                        <span>Cascada de duplicacion</span>
+                    </a>
+                    <a href="leccion-25.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">25</span>
+                        <span>Dimension fractal</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 24</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Cascada de duplicacion de periodo</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 font-light">La ruta universal al caos y la constante de Feigenbaum</p>
+                </div>
+
+                <!-- Content -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">La cascada universal</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En el diagrama de bifurcacion del mapa logistico observamos una secuencia notable de transiciones. Cuando \(r\) aumenta desde 3, el punto fijo se desdobla en un ciclo de periodo 2. Poco despues, el periodo 2 se desdobla en periodo 4. Luego 4 se convierte en 8, 8 en 16, 16 en 32, y asi sucesivamente: \(1 \to 2 \to 4 \to 8 \to 16 \to 32 \to \ldots \to \infty \to \text{caos}\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esta secuencia se llama <em class="text-violet-300">cascada de duplicacion de periodo</em> (period-doubling cascade), y es una de las rutas mas comunes por las que un sistema pasa del orden al caos. Lo extraordinario es que esta cascada tiene una estructura matematica precisa y universal.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Las bifurcaciones se aceleran: cada nueva duplicacion ocurre en un intervalo de parametro mas pequeno que la anterior. La cascada completa ocupa un intervalo finito de \(r\) y culmina en un valor critico \(r_\infty\) donde el periodo se vuelve infinito. Mas alla de \(r_\infty\), el sistema es caotico (con las interrupciones de las ventanas de periodicidad).
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Feigenbaum y la universalidad</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En 1975, Mitchell Feigenbaum, un joven fisico del Laboratorio Nacional de Los Alamos, hizo un descubrimiento que le valio fama inmortal en la matematica. Mientras estudiaba la cascada de duplicacion de periodo en el mapa logistico usando una calculadora de bolsillo HP-65, noto que la razon entre intervalos sucesivos de bifurcacion convergia a un numero fijo.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Sea \(r_n\) el valor del parametro donde ocurre la bifurcacion que crea un ciclo de periodo \(2^n\). Feigenbaum definio la razon:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$\delta = \lim_{n\to\infty} \frac{r_n - r_{n-1}}{r_{n+1} - r_n} = 4.669201609\ldots$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Este numero, \(\delta \approx 4.669\), es la <em class="text-violet-300">constante de Feigenbaum</em>. Significa que cada intervalo de bifurcacion es aproximadamente 4.669 veces mas pequeno que el anterior. La cascada se comprime geometricamente, convergiendo al punto critico \(r_\infty\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Lo verdaderamente asombroso, lo que convirtio un resultado numerico curioso en un descubrimiento de primer orden, fue lo que Feigenbaum hizo a continuacion: verifico que el <em class="text-cyan-300">mismo numero</em> \(\delta = 4.669...\) aparecia en el mapa seno (\(x_{n+1} = A \sin(\pi x_n)\)), en el mapa cuadratico general, en el mapa exponencial, y en cualquier otro mapa unimodal (un maximo, continuo, diferenciable). El numero era <em class="text-violet-300">universal</em>.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">La constante de Feigenbaum</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La primera constante de Feigenbaum mide la contraccion de los intervalos de parametro. Pero existe una segunda constante que mide la contraccion de las ramas del diagrama de bifurcacion en la direccion vertical. Si \(d_n\) es la "anchura" de la bifurcacion de orden \(n\) (la distancia entre los valores extremos del ciclo), entonces:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$\alpha = \lim_{n\to\infty} \frac{d_n}{d_{n+1}} = 2.502907875\ldots$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Ambas constantes, \(\delta\) y \(\alpha\), son numeros trascendentes que aparecen en <em class="text-cyan-300">todos los sistemas con ruta de duplicacion de periodo al caos</em>. No importa si el sistema es un mapa logistico, una reaccion quimica, un circuito electronico, o un modelo de crecimiento poblacional. Si la ruta al caos es por duplicacion de periodo, las constantes de Feigenbaum estan ahi.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Universalidad</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La universalidad de las constantes de Feigenbaum fue demostrada rigurosamente por Oscar Lanford en 1982, usando la teoria del operador de renormalizacion. La idea es que la duplicacion de periodo corresponde a un punto fijo de un operador funcional (el operador de composicion y reescalado), y las constantes \(\delta\) y \(\alpha\) son los autovalores de ese operador en el punto fijo.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Esta es la misma idea de universalidad que aparece en la fisica de transiciones de fase: los detalles microscopicos del sistema son irrelevantes; solo importa la clase de universalidad. Para la duplicacion de periodo, la clase esta determinada por el tipo de maximo del mapa (cuadratico, cubico, etc.). Todos los mapas con maximo cuadratico comparten las mismas \(\delta\) y \(\alpha\).
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La universalidad de Feigenbaum conecta la teoria del caos con la fisica estadistica de una manera profunda e inesperada. No es una coincidencia superficial; es la manifestacion de que ambos fenomenos (transiciones de fase y ruta al caos) son gobernados por la misma estructura matematica: el grupo de renormalizacion.
+                </p>
+
+                <!-- Bifurcation Points Table -->
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Puntos de bifurcacion del mapa logistico</h3>
+
+                <div class="overflow-x-auto my-6">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">n</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Periodo 2&#8319;</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">r&#8345;</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">r&#8345; - r&#8345;&#8331;&#8321;</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Ratio (&rarr; &delta;)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">1</td>
+                                <td class="py-3 px-4">2</td>
+                                <td class="py-3 px-4 mono">3.000000</td>
+                                <td class="py-3 px-4 mono">—</td>
+                                <td class="py-3 px-4 mono">—</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">2</td>
+                                <td class="py-3 px-4">4</td>
+                                <td class="py-3 px-4 mono">3.449490</td>
+                                <td class="py-3 px-4 mono">0.449490</td>
+                                <td class="py-3 px-4 mono">—</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">3</td>
+                                <td class="py-3 px-4">8</td>
+                                <td class="py-3 px-4 mono">3.544090</td>
+                                <td class="py-3 px-4 mono">0.094600</td>
+                                <td class="py-3 px-4 mono text-yellow-400">4.7514</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">4</td>
+                                <td class="py-3 px-4">16</td>
+                                <td class="py-3 px-4 mono">3.564407</td>
+                                <td class="py-3 px-4 mono">0.020317</td>
+                                <td class="py-3 px-4 mono text-yellow-400">4.6562</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">5</td>
+                                <td class="py-3 px-4">32</td>
+                                <td class="py-3 px-4 mono">3.568759</td>
+                                <td class="py-3 px-4 mono">0.004352</td>
+                                <td class="py-3 px-4 mono text-orange-400">4.6684</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">6</td>
+                                <td class="py-3 px-4">64</td>
+                                <td class="py-3 px-4 mono">3.569692</td>
+                                <td class="py-3 px-4 mono">0.000933</td>
+                                <td class="py-3 px-4 mono text-orange-400">4.6686</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-3 px-4 mono text-cyan-400">7</td>
+                                <td class="py-3 px-4">128</td>
+                                <td class="py-3 px-4 mono">3.569891</td>
+                                <td class="py-3 px-4 mono">0.000200</td>
+                                <td class="py-3 px-4 mono text-green-400">4.6692</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 mono text-cyan-400">&infin;</td>
+                                <td class="py-3 px-4">&infin;</td>
+                                <td class="py-3 px-4 mono text-violet-400">3.569946...</td>
+                                <td class="py-3 px-4 mono">0</td>
+                                <td class="py-3 px-4 mono text-green-400">4.6692...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La convergencia del ratio hacia \(\delta = 4.6692...\) es visible incluso con solo las primeras bifurcaciones. Con cada bifurcacion adicional, ganamos aproximadamente un digito de precision. El valor acumulado \(r_\infty = 3.569946...\) marca el "borde del caos": mas alla de este valor, el periodo es infinito y el sistema es caotico (con las interrupciones periodicas).
+                </p>
+
+                <!-- Emphasis Box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 p-6 rounded-r-xl my-8">
+                    <p class="text-violet-200 text-lg font-light italic">
+                        "La constante de Feigenbaum es tan universal como &pi;: aparece en sistemas completamente diferentes. Es una constante de la naturaleza, no de un sistema particular. Su universalidad conecta la teoria del caos con la fisica de transiciones de fase a traves del grupo de renormalizacion."
+                    </p>
+                </div>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">Verificacion experimental</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La universalidad de Feigenbaum ha sido verificada experimentalmente en sistemas fisicos reales. En 1981, Albert Libchaber y Jean Maurer midieron la cascada de duplicacion de periodo en una celda de conveccion de Rayleigh-Benard (el mismo fenomeno que inspiro a Lorenz). Encontraron que la razon entre los intervalos de temperatura de las bifurcaciones sucesivas convergia a \(\delta \approx 4.4 \pm 0.1\), consistente con el valor teorico.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Otros experimentos han verificado la constante en diodos Josephson, reacciones quimicas oscilantes (Belousov-Zhabotinsky), oscilaciones acusticas, y circuitos electronicos no lineales. En todos los casos, la misma constante \(\delta \approx 4.669\) emerge, confirmando la prediccion teorica de universalidad.
+                </p>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-violet-400 font-medium text-lg mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            <span class="font-medium text-gray-200">Calcular bifurcaciones</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Usando el mapa logistico \(x_{n+1} = rx_n(1-x_n)\), encuentra numericamente los primeros 4 puntos de bifurcacion \(r_1, r_2, r_3, r_4\). Pista: para encontrar \(r_1\), busca donde el punto fijo \(x^* = 1 - 1/r\) pierde estabilidad (cuando \(|f'(x^*)| = 1\)).</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Verificar la convergencia</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Con los valores de la tabla, calcula las razones \(\frac{r_3 - r_2}{r_4 - r_3}\), \(\frac{r_4 - r_3}{r_5 - r_4}\), etc. ¿A que velocidad convergen a \(\delta\)? ¿Cuantas bifurcaciones necesitas para tener 3 digitos significativos?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">¿Por que es universal?</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Reflexiona: ¿por que la misma constante aparece en el mapa logistico, el mapa seno, y un circuito electronico? ¿Que tienen en comun? ¿Que propiedad del mapa es relevante y cuales son irrelevantes?</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">LAB: Cascada de Feigenbaum</h2>
+                <p class="text-gray-400 text-sm mb-4">Diagrama de bifurcacion enfocado en la region de duplicacion de periodo, con anotaciones que marcan cada punto de bifurcacion \(r_n\) y las razones entre intervalos sucesivos convergiendo a \(\delta = 4.669...\). Usa el boton "Animar zoom" para ver como la cascada se repite a escalas cada vez mas finas.</p>
+
+                <div class="lab-container my-6">
+                    <div class="bg-gray-900 px-4 py-2 flex items-center justify-between border-b border-violet-500/30">
+                        <div class="flex items-center gap-2">
+                            <div class="flex gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <span class="ml-4 text-sm text-gray-400 mono">feigenbaum-cascade.js</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <button id="zoom-btn" class="text-xs text-gray-500 hover:text-violet-400 transition px-2 py-1 border border-gray-700 rounded">Animar zoom</button>
+                            <button id="reset-btn" class="text-xs text-gray-500 hover:text-violet-400 transition px-2 py-1 border border-gray-700 rounded">Reset</button>
+                        </div>
+                    </div>
+                    <canvas id="lab-canvas" width="900" height="550" style="width: 100%; background: #000;"></canvas>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-23.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-xl">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 23: Diagramas de bifurcacion</div>
+                    </div>
+                </a>
+                <a href="leccion-25.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 25: Dimension fractal</div>
+                    </div>
+                    <span class="text-xl">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 05 — Leccion 24</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Teoria del Caos &middot; De Lorenz al Infinito</p>
+        </div>
+    </footer>
+
+    <!-- LAB Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        const zoomBtn = document.getElementById('zoom-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.scale(dpr, dpr);
+        const W = canvas.clientWidth;
+        const H = canvas.clientHeight;
+
+        // Known bifurcation points
+        const bifPoints = [
+            { n: 1, r: 3.000000, period: 2 },
+            { n: 2, r: 3.449490, period: 4 },
+            { n: 3, r: 3.544090, period: 8 },
+            { n: 4, r: 3.564407, period: 16 },
+            { n: 5, r: 3.568759, period: 32 },
+            { n: 6, r: 3.569692, period: 64 },
+            { n: 7, r: 3.569891, period: 128 }
+        ];
+        const rInfinity = 3.569946;
+        const DELTA = 4.669201;
+
+        // View
+        let rMin = 2.9, rMax = 3.7;
+        let xMin = 0.0, xMax = 1.0;
+        let targetRMin, targetRMax, targetXMin, targetXMax;
+        let animating = false;
+        let animProgress = 0;
+        let zoomLevel = 0;
+
+        const ML = 55, MR = 20, MT = 25, MB = 40;
+        const plotW = W - ML - MR;
+        const plotH = H - MT - MB;
+
+        function computeBifurcation() {
+            const rSteps = Math.min(2500, Math.max(1000, Math.round(plotW * 2)));
+            const transient = 1000;
+            const plotPoints = 400;
+
+            const imageData = ctx.createImageData(canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 3; i < data.length; i += 4) data[i] = 255;
+
+            for (let i = 0; i < rSteps; i++) {
+                const r = rMin + (i / rSteps) * (rMax - rMin);
+                let x = 0.5;
+
+                for (let j = 0; j < transient; j++) {
+                    x = r * x * (1 - x);
+                }
+
+                for (let j = 0; j < plotPoints; j++) {
+                    x = r * x * (1 - x);
+
+                    if (x >= xMin && x <= xMax) {
+                        const px = Math.round((ML + (i / rSteps) * plotW) * dpr);
+                        const py = Math.round((MT + (1 - (x - xMin) / (xMax - xMin)) * plotH) * dpr);
+
+                        if (px >= 0 && px < canvas.width && py >= 0 && py < canvas.height) {
+                            const idx = (py * canvas.width + px) * 4;
+                            data[idx] = Math.min(255, data[idx] + 35);
+                            data[idx+1] = Math.min(255, data[idx+1] + 12);
+                            data[idx+2] = Math.min(255, data[idx+2] + 55);
+                            data[idx+3] = 255;
+                        }
+                    }
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function rToScreen(r) {
+            return ML + ((r - rMin) / (rMax - rMin)) * plotW;
+        }
+
+        function xToScreen(x) {
+            return MT + (1 - (x - xMin) / (xMax - xMin)) * plotH;
+        }
+
+        function drawAnnotations() {
+            // Draw bifurcation point markers
+            for (const bp of bifPoints) {
+                if (bp.r >= rMin && bp.r <= rMax) {
+                    const sx = rToScreen(bp.r);
+
+                    // Vertical line
+                    ctx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+                    ctx.setLineDash([3, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(sx, MT);
+                    ctx.lineTo(sx, MT + plotH);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Label
+                    ctx.font = '9px JetBrains Mono';
+                    ctx.fillStyle = '#a855f7';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('r' + bp.n, sx, MT - 5);
+                    ctx.fillStyle = '#6b7280';
+                    ctx.fillText(bp.r.toFixed(4), sx, MT - 15);
+                }
+            }
+
+            // Draw r_infinity line
+            if (rInfinity >= rMin && rInfinity <= rMax) {
+                const sx = rToScreen(rInfinity);
+                ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+                ctx.setLineDash([2, 3]);
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(sx, MT);
+                ctx.lineTo(sx, MT + plotH);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.lineWidth = 1;
+
+                ctx.font = '10px JetBrains Mono';
+                ctx.fillStyle = '#ef4444';
+                ctx.textAlign = 'center';
+                ctx.fillText('r\u221E = ' + rInfinity.toFixed(6), sx, MT + plotH + 30);
+            }
+
+            // Draw ratio annotations between visible consecutive bifurcation pairs
+            for (let i = 2; i < bifPoints.length; i++) {
+                const prev = bifPoints[i-1];
+                const curr = bifPoints[i];
+                if (prev.r >= rMin && curr.r <= rMax) {
+                    const dx1 = prev.r - bifPoints[i-2].r;
+                    const dx2 = curr.r - prev.r;
+                    const ratio = dx1 / dx2;
+
+                    const midR = (prev.r + curr.r) / 2;
+                    const sx = rToScreen(midR);
+                    const sy = MT + 20 + (i % 2) * 16;
+
+                    // Only draw if there's enough screen space
+                    if (rToScreen(curr.r) - rToScreen(prev.r) > 30) {
+                        // Bracket
+                        const sx1 = rToScreen(prev.r);
+                        const sx2 = rToScreen(curr.r);
+                        ctx.strokeStyle = '#22d3ee';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(sx1, sy + 5);
+                        ctx.lineTo(sx1, sy);
+                        ctx.lineTo(sx2, sy);
+                        ctx.lineTo(sx2, sy + 5);
+                        ctx.stroke();
+
+                        ctx.font = '9px JetBrains Mono';
+                        ctx.fillStyle = '#22d3ee';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('\u03B4\u2248' + ratio.toFixed(2), sx, sy - 4);
+                    }
+                }
+            }
+
+            // Info panel
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(W - 220, MT + 5, 200, 85, 6);
+            ctx.fill();
+            ctx.strokeStyle = '#1f2937';
+            ctx.beginPath();
+            ctx.roundRect(W - 220, MT + 5, 200, 85, 6);
+            ctx.stroke();
+
+            ctx.font = '11px Inter';
+            ctx.fillStyle = '#a855f7';
+            ctx.textAlign = 'left';
+            ctx.fillText('Constante de Feigenbaum', W - 210, MT + 22);
+
+            ctx.font = '20px JetBrains Mono';
+            ctx.fillStyle = '#22d3ee';
+            ctx.fillText('\u03B4 = 4.6692...', W - 210, MT + 48);
+
+            ctx.font = '11px JetBrains Mono';
+            ctx.fillStyle = '#6b7280';
+            ctx.fillText('Zoom nivel: ' + zoomLevel, W - 210, MT + 68);
+            ctx.fillText('r\u221E = 3.569946...', W - 210, MT + 82);
+        }
+
+        function drawAxes() {
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ML, MT);
+            ctx.lineTo(ML, MT + plotH);
+            ctx.lineTo(ML + plotW, MT + plotH);
+            ctx.stroke();
+
+            ctx.font = '10px JetBrains Mono';
+            ctx.fillStyle = '#6b7280';
+            ctx.textAlign = 'center';
+
+            const rTicks = 8;
+            for (let i = 0; i <= rTicks; i++) {
+                const r = rMin + (i / rTicks) * (rMax - rMin);
+                const px = ML + (i / rTicks) * plotW;
+                ctx.fillText(r.toFixed(4), px, MT + plotH + 15);
+            }
+
+            ctx.textAlign = 'right';
+            const xTicks = 5;
+            for (let i = 0; i <= xTicks; i++) {
+                const x = xMin + (i / xTicks) * (xMax - xMin);
+                const py = MT + (1 - i / xTicks) * plotH;
+                ctx.fillText(x.toFixed(3), ML - 5, py + 3);
+            }
+
+            ctx.font = '12px Inter';
+            ctx.fillStyle = '#9ca3af';
+            ctx.textAlign = 'center';
+            ctx.fillText('r', ML + plotW / 2, MT + plotH + 35);
+        }
+
+        function render() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, W, H);
+            computeBifurcation();
+            drawAxes();
+            drawAnnotations();
+        }
+
+        // Animated zoom into cascade
+        function animateZoom() {
+            if (animating) return;
+
+            zoomLevel++;
+            const zoomTargets = [
+                { rMin: 2.9, rMax: 3.7, xMin: 0.0, xMax: 1.0 },
+                { rMin: 3.4, rMax: 3.6, xMin: 0.3, xMax: 0.9 },
+                { rMin: 3.54, rMax: 3.575, xMin: 0.34, xMax: 0.9 },
+                { rMin: 3.563, rMax: 3.5705, xMin: 0.35, xMax: 0.9 },
+                { rMin: 3.5685, rMax: 3.5701, xMin: 0.35, xMax: 0.9 },
+            ];
+
+            if (zoomLevel >= zoomTargets.length) {
+                zoomLevel = 0;
+            }
+
+            const target = zoomTargets[zoomLevel];
+            targetRMin = target.rMin;
+            targetRMax = target.rMax;
+            targetXMin = target.xMin;
+            targetXMax = target.xMax;
+
+            animating = true;
+            animProgress = 0;
+
+            const startRMin = rMin, startRMax = rMax;
+            const startXMin = xMin, startXMax = xMax;
+
+            function step() {
+                animProgress += 0.02;
+                if (animProgress >= 1) {
+                    animProgress = 1;
+                    animating = false;
+                }
+
+                const t = animProgress * animProgress * (3 - 2 * animProgress); // smoothstep
+                rMin = startRMin + (targetRMin - startRMin) * t;
+                rMax = startRMax + (targetRMax - startRMax) * t;
+                xMin = startXMin + (targetXMin - startXMin) * t;
+                xMax = startXMax + (targetXMax - startXMax) * t;
+
+                render();
+
+                if (animating) requestAnimationFrame(step);
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        zoomBtn.addEventListener('click', animateZoom);
+
+        resetBtn.addEventListener('click', function() {
+            zoomLevel = 0;
+            rMin = 2.9;
+            rMax = 3.7;
+            xMin = 0.0;
+            xMax = 1.0;
+            render();
+        });
+
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.clientWidth * dpr;
+            canvas.height = canvas.clientHeight * dpr;
+            ctx.scale(dpr, dpr);
+            render();
+        });
+
+        render();
+
+    })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 30 · Fronteras abiertas | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 06</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 30 / 30</span>
+                <div class="flex gap-2">
+                    <a href="leccion-29.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="../index.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Fin del curso</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 06</h2>
+                <p class="text-sm text-gray-400 mt-1">Mas Alla</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>5 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-26.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">26</span>
+                        <span>Secciones de Poincare</span>
+                    </a>
+                    <a href="leccion-27.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">27</span>
+                        <span>Mapa logistico</span>
+                    </a>
+                    <a href="leccion-28.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">28</span>
+                        <span>Caos en la naturaleza</span>
+                    </a>
+                    <a href="leccion-29.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">29</span>
+                        <span>Visualizacion avanzada</span>
+                    </a>
+                    <a href="leccion-30.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">30</span>
+                        <span>Fronteras abiertas</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 30</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Fronteras abiertas</h1>
+                    <p class="text-xl text-gray-400">El final del curso es el comienzo de la exploracion</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Lo que hemos aprendido -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Lo que hemos aprendido</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Hemos recorrido un camino largo. En la Leccion 1 comenzamos con una pregunta simple:
+                            ¿puede un sistema determinista ser impredecible? La respuesta, como ahora sabemos, es
+                            un rotundo si. Pero esa respuesta abrio un universo entero de preguntas nuevas, y las
+                            hemos explorado sistematicamente a lo largo de 30 lecciones y 6 modulos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En el <strong class="text-white">Modulo 1</strong> sentamos los fundamentos: caos
+                            determinista, espacio de fases, atractores, sensibilidad a condiciones iniciales y
+                            disipatividad. Aprendimos el lenguaje basico para hablar de sistemas dinamicos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En el <strong class="text-white">Modulo 2</strong> nos sumergimos en el atractor de
+                            Lorenz, el arquetipo del caos: sus ecuaciones, su geometria de mariposa, sus
+                            propiedades de estiramiento y plegamiento, y los parametros que controlan la
+                            transicion al caos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">Modulo 3</strong> cuantifico el caos: exponentes de
+                            Lyapunov para medir la sensibilidad, bifurcaciones para entender las transiciones,
+                            y la constante de Feigenbaum como prueba de universalidad.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En el <strong class="text-white">Modulo 4</strong> exploramos la diversidad del caos
+                            a traves de diez atractores extranos diferentes, cada uno con su propia personalidad
+                            geometrica pero compartiendo las propiedades universales del caos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">Modulo 5</strong> nos llevo a los fractales: la geometria
+                            del caos. Mandelbrot, Julia, dimension fractal, autosimilaridad, y la profunda conexion
+                            entre fractales y atractores extranos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Y en este <strong class="text-white">Modulo 6</strong> hemos ido mas alla: secciones
+                            de Poincare, mapas discretos, caos en la naturaleza y visualizacion avanzada. Pero el
+                            caos es un campo vivo, en constante expansion. Veamos que hay en la frontera.
+                        </p>
+                    </section>
+
+                    <!-- Recapitulacion del viaje -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Recapitulacion del viaje</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Mirando hacia atras, el hilo conductor de todo el curso ha sido una tension fundamental:
+                            entre <strong class="text-white">determinismo y complejidad</strong>. Sistemas simples
+                            &mdash; tres ecuaciones diferenciales, una ecuacion en diferencias de una sola variable
+                            &mdash; pueden generar comportamiento de complejidad ilimitada. No necesitamos infinitas
+                            variables ni ruido aleatorio: la no linealidad basta.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Las herramientas que hemos aprendido &mdash; espacio de fases, exponentes de Lyapunov,
+                            bifurcaciones, secciones de Poincare, dimension fractal &mdash; no son solo tecnicas
+                            matematicas. Son formas de <em>pensar</em> sobre la complejidad. Son lentes que nos
+                            permiten ver estructura donde antes solo veiamos desorden. Y esa vision se aplica mucho
+                            mas alla de las ecuaciones diferenciales.
+                        </p>
+                    </section>
+
+                    <!-- Caos cuantico -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Caos cuantico</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            ¿Existe el caos en la mecanica cuantica? La pregunta parece simple pero es profundamente
+                            sutil. En mecanica clasica, el caos se manifiesta como divergencia exponencial de
+                            trayectorias. Pero en mecanica cuantica no hay trayectorias: hay funciones de onda que
+                            evolucionan segun la ecuacion de Schrodinger, que es <em>lineal</em>. Y los sistemas
+                            lineales no pueden ser caoticos en el sentido clasico.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Sin embargo, cuando un sistema clasico es caotico, su version cuantica muestra
+                            "huellas" del caos. La conjetura de <strong class="text-white">Berry-Tabor</strong>
+                            establece que los niveles de energia de un sistema cuantico cuya contraparte clasica
+                            es integrable se distribuyen como una secuencia de Poisson (niveles independientes).
+                            La conjetura <strong class="text-white">BGS</strong> (Bohigas-Giannoni-Schmit) afirma
+                            que si la contraparte clasica es caotica, los niveles siguen las estadisticas de
+                            matrices aleatorias (niveles que se repelen mutuamente).
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            El caos cuantico tiene aplicaciones en fisica nuclear (los niveles de energia de nucleos
+                            pesados siguen estadisticas de matrices aleatorias), en nanofisica (billar cuantico,
+                            donde la forma del recipiente determina si la dinamica es caotica), y en agujeros
+                            negros (la conjetura de scrambling cuantico de la informacion). Es una de las fronteras
+                            mas activas de la fisica moderna.
+                        </p>
+                    </section>
+
+                    <!-- Redes y caos -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Redes y caos</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            ¿Que sucede cuando muchos sistemas caoticos se acoplan entre si? El resultado puede ser
+                            sorprendente: en lugar de amplificar el caos, el acoplamiento puede producir
+                            <strong class="text-white">sincronizacion</strong>. Miles de osciladores caoticos,
+                            conectados de la manera correcta, pueden coordinarse espontaneamente para oscilar al
+                            unisono.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El <strong class="text-white">modelo de Kuramoto</strong> es el ejemplo canonico: N
+                            osciladores con frecuencias naturales diferentes, acoplados mediante una interaccion
+                            sinusoidal. A medida que aumenta la fuerza de acoplamiento, los osciladores pasan de
+                            comportarse independientemente (cada uno a su ritmo) a sincronizarse parcialmente
+                            (un grupo coherente emerge) y finalmente a sincronizarse completamente.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Este fenomeno es ubicuo en la naturaleza: las luciernagas que parpadean al unisono, los
+                            marcapasos cardiacos que se sincronizan, las neuronas que disparan coordinadamente, las
+                            redes electricas que mantienen frecuencia constante. La frontera entre caos y
+                            sincronizacion en redes complejas es uno de los temas mas activos de la ciencia moderna.
+                        </p>
+                    </section>
+
+                    <!-- Caos y machine learning -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Caos y machine learning</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La conexion entre caos y aprendizaje automatico es bidireccional. Por un lado, las
+                            redes neuronales recurrentes (RNN) son sistemas dinamicos no lineales que pueden
+                            exhibir caos. De hecho, el <strong class="text-white">reservoir computing</strong>
+                            (computacion de reservorio) explota deliberadamente la dinamica caotica: una red
+                            recurrente aleatoria "al borde del caos" se usa como reservorio de estados, y solo
+                            se entrena una capa de salida lineal.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Los <strong class="text-white">echo state networks</strong> (ESN) son un ejemplo
+                            concreto: una red recurrente con pesos fijos cuyo radio espectral esta ajustado cerca
+                            de 1 (el borde del caos). Esta red transforma senales de entrada en representaciones
+                            de alta dimension que son faciles de clasificar linealmente. La clave es que el
+                            reservorio caotico mezcla informacion de manera rica pero determinista.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            En la otra direccion, el machine learning se esta usando para descubrir y analizar
+                            caos: predecir trayectorias caoticas a corto plazo, estimar exponentes de Lyapunov
+                            a partir de datos, reconstruir atractores a partir de series temporales parciales,
+                            y descubrir ecuaciones dinamicas ocultas en datos experimentales. La teoria del
+                            caos y la inteligencia artificial se estan fertilizando mutuamente.
+                        </p>
+                    </section>
+
+                    <!-- Problemas abiertos -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Problemas abiertos</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La teoria del caos, a pesar de sus 60 anos de desarrollo, esta lejos de estar completa.
+                            Algunos de los problemas abiertos mas importantes son:
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Las <strong class="text-white">ecuaciones de Navier-Stokes</strong> y la turbulencia:
+                            ni siquiera sabemos si las soluciones de Navier-Stokes en 3D existen y son suaves para
+                            todo tiempo (es uno de los Problemas del Milenio del Clay Institute, con un premio de
+                            un millon de dolares). Entender la turbulencia como fenomeno caotico es el santo grial
+                            de la dinamica de fluidos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La <strong class="text-white">prediccion climatica</strong>: distinguir entre tiempo
+                            meteorologico (caotico, horizonte de ~10 dias) y clima (promedio estadistico, potencialmente
+                            predecible a largo plazo) es uno de los desafios cientificos mas urgentes. ¿Como
+                            predecimos tendencias a largo plazo en un sistema caotico? Las herramientas de la
+                            teoria ergodica dan esperanza, pero los detalles son formidables.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Y en la frontera mas especulativa: ¿juega el caos algun papel en la
+                            <strong class="text-white">consciencia</strong>? Algunos neurocientificos proponen
+                            que la actividad cerebral opera "al borde del caos", en un regimen critico que
+                            maximiza la capacidad de procesamiento de informacion. La idea es fascinante pero
+                            profundamente dificil de verificar.
+                        </p>
+                    </section>
+
+                    <!-- Tu siguiente paso -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Tu siguiente paso</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Has completado 30 lecciones de teoria del caos. Tienes las herramientas conceptuales
+                            y computacionales para explorar por tu cuenta. ¿Que sigue?
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            <strong class="text-white">Explora ChaosLab.</strong> Los 10 atractores del LAB de
+                            abajo son solo el comienzo. Modifica los parametros, cambia las condiciones iniciales,
+                            anade nuevos atractores. El codigo esta abierto y es tuyo para experimentar.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            <strong class="text-white">Lee a los maestros.</strong> Steven Strogatz,
+                            <em>Nonlinear Dynamics and Chaos</em> es el texto de referencia, magistralmente escrito.
+                            James Gleick, <em>Chaos: Making a New Science</em> es la historia del campo, accesible
+                            y fascinante. Edward Lorenz, <em>The Essence of Chaos</em> es la perspectiva del
+                            descubridor.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            <strong class="text-white">Crea tu propio atractor.</strong> Inventa un sistema de
+                            tres EDOs con no linealidades cuadraticas o cubicas. Variando los parametros, ¿puedes
+                            encontrar una region caotica? Si lo logras, calculale sus exponentes de Lyapunov, su
+                            dimension fractal, dibuja su seccion de Poincare. Y si creas algo bello, compartelo
+                            con la comunidad.
+                        </p>
+                    </section>
+
+                    <!-- Emphasis box -->
+                    <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                        <p class="text-violet-300 font-semibold mb-2">Idea final</p>
+                        <p class="text-gray-300">
+                            El caos es una ventana a la complejidad del universo, y apenas hemos abierto la puerta.
+                            Detras hay un paisaje infinito de matematicas, fisica, biologia, arte y filosofia.
+                            Las herramientas que llevas contigo &mdash; sensibilidad, atractores, fractales,
+                            bifurcaciones &mdash; son brujulas para navegar ese paisaje. Usálas bien.
+                        </p>
+                    </div>
+
+                    <!-- Table -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Fronteras de investigacion</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-4 py-3 text-left text-violet-400 font-semibold">Tema</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Pregunta abierta</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Frontera actual</th>
+                                        <th class="px-4 py-3 text-left text-cyan-400 font-semibold">Investigadores clave</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Turbulencia</td>
+                                        <td class="px-4 py-3 text-gray-400">¿Existen soluciones suaves de N-S en 3D?</td>
+                                        <td class="px-4 py-3 text-gray-400">Problema del Milenio, DNS a Re~10^6</td>
+                                        <td class="px-4 py-3 text-gray-400">Kolmogorov, Fefferman, Tao</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Caos cuantico</td>
+                                        <td class="px-4 py-3 text-gray-400">¿BGS es universalmente valida?</td>
+                                        <td class="px-4 py-3 text-gray-400">Billar cuantico, scrambling</td>
+                                        <td class="px-4 py-3 text-gray-400">Berry, Bohigas, Maldacena</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Sincronizacion</td>
+                                        <td class="px-4 py-3 text-gray-400">¿Como emerge el orden del caos?</td>
+                                        <td class="px-4 py-3 text-gray-400">Redes complejas, chimera states</td>
+                                        <td class="px-4 py-3 text-gray-400">Kuramoto, Strogatz, Pikovsky</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">ML + Caos</td>
+                                        <td class="px-4 py-3 text-gray-400">¿Puede ML predecir caos a largo plazo?</td>
+                                        <td class="px-4 py-3 text-gray-400">Reservoir computing, physics-informed NN</td>
+                                        <td class="px-4 py-3 text-gray-400">Jaeger, Pathak, Brunton</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-4 py-3 text-gray-300">Clima</td>
+                                        <td class="px-4 py-3 text-gray-400">¿Limite de prediccion climatica?</td>
+                                        <td class="px-4 py-3 text-gray-400">Tipping points, Earth system models</td>
+                                        <td class="px-4 py-3 text-gray-400">Lorenz, Ghil, Hasselmann</td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-4 py-3 text-gray-300">Neurociencia</td>
+                                        <td class="px-4 py-3 text-gray-400">¿Cerebro al borde del caos?</td>
+                                        <td class="px-4 py-3 text-gray-400">Criticalidad neuronal, avalanchas</td>
+                                        <td class="px-4 py-3 text-gray-400">Beggs, Chialvo, Bak</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios finales</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Disena tu propio sistema de 3 EDOs con al menos un termino no lineal cuadratico.
+                                    Por ejemplo: \(\dot{x} = a(y - x)\), \(\dot{y} = bx - y - xz\),
+                                    \(\dot{z} = xy - cz\). Varia los parametros \(a, b, c\) e intenta encontrar
+                                    una region en el espacio de parametros donde el sistema sea caotico.
+                                    ¿Que criterios usas para determinar si es caotico?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Implementa tu sistema de la pregunta anterior en JavaScript usando RK4.
+                                    Visualizalo en 3D con Three.js o en 2D como proyeccion. Si encuentras un
+                                    atractor extrano, calcula sus exponentes de Lyapunov numericamente.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>Observa el mosaico de atractores en el LAB de abajo. Para cada uno de los 10
+                                    atractores, identifica: (a) si tiene simetria, (b) cuantas "alas" o lobulos
+                                    tiene, (c) cual crees que tiene la mayor dimension fractal. Justifica
+                                    cualitativamente tus respuestas basandote en la geometria visual.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Mosaico de atractores</h2>
+                        <p class="text-gray-400 mb-4">Los 10 atractores de ChaosLab renderizados simultaneamente como
+                        proyecciones 2D rotantes. Cada uno es integrado con RK4 y proyectado en una celda del mosaico.
+                        Un bestiario visual del caos.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30">
+                                <span class="mono text-xs text-violet-400">chaos-lab::attractor-mosaic</span>
+                                <div class="flex gap-2">
+                                    <button id="btnReset30" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause30" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="1000" height="600" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-29.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">&larr; Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 29: Visualizacion avanzada</span>
+                </a>
+                <a href="../index.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Fin del curso</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Volver al indice del curso &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 06 &middot; Leccion 30</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Attractor Mosaic -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+        const W = canvas.width;
+        const H = canvas.height;
+        let paused = false;
+        let time = 0;
+
+        // Grid: 2 rows x 5 columns
+        const cols = 5, rows = 2;
+        const cellW = W / cols;
+        const cellH = H / rows;
+
+        // RK4 generic stepper
+        function rk4Step(state, derivs, dt) {
+            const n = state.length;
+            const k1 = derivs(state);
+            const s2 = state.map((v, i) => v + 0.5 * dt * k1[i]);
+            const k2 = derivs(s2);
+            const s3 = state.map((v, i) => v + 0.5 * dt * k2[i]);
+            const k3 = derivs(s3);
+            const s4 = state.map((v, i) => v + dt * k3[i]);
+            const k4 = derivs(s4);
+            return state.map((v, i) => v + (dt / 6) * (k1[i] + 2*k2[i] + 2*k3[i] + k4[i]));
+        }
+
+        // Attractor definitions
+        const attractors = [
+            {
+                name: 'Lorenz',
+                init: [1, 1, 1],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [10*(y-x), x*(28-z)-y, x*y-8/3*z];
+                },
+                scale: 5, center: [0, 0, 25], color: '#a855f7', dt: 0.005
+            },
+            {
+                name: 'Rossler',
+                init: [1, 1, 0],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [-(y+z), x+0.2*y, 0.2+z*(x-5.7)];
+                },
+                scale: 10, center: [0, 0, 3], color: '#22d3ee', dt: 0.01
+            },
+            {
+                name: 'Chen',
+                init: [-0.1, 0.5, -0.6],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [35*(y-x), -7*x-x*z+28*y, x*y-3*z];
+                },
+                scale: 4, center: [0, 0, 30], color: '#f97316', dt: 0.003
+            },
+            {
+                name: 'Aizawa',
+                init: [0.1, 0, 0],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [
+                        (z-0.7)*x - 3.5*y,
+                        3.5*x + (z-0.7)*y,
+                        0.6 + 0.95*z - z*z*z/3 - (x*x+y*y)*(1+0.25*z) + 0.1*z*x*x*x
+                    ];
+                },
+                scale: 60, center: [0, 0, 0], color: '#ec4899', dt: 0.01
+            },
+            {
+                name: 'Thomas',
+                init: [1.1, 1.1, -0.01],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    const b = 0.208186;
+                    return [Math.sin(y)-b*x, Math.sin(z)-b*y, Math.sin(x)-b*z];
+                },
+                scale: 20, center: [0, 0, 0], color: '#22c55e', dt: 0.05
+            },
+            {
+                name: 'Halvorsen',
+                init: [-1.48, -1.51, 2.04],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    const a = 1.89;
+                    return [
+                        -a*x - 4*y - 4*z - y*y,
+                        -a*y - 4*z - 4*x - z*z,
+                        -a*z - 4*x - 4*y - x*x
+                    ];
+                },
+                scale: 6, center: [0, 0, 0], color: '#eab308', dt: 0.005
+            },
+            {
+                name: 'Dadras',
+                init: [1, 1, 0.01],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [y-3*x+2*y*z, 5*y-x*z+z, 2*x*y-8*z];
+                },
+                scale: 4, center: [0, 0, 0], color: '#6366f1', dt: 0.005
+            },
+            {
+                name: 'Sprott B',
+                init: [0.1, 0.1, 0],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [y*z, x-y, 1-x*y];
+                },
+                scale: 25, center: [0, 0, 0], color: '#ef4444', dt: 0.02
+            },
+            {
+                name: 'Lu Chen',
+                init: [0.1, 0.3, -0.6],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    return [36*(y-x), -20*x+36*y-x*z, x*y-3*z];
+                },
+                scale: 3.5, center: [0, 0, 40], color: '#14b8a6', dt: 0.002
+            },
+            {
+                name: 'Rabinovich-Fabrikant',
+                init: [-1, 0, 0.5],
+                derivs: (s) => {
+                    const [x, y, z] = s;
+                    const a = 0.14, g = 0.10;
+                    return [
+                        y*(z - 1 + x*x) + g*x,
+                        x*(3*z + 1 - x*x) + g*y,
+                        -2*z*(a + x*y)
+                    ];
+                },
+                scale: 30, center: [0, 0, 0.5], color: '#d946ef', dt: 0.01
+            }
+        ];
+
+        // Initialize states and trails
+        const states = attractors.map(a => [...a.init]);
+        const trails = attractors.map(() => []);
+        const maxTrail = 800;
+
+        // Warm up all attractors
+        for (let a = 0; a < attractors.length; a++) {
+            for (let i = 0; i < 2000; i++) {
+                states[a] = rk4Step(states[a], attractors[a].derivs, attractors[a].dt);
+                // Safety check
+                const mag = Math.sqrt(states[a][0]**2 + states[a][1]**2 + states[a][2]**2);
+                if (!isFinite(mag) || mag > 1e6) {
+                    states[a] = [...attractors[a].init];
+                }
+            }
+        }
+
+        // 3D rotation and projection
+        function project(x, y, z, cx, cy, cz, scale, angle) {
+            // Center
+            const dx = x - cx, dy = y - cy, dz = z - cz;
+            // Rotate around Y axis
+            const cosA = Math.cos(angle);
+            const sinA = Math.sin(angle);
+            const rx = dx * cosA + dz * sinA;
+            const ry = dy;
+            const rz = -dx * sinA + dz * cosA;
+            // Slight tilt
+            const cosT = Math.cos(0.3);
+            const sinT = Math.sin(0.3);
+            const fy = ry * cosT - rz * sinT;
+            return { x: rx / scale, y: fy / scale };
+        }
+
+        function reset() {
+            for (let a = 0; a < attractors.length; a++) {
+                states[a] = [...attractors[a].init];
+                trails[a] = [];
+            }
+            // Warm up
+            for (let a = 0; a < attractors.length; a++) {
+                for (let i = 0; i < 2000; i++) {
+                    states[a] = rk4Step(states[a], attractors[a].derivs, attractors[a].dt);
+                    const mag = Math.sqrt(states[a][0]**2 + states[a][1]**2 + states[a][2]**2);
+                    if (!isFinite(mag) || mag > 1e6) states[a] = [...attractors[a].init];
+                }
+            }
+            time = 0;
+        }
+
+        function draw() {
+            ctx.fillStyle = '#030712';
+            ctx.fillRect(0, 0, W, H);
+
+            time += 0.008;
+
+            for (let a = 0; a < attractors.length; a++) {
+                const attr = attractors[a];
+                const col = Math.floor(a % cols);
+                const row = Math.floor(a / cols);
+                const ox = col * cellW;
+                const oy = row * cellH;
+
+                // Step simulation
+                for (let s = 0; s < 10; s++) {
+                    states[a] = rk4Step(states[a], attr.derivs, attr.dt);
+                    const mag = Math.sqrt(states[a][0]**2 + states[a][1]**2 + states[a][2]**2);
+                    if (!isFinite(mag) || mag > 1e6) {
+                        states[a] = [...attr.init];
+                        trails[a] = [];
+                    }
+                }
+
+                // Project and store
+                const p = project(
+                    states[a][0], states[a][1], states[a][2],
+                    attr.center[0], attr.center[1], attr.center[2],
+                    attr.scale, time + a * 0.6
+                );
+                trails[a].push({ x: p.x, y: p.y });
+                if (trails[a].length > maxTrail) trails[a].shift();
+
+                // Draw cell border
+                ctx.strokeStyle = '#1a1a2e';
+                ctx.lineWidth = 1;
+                ctx.strokeRect(ox + 1, oy + 1, cellW - 2, cellH - 2);
+
+                // Draw name
+                ctx.fillStyle = attr.color;
+                ctx.font = '11px JetBrains Mono, monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(attr.name, ox + cellW / 2, oy + 16);
+
+                // Draw trail
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(ox, oy, cellW, cellH);
+                ctx.clip();
+
+                const centerX = ox + cellW / 2;
+                const centerY = oy + cellH / 2 + 8;
+
+                if (trails[a].length > 1) {
+                    for (let i = 1; i < trails[a].length; i++) {
+                        const alpha = 0.05 + 0.95 * Math.pow(i / trails[a].length, 2);
+                        ctx.beginPath();
+                        ctx.strokeStyle = attr.color;
+                        ctx.globalAlpha = alpha * 0.8;
+                        ctx.lineWidth = 1.2;
+                        ctx.moveTo(centerX + trails[a][i-1].x, centerY - trails[a][i-1].y);
+                        ctx.lineTo(centerX + trails[a][i].x, centerY - trails[a][i].y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Draw head point
+                if (trails[a].length > 0) {
+                    const last = trails[a][trails[a].length - 1];
+                    ctx.globalAlpha = 1;
+                    ctx.beginPath();
+                    ctx.arc(centerX + last.x, centerY - last.y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                }
+
+                ctx.globalAlpha = 1;
+                ctx.restore();
+            }
+        }
+
+        function animate() {
+            if (!paused) draw();
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('btnReset30').addEventListener('click', reset);
+        document.getElementById('btnPause30').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

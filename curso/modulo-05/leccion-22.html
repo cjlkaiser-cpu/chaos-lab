@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 22: Perturbacion-renormalizacion — Curso Teoria del Caos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 05</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">22</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">Perturbacion-renormalizacion</span>
+                        <span class="text-gray-400 font-light ml-1">— como calcular &lambda; sin algebra lineal</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-21.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="leccion-23.html" class="text-xs text-gray-600 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-sm font-medium text-violet-400 mb-1">Modulo 05</h2>
+                <p class="text-xs text-gray-500 mb-4">Herramientas de Analisis</p>
+
+                <!-- Progress -->
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>2/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 40%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="space-y-1">
+                    <a href="leccion-21.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">21</span>
+                        <span>Exponente de Lyapunov</span>
+                    </a>
+                    <a href="leccion-22.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 border border-violet-500/30">
+                        <span class="mono text-xs">22</span>
+                        <span>Perturbacion-renormalizacion</span>
+                    </a>
+                    <a href="leccion-23.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">23</span>
+                        <span>Diagramas de bifurcacion</span>
+                    </a>
+                    <a href="leccion-24.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">24</span>
+                        <span>Cascada de duplicacion</span>
+                    </a>
+                    <a href="leccion-25.html" class="flex items-center gap-2 text-sm px-3 py-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-gray-900 transition">
+                        <span class="mono text-xs">25</span>
+                        <span>Dimension fractal</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 22</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~30 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">Perturbacion-renormalizacion</span>
+                    </h1>
+                    <p class="text-xl text-gray-500 font-light">Como calcular &lambda; sin algebra lineal</p>
+                </div>
+
+                <!-- Content -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">El algoritmo</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En la leccion anterior definimos el exponente de Lyapunov y comprendimos su significado profundo: es la tasa exponencial a la que trayectorias cercanas divergen en el espacio de fases. Pero la definicion formal involucra un limite y, en principio, requeriria resolver las ecuaciones variacionales del sistema, es decir, calcular y multiplicar la Jacobiana a lo largo de toda la trayectoria. Para sistemas de alta dimension o ecuaciones complicadas, esto puede ser prohibitivamente costoso.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El <em class="text-violet-300">algoritmo de perturbacion-renormalizacion</em>, propuesto por Benettin, Galgani, Giorgilli y Strelcyn en 1980, ofrece una alternativa elegante que no requiere ninguna derivada, ninguna Jacobiana, ninguna descomposicion matricial. Solo necesitamos poder integrar las ecuaciones del sistema dos veces en paralelo y medir distancias. Es un metodo puramente geometrico.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El procedimiento consta de seis pasos que se repiten ciclicamente, cada uno con un proposito preciso en la estimacion del exponente de Lyapunov:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 1 — Inicializar</div>
+                        <p class="text-gray-400 text-sm">Partimos de dos trayectorias separadas por una distancia \(\varepsilon\). La referencia arranca en \(\mathbf{x}_0\), la perturbada en \(\mathbf{x}_0 + \varepsilon \hat{\mathbf{e}}\), donde \(\hat{\mathbf{e}}\) es un vector unitario en cualquier direccion.</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 2 — Integrar</div>
+                        <p class="text-gray-400 text-sm">Ambas trayectorias evolucionan bajo las mismas ecuaciones durante un intervalo de tiempo \(\tau\), el <em>periodo de renormalizacion</em>. Usamos el mismo integrador (RK4) con el mismo paso temporal.</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 3 — Medir</div>
+                        <p class="text-gray-400 text-sm">Calculamos la nueva separacion \(d_i = \|\mathbf{x}'(t_i) - \mathbf{x}(t_i)\|\). Si el sistema es caotico, \(d_i \gg \varepsilon\). Si es estable, \(d_i \lesssim \varepsilon\).</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 4 — Acumular</div>
+                        <p class="text-gray-400 text-sm">Sumamos el logaritmo del factor de amplificacion: \(\ln(d_i / \varepsilon)\). Cada renormalizacion aporta una muestra de la tasa de divergencia local en esa region del atractor.</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 5 — Renormalizar</div>
+                        <p class="text-gray-400 text-sm">Devolvemos la perturbada a distancia \(\varepsilon\) de la referencia, conservando la direccion: \(\mathbf{x}' \leftarrow \mathbf{x} + \varepsilon \cdot (\mathbf{x}' - \mathbf{x}) / d_i\). Esto es el paso critico del algoritmo.</p>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 rounded-xl p-5">
+                        <div class="text-cyan-400 mono text-sm font-medium mb-2">Paso 6 — Repetir</div>
+                        <p class="text-gray-400 text-sm">Volvemos al Paso 2 y repetimos \(N\) veces. El exponente de Lyapunov se estima como el promedio acumulado de todas las contribuciones logaritmicas dividido por el tiempo total.</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Despues de \(N\) ciclos de renormalizacion, cada uno de duracion \(\tau\), el exponente de Lyapunov maximo se calcula como:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$\lambda_1 = \frac{1}{N\tau} \sum_{i=1}^{N} \ln \frac{d_i}{\varepsilon}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Esta formula es simplemente el promedio temporal de las tasas logaritmicas de expansion, exactamente como prescribe la definicion formal del exponente de Lyapunov. La belleza del metodo es su universalidad: funciona igual para cualquier sistema de ecuaciones diferenciales, mapas iterados, o incluso datos experimentales.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">¿Por que renormalizar?</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La renormalizacion es el ingrediente critico que distingue este algoritmo de un calculo ingenuo. Sin ella, el metodo fracasa inevitablemente, y la razon es geometrica. Consideremos que ocurre cuando dejamos divergir las dos trayectorias sin intervencion.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    En un sistema caotico, la separacion crece exponencialmente: \(d(t) \sim \varepsilon \cdot e^{\lambda t}\). Pero el espacio de fases no es infinito. El atractor tiene un diametro finito \(D\) (para el Lorenz, \(D \approx 40\) unidades). Una vez que la separacion alcanza el orden de \(D\), las dos trayectorias estan en regiones completamente distintas del atractor. Su distancia fluctua erraticamente entre 0 y \(D\), sin relacion alguna con la tasa <em class="text-violet-300">local</em> de divergencia exponencial que queremos medir.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El tiempo hasta la saturacion es sorprendentemente corto:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$t_{\text{sat}} \approx \frac{1}{\lambda} \ln \frac{D}{\varepsilon}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Para el Lorenz con \(\varepsilon = 10^{-6}\) y \(D \approx 40\): \(t_{\text{sat}} \approx \frac{1}{0.906} \ln(4 \times 10^7) \approx 19\) unidades de tiempo. Despues de apenas 19 segundos de simulacion, toda la informacion sobre la divergencia local se ha perdido irremediablemente.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La renormalizacion resuelve esto con elegancia. Al devolver periodicamente la perturbacion al regimen lineal (separaciones \(\sim \varepsilon \ll D\)), aseguramos que cada ciclo mida genuinamente la tasa de expansion exponencial local. Conservar la <em class="text-cyan-300">direccion</em> de la perturbacion es igualmente importante: permite que el vector de separacion se alinee naturalmente con la direccion de maxima expansion, convergiendo al primer vector de Lyapunov.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Eleccion de parametros</h2>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">La perturbacion &varepsilon;</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    La eleccion de \(\varepsilon\) es un equilibrio entre dos limites. Si \(\varepsilon\) es demasiado grande, la perturbacion no es infinitesimal y la hipotesis de linealidad se viola: la separacion ya no crece como una exponencial pura, sino que esta contaminada por efectos no lineales. El resultado sera un \(\lambda\) sistematicamente subestimado.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Si \(\varepsilon\) es demasiado pequeno, los errores de redondeo del punto flotante de 64 bits (precision de \(\sim 10^{-16}\)) dominan la diferencia entre las trayectorias. El resultado sera ruidoso e inestable. Para aritmetica de doble precision, el rango optimo es:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$10^{-8} \lesssim \varepsilon \lesssim 10^{-4}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    En la practica, \(\varepsilon \approx 10^{-6}\) es un valor robusto para la mayoria de los sistemas. Una verificacion esencial: si el \(\lambda\) calculado cambia significativamente al variar \(\varepsilon\) dentro de este rango, hay un problema con el integrador o con la escala del sistema.
+                </p>
+
+                <h3 class="text-xl font-light text-cyan-400 mt-10 mb-4">El periodo de renormalizacion &tau;</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El intervalo \(\tau\) entre renormalizaciones tiene sus propias restricciones. Si \(\tau\) es demasiado corto, el factor \(d_i / \varepsilon\) estara muy proximo a 1, y su logaritmo sera un numero pequeno dominado por ruido numerico. Si \(\tau\) es demasiado largo, la perturbacion puede saturarse antes de la renormalizacion, perdiendo la informacion que necesitamos.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Una regla practica robusta: \(\tau\) debe ser del orden de una unidad de tiempo natural del sistema. Para el Lorenz, una orbita tipica alrededor de un ala del atractor tarda aproximadamente \(T \sim 0.7\) a \(1.5\) unidades de tiempo, asi que \(\tau \approx 0.5\) a \(2.0\) funciona bien. Para mapas iterados, \(\tau = 1\) (un paso de iteracion) es la eleccion natural.
+                </p>
+
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">Convergencia</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El exponente de Lyapunov converge lentamente. Cada ciclo de renormalizacion aporta una muestra de \(\ln(d_i / \varepsilon)\), pero estas muestras estan correlacionadas temporalmente y tienen varianza considerable. La convergencia sigue la ley del promedio: la fluctuacion tipica del promedio parcial decrece como \(1/\sqrt{N}\), lo que significa que necesitamos del orden de \(10^4\) renormalizaciones para obtener 2 digitos significativos de \(\lambda\), y \(10^6\) para 3 digitos.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El <em class="text-violet-300">promedio movil</em> (running average) es la herramienta clave para monitorear la convergencia. Lo graficamos como funcion del numero de renormalizaciones y buscamos la estabilizacion:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-xl p-6 my-8 text-center">
+                    $$\bar{\lambda}_N = \frac{1}{N\tau} \sum_{i=1}^{N} \ln \frac{d_i}{\varepsilon}$$
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Al principio, \(\bar{\lambda}_N\) oscila ampliamente: las primeras iteraciones estan contaminadas por el transitorio y la orientacion arbitraria de la perturbacion inicial. Gradualmente, el promedio se estabiliza alrededor del valor verdadero. El exponente ha convergido cuando las oscilaciones residuales son menores que la precision deseada.
+                </p>
+
+                <!-- Emphasis Box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 p-6 rounded-r-xl my-8">
+                    <p class="text-violet-200 text-lg font-light italic">
+                        "La precision del exponente de Lyapunov esta limitada por tres factores independientes: el numero de renormalizaciones N (convergencia estadistica), la precision del integrador numerico (errores de truncacion del RK4), y la magnitud de &varepsilon; (regimen lineal vs. errores de redondeo). Duplicar los digitos significativos requiere cuadruplicar N."
+                    </p>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Una verificacion practica indispensable es la independencia respecto a los parametros. Si ejecutamos el algoritmo con \(\varepsilon = 10^{-5}\), \(\varepsilon = 10^{-6}\), y \(\varepsilon = 10^{-7}\), los tres deben converger al mismo \(\lambda\) (dentro del error estadistico). Lo mismo con \(\tau\): variaciones moderadas no deben alterar el resultado. Si lo alteran, algo esta mal.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El metodo de perturbacion-renormalizacion calcula solo el exponente de Lyapunov <em class="text-cyan-300">maximo</em> \(\lambda_1\). Para obtener el espectro completo (\(\lambda_1, \lambda_2, \ldots, \lambda_n\)), se necesita la generalizacion de Benettin que usa multiples vectores ortogonales y re-ortogonalizacion via Gram-Schmidt o descomposicion QR en cada renormalizacion. Pero para determinar si un sistema es caotico, el exponente maximo es suficiente: si \(\lambda_1 > 0\), hay caos.
+                </p>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-violet-400 font-medium text-lg mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            <span class="font-medium text-gray-200">Implementacion para el mapa logistico</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Implementa el algoritmo de perturbacion-renormalizacion para el mapa logistico \(x_{n+1} = r x_n(1-x_n)\) con \(r=4\). En este caso \(\tau = 1\) iteracion. Calcula \(\lambda\) y compara con el valor exacto \(\lambda = \ln 2 \approx 0.693\). ¿Cuantas iteraciones necesitas para 3 digitos correctos?</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Sensibilidad a &varepsilon;</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Usa el LAB de abajo. Mueve el slider de \(\varepsilon\) desde \(10^{-8}\) hasta \(10^{-2}\) y observa como cambia la estimacion de \(\lambda\). ¿A partir de que valor la estimacion se degrada? ¿Se degrada por exceso o por defecto? Explica por que, distinguiendo los dos mecanismos de error (no linealidad vs. redondeo).</p>
+                        </li>
+                        <li>
+                            <span class="font-medium text-gray-200">Efecto de &tau;</span>
+                            <p class="text-gray-400 text-sm mt-1 ml-6">Con \(\varepsilon\) fijo en \(10^{-6}\), varia \(\tau\) en el LAB. ¿La convergencia es mas rapida con \(\tau\) grande o pequeno? ¿Hay un valor de \(\tau\) a partir del cual el resultado se vuelve incorrecto? Argumenta con la formula \(t_{\text{sat}} \approx \frac{1}{\lambda} \ln(D/\varepsilon)\).</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <h2 class="text-2xl font-light text-violet-400 border-b border-gray-900 pb-2 mt-12 mb-6">LAB: Perturbacion-renormalizacion en vivo</h2>
+                <p class="text-gray-400 text-sm mb-4">Visualizacion del atractor de Lorenz (proyeccion x-z) con dos trayectorias evolucionando en paralelo. La trayectoria de referencia se muestra en gris, la perturbada en cyan. Cada \(\tau\) unidades de tiempo, se produce una renormalizacion: una flecha amarilla indica el desplazamiento de la perturbada de vuelta a distancia \(\varepsilon\). El promedio movil de \(\lambda_1\) se muestra prominentemente. Ajusta \(\varepsilon\) y \(\tau\) con los sliders para explorar su efecto.</p>
+
+                <div class="lab-container my-6">
+                    <div class="bg-gray-900 px-4 py-2 flex items-center justify-between border-b border-violet-500/30">
+                        <div class="flex items-center gap-2">
+                            <div class="flex gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <span class="ml-4 text-sm text-gray-400 mono">perturbacion-renorm.js</span>
+                        </div>
+                        <div class="flex items-center gap-4 flex-wrap">
+                            <label class="text-xs text-gray-500">
+                                &varepsilon; = <span id="eps-val" class="text-cyan-400 mono">1e-6</span>
+                            </label>
+                            <input type="range" id="eps-slider" min="-8" max="-2" step="0.5" value="-6"
+                                class="w-28 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-violet-500">
+                            <label class="text-xs text-gray-500">
+                                &tau; = <span id="tau-val" class="text-cyan-400 mono">1.00</span>
+                            </label>
+                            <input type="range" id="tau-slider" min="0.2" max="5.0" step="0.2" value="1.0"
+                                class="w-28 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-violet-500">
+                            <button id="reset-btn" class="text-xs text-gray-500 hover:text-violet-400 transition px-2 py-1 border border-gray-700 rounded">Reset</button>
+                        </div>
+                    </div>
+                    <canvas id="lab-canvas" width="900" height="500" style="width: 100%; background: #000;"></canvas>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-21.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-xl">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 21: Exponente de Lyapunov</div>
+                    </div>
+                </a>
+                <a href="leccion-23.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm group-hover:text-violet-400">Leccion 23: Diagramas de bifurcacion</div>
+                    </div>
+                    <span class="text-xl">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 05 — Leccion 22</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Teoria del Caos &middot; De Lorenz al Infinito</p>
+        </div>
+    </footer>
+
+    <!-- LAB Script -->
+    <script>
+    (function() {
+        'use strict';
+
+        const canvas = document.getElementById('lab-canvas');
+        const ctx = canvas.getContext('2d');
+        const epsSlider = document.getElementById('eps-slider');
+        const epsVal = document.getElementById('eps-val');
+        const tauSlider = document.getElementById('tau-slider');
+        const tauVal = document.getElementById('tau-val');
+        const resetBtn = document.getElementById('reset-btn');
+
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr;
+        canvas.height = canvas.clientHeight * dpr;
+        ctx.scale(dpr, dpr);
+        const W = canvas.clientWidth;
+        const H = canvas.clientHeight;
+
+        const SIGMA = 10, BETA = 8/3, RHO = 28;
+        const DT = 0.005;
+        let EPSILON = 1e-6;
+        let TAU = 1.0;
+
+        let ref, pert, lyapSum, lyapCount, lyapCurrent, lyapHistory;
+        let timeAccum, trailRef, trailPert, renormArrows;
+        const MAX_HISTORY = 400;
+        const MAX_TRAIL = 2500;
+        const MAX_ARROWS = 15;
+
+        function lorenz(s) {
+            return [SIGMA*(s[1]-s[0]), s[0]*(RHO-s[2])-s[1], s[0]*s[1]-BETA*s[2]];
+        }
+
+        function rk4(s, dt) {
+            const k1 = lorenz(s);
+            const s2 = [s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2];
+            const k2 = lorenz(s2);
+            const s3 = [s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2];
+            const k3 = lorenz(s3);
+            const s4 = [s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt];
+            const k4 = lorenz(s4);
+            return [
+                s[0]+(k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                s[1]+(k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                s[2]+(k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6
+            ];
+        }
+
+        function toScreen(xz) {
+            return [W*0.42 + xz[0]*(W/80), H*0.93 - (xz[1]/55)*H*0.88];
+        }
+
+        function reset() {
+            ref = [1+Math.random()*0.1, 1, 1];
+            for (let i = 0; i < 600; i++) ref = rk4(ref, DT);
+            pert = [ref[0]+EPSILON, ref[1], ref[2]];
+            lyapSum = 0; lyapCount = 0; lyapCurrent = 0;
+            lyapHistory = []; timeAccum = 0;
+            trailRef = []; trailPert = []; renormArrows = [];
+        }
+
+        function step() {
+            for (let i = 0; i < 4; i++) {
+                ref = rk4(ref, DT);
+                pert = rk4(pert, DT);
+                timeAccum += DT;
+
+                trailRef.push([ref[0], ref[2]]);
+                trailPert.push([pert[0], pert[2]]);
+                if (trailRef.length > MAX_TRAIL) trailRef.shift();
+                if (trailPert.length > MAX_TRAIL) trailPert.shift();
+
+                if (timeAccum >= TAU) {
+                    timeAccum -= TAU;
+                    const dx = pert[0]-ref[0], dy = pert[1]-ref[1], dz = pert[2]-ref[2];
+                    const dist = Math.sqrt(dx*dx+dy*dy+dz*dz);
+
+                    if (dist > 0 && isFinite(dist)) {
+                        lyapSum += Math.log(dist/EPSILON);
+                        lyapCount++;
+                        lyapCurrent = lyapSum/(lyapCount*TAU);
+
+                        const oldPert = [pert[0], pert[2]];
+                        const sc = EPSILON/dist;
+                        pert = [ref[0]+dx*sc, ref[1]+dy*sc, ref[2]+dz*sc];
+                        const newPert = [pert[0], pert[2]];
+                        renormArrows.push({from: oldPert, to: newPert, age: 0});
+                        if (renormArrows.length > MAX_ARROWS) renormArrows.shift();
+                    }
+                }
+            }
+
+            if (lyapCount > 0 && lyapCount % 2 === 0) {
+                lyapHistory.push(lyapCurrent);
+                if (lyapHistory.length > MAX_HISTORY) lyapHistory.shift();
+            }
+        }
+
+        function drawArrow(fx, fy, tx, ty, alpha) {
+            const ddx = tx-fx, ddy = ty-fy;
+            const len = Math.sqrt(ddx*ddx+ddy*ddy);
+            if (len < 1.5) return;
+            ctx.strokeStyle = 'rgba(234,179,8,'+alpha+')';
+            ctx.fillStyle = 'rgba(234,179,8,'+alpha+')';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(tx, ty); ctx.stroke();
+            const angle = Math.atan2(ddy, ddx);
+            const hl = Math.min(7, len*0.4);
+            ctx.beginPath();
+            ctx.moveTo(tx, ty);
+            ctx.lineTo(tx-hl*Math.cos(angle-0.4), ty-hl*Math.sin(angle-0.4));
+            ctx.lineTo(tx-hl*Math.cos(angle+0.4), ty-hl*Math.sin(angle+0.4));
+            ctx.closePath(); ctx.fill();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, W, H);
+
+            // Reference trail
+            if (trailRef.length > 1) {
+                ctx.beginPath();
+                for (let i = 0; i < trailRef.length; i++) {
+                    const p = toScreen(trailRef[i]);
+                    i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]);
+                }
+                ctx.strokeStyle = 'rgba(156,163,175,0.3)';
+                ctx.lineWidth = 1; ctx.stroke();
+            }
+
+            // Perturbed trail
+            if (trailPert.length > 1) {
+                ctx.beginPath();
+                for (let i = 0; i < trailPert.length; i++) {
+                    const p = toScreen(trailPert[i]);
+                    i === 0 ? ctx.moveTo(p[0], p[1]) : ctx.lineTo(p[0], p[1]);
+                }
+                ctx.strokeStyle = 'rgba(34,211,238,0.35)';
+                ctx.lineWidth = 1; ctx.stroke();
+            }
+
+            // Renormalization arrows
+            for (const a of renormArrows) {
+                a.age++;
+                const alpha = Math.max(0, 1-a.age/100);
+                if (alpha > 0) {
+                    const f = toScreen(a.from), t = toScreen(a.to);
+                    drawArrow(f[0], f[1], t[0], t[1], alpha);
+                }
+            }
+
+            // Current reference point
+            const rp = toScreen([ref[0], ref[2]]);
+            ctx.fillStyle = 'rgba(156,163,175,0.9)';
+            ctx.beginPath(); ctx.arc(rp[0], rp[1], 5, 0, Math.PI*2); ctx.fill();
+
+            // Current perturbed point
+            const pp = toScreen([pert[0], pert[2]]);
+            ctx.fillStyle = '#22d3ee';
+            ctx.beginPath(); ctx.arc(pp[0], pp[1], 4, 0, Math.PI*2); ctx.fill();
+
+            // Lambda display
+            const col = lyapCurrent > 0.1 ? '#ef4444' : (lyapCurrent > -0.1 ? '#eab308' : '#22c55e');
+            ctx.font = 'bold 38px JetBrains Mono';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = col;
+            ctx.fillText('\u03BB\u2081 = '+lyapCurrent.toFixed(4), 18, 48);
+
+            ctx.font = '13px Inter';
+            ctx.fillStyle = '#9ca3af';
+            ctx.fillText('Renormalizaciones: '+lyapCount, 18, 72);
+
+            // Convergence chart
+            const cX = W-290, cW = 270, cT = 15, cH = 110;
+            ctx.fillStyle = 'rgba(10,10,10,0.88)';
+            ctx.beginPath(); ctx.roundRect(cX, cT, cW, cH, 6); ctx.fill();
+            ctx.strokeStyle = '#1f2937';
+            ctx.beginPath(); ctx.roundRect(cX, cT, cW, cH, 6); ctx.stroke();
+
+            ctx.font = '11px Inter'; ctx.fillStyle = '#6b7280'; ctx.textAlign = 'left';
+            ctx.fillText('Convergencia \u03BB\u2081', cX+8, cT+14);
+
+            const sMin = -1, sMax = 2;
+            const zy = cT+cH*(sMax/(sMax-sMin));
+            ctx.strokeStyle = '#374151'; ctx.setLineDash([3,3]);
+            ctx.beginPath(); ctx.moveTo(cX, zy); ctx.lineTo(cX+cW, zy); ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (lyapHistory.length > 1) {
+                ctx.beginPath();
+                for (let i = 0; i < lyapHistory.length; i++) {
+                    const x = cX+(i/MAX_HISTORY)*cW;
+                    const cl = Math.max(sMin, Math.min(sMax, lyapHistory[i]));
+                    const y = cT+cH*((sMax-cl)/(sMax-sMin));
+                    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+                }
+                ctx.strokeStyle = col; ctx.lineWidth = 1.8; ctx.stroke(); ctx.lineWidth = 1;
+            }
+
+            // Legend
+            ctx.font = '11px JetBrains Mono'; ctx.textAlign = 'left';
+            ctx.fillStyle = '#6b7280';
+            ctx.fillText('\u03B5='+EPSILON.toExponential(0)+' | \u03C4='+TAU.toFixed(1)+' | \u03C1=28', 18, H-14);
+            ctx.fillStyle = '#9ca3af'; ctx.fillText('\u25CF Referencia', W-210, H-14);
+            ctx.fillStyle = '#22d3ee'; ctx.fillText('\u25CF Perturbada', W-110, H-14);
+        }
+
+        function animate() {
+            step(); draw();
+            requestAnimationFrame(animate);
+        }
+
+        epsSlider.addEventListener('input', function() {
+            EPSILON = Math.pow(10, parseFloat(this.value));
+            epsVal.textContent = EPSILON.toExponential(0);
+            reset();
+        });
+
+        tauSlider.addEventListener('input', function() {
+            TAU = parseFloat(this.value);
+            tauVal.textContent = TAU.toFixed(2);
+            reset();
+        });
+
+        resetBtn.addEventListener('click', reset);
+
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.clientWidth*dpr;
+            canvas.height = canvas.clientHeight*dpr;
+            ctx.scale(dpr, dpr);
+        });
+
+        reset();
+        animate();
+    })();
+    </script>
+
+</body>
+</html>

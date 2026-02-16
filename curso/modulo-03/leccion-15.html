@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 15: De ecuaciones a pixeles — Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="border-b border-gray-900 bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <nav class="text-xs text-gray-600 mb-1">
+                        <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                        <span class="mx-1">/</span>
+                        <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                        <span class="mx-1">/</span>
+                        <span class="text-gray-500">Modulo 03</span>
+                    </nav>
+                    <h1 class="text-xl font-light">
+                        <span class="text-cyan-400 mono text-sm">15</span>
+                        <span class="text-violet-400 font-medium glow-text ml-2">De ecuaciones a pixeles</span>
+                    </h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="leccion-14.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">&larr; Anterior</a>
+                    <a href="../modulo-04/leccion-16.html" class="text-xs text-gray-500 hover:text-violet-400 transition px-3 py-1 border border-gray-800 rounded-lg">Siguiente &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-24 bg-gray-950 border border-gray-900 rounded-2xl p-5">
+                <h2 class="text-lg font-medium text-violet-400">Modulo 03</h2>
+                <p class="text-gray-500 text-sm mb-4">Integracion Numerica</p>
+
+                <div class="mb-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Progreso</span>
+                        <span>5/5</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-1.5">
+                        <div class="progress-bar h-1.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="leccion-11.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">11</span>
+                        <span>De ecuaciones a trayectorias</span>
+                    </a>
+                    <a href="leccion-12.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">12</span>
+                        <span>Euler vs RK4</span>
+                    </a>
+                    <a href="leccion-13.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">13</span>
+                        <span>Derivacion de RK4</span>
+                    </a>
+                    <a href="leccion-14.html" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-900 text-gray-500 text-sm transition">
+                        <span class="mono text-xs">14</span>
+                        <span>Eleccion del paso temporal</span>
+                    </a>
+                    <a href="leccion-15.html" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-violet-500/10 text-violet-400 text-sm">
+                        <span class="mono text-xs">15</span>
+                        <span>De ecuaciones a pixeles</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article class="prose prose-invert max-w-none">
+
+                <!-- Lesson Header -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="text-cyan-400 mono text-sm font-medium">LECCION 15</span>
+                        <span class="text-gray-700">|</span>
+                        <span class="text-gray-500 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl font-light mb-2">
+                        <span class="text-violet-400 font-medium glow-text">De ecuaciones</span> a pixeles
+                    </h1>
+                    <p class="text-gray-500 text-lg">El pipeline completo desde las matematicas hasta la pantalla</p>
+                </div>
+
+                <!-- h2: El pipeline completo -->
+                <h2 class="text-2xl font-medium text-violet-400 mt-12 mb-4">El pipeline completo</h2>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Hemos recorrido un largo camino en este modulo. Empezamos con el problema fundamental (convertir ecuaciones
+                    en trayectorias), aprendimos Euler y sus limitaciones, derivamos RK4, y entendimos como elegir el paso temporal.
+                    Ahora es el momento de ver <strong class="text-white">como se conecta todo</strong> en un pipeline funcional.
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    ChaosLab ejecuta un ciclo continuo que transforma ecuaciones matematicas en pixeles en pantalla. Este ciclo
+                    tiene 5 etapas, y cada frame (16.67 ms a 60 fps) las atraviesa todas. Veamos cada una:
+                </p>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    La belleza de este pipeline es que es <em class="text-violet-300">completamente general</em>. Cambiando
+                    unicamente la funcion \(f(x)\) en la primera etapa, podemos visualizar cualquier sistema caotico:
+                    Lorenz, Rossler, Chen, Thomas, o cualquier otro. El resto del pipeline permanece identico.
+                </p>
+
+                <!-- h3: Paso 1 -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso 1: Definir el sistema</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Todo comienza con las ecuaciones. Para Lorenz, definimos una funcion JavaScript que calcula las derivadas:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <pre class="mono text-sm text-gray-300 leading-relaxed"><code><span class="text-violet-400">function</span> <span class="text-cyan-400">lorenz</span>([x, y, z], params) {
+    <span class="text-violet-400">const</span> { sigma, rho, beta } = params;
+    <span class="text-violet-400">return</span> [
+        sigma * (y - x),        <span class="text-gray-600">// dx/dt</span>
+        x * (rho - z) - y,      <span class="text-gray-600">// dy/dt</span>
+        x * y - beta * z        <span class="text-gray-600">// dz/dt</span>
+    ];
+}</code></pre>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Ademas de la funcion, necesitamos los <strong class="text-white">parametros</strong> (\(\sigma = 10, \rho = 28, \beta = 8/3\))
+                    y las <strong class="text-white">condiciones iniciales</strong> (\(x_0 = 1, y_0 = 1, z_0 = 1\)). Con estos tres ingredientes,
+                    el sistema queda completamente definido.
+                </p>
+
+                <!-- h3: Paso 2 -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso 2: Integrar con RK4</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El integrador RK4 genera nuevos puntos de la trayectoria. En cada frame, calculamos un lote de puntos:
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <pre class="mono text-sm text-gray-300 leading-relaxed"><code><span class="text-violet-400">function</span> <span class="text-cyan-400">rk4Step</span>(f, state, params, dt) {
+    <span class="text-violet-400">const</span> k1 = f(state, params);
+    <span class="text-violet-400">const</span> k2 = f(add(state, scale(k1, dt/2)), params);
+    <span class="text-violet-400">const</span> k3 = f(add(state, scale(k2, dt/2)), params);
+    <span class="text-violet-400">const</span> k4 = f(add(state, scale(k3, dt)), params);
+    <span class="text-violet-400">return</span> add(state, scale(
+        add(k1, scale(k2, 2), scale(k3, 2), k4),
+        dt / 6
+    ));
+}
+
+<span class="text-gray-600">// En el loop: 20 pasos por frame</span>
+<span class="text-violet-400">for</span> (<span class="text-violet-400">let</span> i = 0; i &lt; 20; i++) {
+    state = rk4Step(lorenz, state, params, 0.005);
+    addToBuffer(state);
+}</code></pre>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Con 20 pasos por frame y \(dt = 0.005\), cada frame avanza 0.1 unidades de tiempo simulado.
+                    A 60 fps, la simulacion avanza 6 unidades de tiempo por segundo. Para Lorenz, esto significa
+                    aproximadamente 4 orbitas completas por segundo -- una velocidad natural y agradable para la visualizacion.
+                </p>
+
+                <!-- h3: Paso 3 -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso 3: Almacenar en buffer</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Los puntos generados se almacenan en un <strong class="text-white">buffer circular</strong> implementado
+                    con un <code class="mono text-violet-400">Float32Array</code>. La idea del buffer circular es elegante:
+                    en lugar de hacer <code class="mono text-violet-400">push</code> y <code class="mono text-violet-400">shift</code>
+                    (que requieren mover toda la memoria), simplemente sobrescribimos el punto mas antiguo.
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <pre class="mono text-sm text-gray-300 leading-relaxed"><code><span class="text-violet-400">const</span> MAX_POINTS = 50000;
+<span class="text-violet-400">const</span> positions = <span class="text-violet-400">new</span> Float32Array(MAX_POINTS * 3);
+<span class="text-violet-400">let</span> writeIndex = 0;
+<span class="text-violet-400">let</span> pointCount = 0;
+
+<span class="text-violet-400">function</span> <span class="text-cyan-400">addToBuffer</span>(state) {
+    <span class="text-violet-400">const</span> i = (writeIndex % MAX_POINTS) * 3;
+    positions[i]     = state[0];
+    positions[i + 1] = state[1];
+    positions[i + 2] = state[2];
+    writeIndex++;
+    pointCount = Math.min(pointCount + 1, MAX_POINTS);
+}</code></pre>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    <code class="mono text-violet-400">Float32Array</code> es clave por dos razones: (1) es mucho mas eficiente
+                    en memoria que un array de objetos JavaScript, y (2) puede pasarse directamente a la GPU a traves de
+                    WebGL/Three.js sin conversion. Para 50,000 puntos 3D, el buffer ocupa solo 600 KB (50000 * 3 * 4 bytes).
+                </p>
+
+                <!-- h3: Paso 4 -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso 4: Renderizar con Three.js</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Three.js toma el buffer de posiciones y lo convierte en geometria visible. El atractor se dibuja
+                    como una linea continua (<code class="mono text-violet-400">THREE.Line</code>) con un material
+                    que puede tener color, transparencia y efectos de brillo.
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <pre class="mono text-sm text-gray-300 leading-relaxed"><code><span class="text-gray-600">// Geometria</span>
+<span class="text-violet-400">const</span> geometry = <span class="text-violet-400">new</span> THREE.BufferGeometry();
+geometry.setAttribute(<span class="text-green-400">'position'</span>,
+    <span class="text-violet-400">new</span> THREE.BufferAttribute(positions, 3));
+
+<span class="text-gray-600">// Material</span>
+<span class="text-violet-400">const</span> material = <span class="text-violet-400">new</span> THREE.LineBasicMaterial({
+    color: <span class="text-cyan-400">0xa855f7</span>,
+    transparent: <span class="text-cyan-400">true</span>,
+    opacity: <span class="text-cyan-400">0.8</span>
+});
+
+<span class="text-gray-600">// Objeto</span>
+<span class="text-violet-400">const</span> line = <span class="text-violet-400">new</span> THREE.Line(geometry, material);
+scene.add(line);</code></pre>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    En cada frame, despues de calcular nuevos puntos, marcamos la geometria como actualizada
+                    (<code class="mono text-violet-400">geometry.attributes.position.needsUpdate = true</code>)
+                    y Three.js sube los datos a la GPU automaticamente. La GPU entonces rasteriza miles de segmentos
+                    de linea en microsegundos.
+                </p>
+
+                <!-- h3: Paso 5 -->
+                <h3 class="text-xl font-medium text-cyan-400 mt-10 mb-3">Paso 5: Mostrar en pantalla</h3>
+
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    El paso final es el render loop y los efectos de post-procesamiento. Three.js usa
+                    <code class="mono text-violet-400">requestAnimationFrame</code> para sincronizarse con la tasa de
+                    refresco del monitor. Opcionalmente, un <strong class="text-white">EffectComposer</strong> aplica
+                    efectos como bloom (brillo difuso), tone mapping y anti-aliasing.
+                </p>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-lg p-4 mb-4 overflow-x-auto">
+                    <pre class="mono text-sm text-gray-300 leading-relaxed"><code><span class="text-violet-400">function</span> <span class="text-cyan-400">animate</span>() {
+    requestAnimationFrame(animate);
+
+    <span class="text-gray-600">// 1. Integrar nuevos puntos</span>
+    <span class="text-violet-400">for</span> (<span class="text-violet-400">let</span> i = 0; i &lt; 20; i++) {
+        state = rk4Step(lorenz, state, params, dt);
+        addToBuffer(state);
+    }
+
+    <span class="text-gray-600">// 2. Actualizar geometria</span>
+    line.geometry.attributes.position.needsUpdate = <span class="text-cyan-400">true</span>;
+    line.geometry.setDrawRange(0, pointCount);
+
+    <span class="text-gray-600">// 3. Rotar camara</span>
+    camera.position.x = 60 * Math.cos(time * 0.1);
+    camera.position.z = 60 * Math.sin(time * 0.1);
+    camera.lookAt(0, 0, 25);
+
+    <span class="text-gray-600">// 4. Renderizar (con o sin post-procesado)</span>
+    composer.render();  <span class="text-gray-600">// incluye bloom</span>
+}</code></pre>
+                </div>
+
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    El efecto <strong class="text-white">bloom</strong> es especialmente importante para la estetica de ChaosLab.
+                    Toma los pixeles mas brillantes de la escena y les aplica un desenfoque gaussiano, creando el
+                    caracteristico "resplandor" de las lineas del atractor. Esto transforma una simple linea matematica
+                    en algo que parece un objeto luminoso flotando en el espacio.
+                </p>
+
+                <!-- Emphasis box -->
+                <div class="border-l-4 border-violet-400 bg-violet-500/5 px-6 py-4 my-8 rounded-r-lg">
+                    <p class="text-gray-200 font-medium">
+                        ChaosLab ejecuta este pipeline 60 veces por segundo, generando 20 nuevos puntos por frame.
+                        Eso son 1,200 puntos por segundo, cada uno calculado con 4 evaluaciones de la funcion (RK4),
+                        para un total de 4,800 evaluaciones por segundo.
+                    </p>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto mb-8">
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800">
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Etapa</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Entrada</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Salida</th>
+                                <th class="text-left py-3 px-4 text-violet-400 font-medium">Tecnologia</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400 text-xs">
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-violet-300">1. Definir sistema</td>
+                                <td class="py-2 px-4">Ecuaciones + parametros</td>
+                                <td class="py-2 px-4">Funcion f(state, params)</td>
+                                <td class="py-2 px-4 mono">JavaScript</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-violet-300">2. Integrar (RK4)</td>
+                                <td class="py-2 px-4">f(), estado, dt</td>
+                                <td class="py-2 px-4">20 puntos [x,y,z]</td>
+                                <td class="py-2 px-4 mono">RK4 (JS)</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-violet-300">3. Buffer circular</td>
+                                <td class="py-2 px-4">Puntos [x,y,z]</td>
+                                <td class="py-2 px-4">Float32Array (50K * 3)</td>
+                                <td class="py-2 px-4 mono">TypedArray</td>
+                            </tr>
+                            <tr class="border-b border-gray-900">
+                                <td class="py-2 px-4 text-violet-300">4. Renderizar</td>
+                                <td class="py-2 px-4">Float32Array</td>
+                                <td class="py-2 px-4">BufferGeometry + Line</td>
+                                <td class="py-2 px-4 mono">Three.js / WebGL</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 text-violet-300">5. Pantalla</td>
+                                <td class="py-2 px-4">Escena 3D</td>
+                                <td class="py-2 px-4">Pixeles con bloom</td>
+                                <td class="py-2 px-4 mono">EffectComposer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Exercises -->
+                <div class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 my-10">
+                    <h3 class="text-lg font-medium text-violet-400 mb-4">Ejercicios</h3>
+                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
+                        <li>
+                            Si ChaosLab opera a 60 fps con 20 pasos/frame, cuantos puntos por segundo genera?
+                            A esa tasa, cuanto tarda en llenar un buffer de 50,000 puntos?
+                        </li>
+                        <li>
+                            Por que un buffer circular es mas eficiente que un array con push/shift?
+                            Piensa en la complejidad algoritmica de cada operacion.
+                        </li>
+                        <li>
+                            Que efecto visual produce el bloom sobre las lineas del atractor? Por que
+                            es importante para la percepcion de profundidad y la estetica?
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- LAB Section -->
+                <div class="my-12">
+                    <h2 class="text-2xl font-medium text-violet-400 mb-2">LAB: El pipeline en accion</h2>
+                    <p class="text-gray-500 text-sm mb-4">
+                        Diagrama animado del pipeline. Cada etapa se ilumina en secuencia mostrando el flujo de datos.
+                        Debajo, un mini atractor de Lorenz muestra el resultado final en tiempo real.
+                    </p>
+
+                    <div class="lab-container">
+                        <div class="bg-gray-950 px-4 py-3 flex items-center gap-4 flex-wrap border-b border-violet-500/30">
+                            <span class="text-xs text-gray-400">Pipeline ChaosLab</span>
+                            <span id="pipeline-stage" class="mono text-xs text-violet-400 ml-auto">Etapa 1: Definir sistema</span>
+                        </div>
+                        <!-- Pipeline diagram -->
+                        <canvas id="pipeline-canvas" class="w-full bg-black" style="height: 180px;"></canvas>
+                        <!-- Lorenz output -->
+                        <div class="border-t border-violet-500/30">
+                            <canvas id="lorenz-canvas" class="w-full bg-black" style="height: 320px;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- Bottom Navigation -->
+            <div class="flex justify-between items-center mt-16 pt-8 border-t border-gray-900">
+                <a href="leccion-14.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition">
+                    <span class="text-lg">&larr;</span>
+                    <div>
+                        <div class="text-xs text-gray-600">Anterior</div>
+                        <div class="text-sm">Eleccion del paso temporal</div>
+                    </div>
+                </a>
+                <a href="../modulo-04/leccion-16.html" class="group flex items-center gap-3 text-gray-500 hover:text-violet-400 transition text-right">
+                    <div>
+                        <div class="text-xs text-gray-600">Siguiente</div>
+                        <div class="text-sm">Rossler</div>
+                    </div>
+                    <span class="text-lg">&rarr;</span>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-900 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <nav class="text-xs text-gray-600 text-center mb-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span class="mx-1">/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span class="mx-1">/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span class="mx-1">/</span>
+                <span class="text-gray-500">Modulo 03 &middot; Leccion 15</span>
+            </nav>
+            <p class="text-center text-gray-700 text-sm mono">Integracion Numerica &middot; De ecuaciones a pixeles</p>
+        </div>
+    </footer>
+
+    <script>
+        // ============================
+        // LAB: Pipeline Visualization + Mini Lorenz
+        // ============================
+        const pipeCanvas = document.getElementById('pipeline-canvas');
+        const lorenzCanvas = document.getElementById('lorenz-canvas');
+        const pCtx = pipeCanvas.getContext('2d');
+        const lCtx = lorenzCanvas.getContext('2d');
+        const pipeStageEl = document.getElementById('pipeline-stage');
+
+        const dpr = window.devicePixelRatio || 1;
+
+        function resizeAll() {
+            [pipeCanvas, lorenzCanvas].forEach(c => {
+                const rect = c.getBoundingClientRect();
+                c.width = rect.width * dpr;
+                c.height = rect.height * dpr;
+                c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+            });
+        }
+
+        // Pipeline stages data
+        const stages = [
+            { label: 'ECUACIONES', sub: 'dx/dt = f(x)', color: '#a855f7', icon: 'f(x)' },
+            { label: 'RK4', sub: 'k1,k2,k3,k4', color: '#22d3ee', icon: 'RK4' },
+            { label: 'BUFFER', sub: 'Float32Array', color: '#f59e0b', icon: '[ ]' },
+            { label: 'THREE.JS', sub: 'BufferGeometry', color: '#22c55e', icon: '3D' },
+            { label: 'PANTALLA', sub: 'Bloom + 60fps', color: '#ec4899', icon: 'px' }
+        ];
+
+        const stageNames = [
+            'Etapa 1: Definir sistema',
+            'Etapa 2: Integrar (RK4)',
+            'Etapa 3: Buffer circular',
+            'Etapa 4: Renderizar (Three.js)',
+            'Etapa 5: Pantalla + bloom'
+        ];
+
+        let time = 0;
+
+        // Lorenz integrator
+        const sigma = 10, rho = 28, beta = 8 / 3;
+        function lorenz([x, y, z]) {
+            return [sigma * (y - x), x * (rho - z) - y, x * y - beta * z];
+        }
+        function rk4Step(state, dt) {
+            const k1 = lorenz(state);
+            const s2 = [state[0] + k1[0] * dt / 2, state[1] + k1[1] * dt / 2, state[2] + k1[2] * dt / 2];
+            const k2 = lorenz(s2);
+            const s3 = [state[0] + k2[0] * dt / 2, state[1] + k2[1] * dt / 2, state[2] + k2[2] * dt / 2];
+            const k3 = lorenz(s3);
+            const s4 = [state[0] + k3[0] * dt, state[1] + k3[1] * dt, state[2] + k3[2] * dt];
+            const k4 = lorenz(s4);
+            return [
+                state[0] + (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]) * dt / 6,
+                state[1] + (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) * dt / 6,
+                state[2] + (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]) * dt / 6
+            ];
+        }
+
+        let lState = [1, 1, 1];
+        let lTrail = [];
+        const MAX_TRAIL = 8000;
+        let angle = 0;
+
+        function projectLorenz(x, y, z, w, h) {
+            const ca = Math.cos(angle), sa = Math.sin(angle);
+            const rx = x * ca - y * sa;
+            const ry = x * sa + y * ca;
+            const p = 4 / (5 - (z - 25) * 0.015);
+            return [
+                w / 2 + rx * w * 0.012 * p,
+                h * 0.55 - (z - 25) * h * 0.01 * p + ry * h * 0.003 * p
+            ];
+        }
+
+        function drawPipeline() {
+            const rect = pipeCanvas.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+            pCtx.clearRect(0, 0, w, h);
+
+            const stageW = (w - 80) / stages.length;
+            const cy = h / 2;
+            const activeStage = Math.floor(time * 1.5) % stages.length;
+
+            pipeStageEl.textContent = stageNames[activeStage];
+
+            for (let i = 0; i < stages.length; i++) {
+                const cx = 40 + i * stageW + stageW / 2;
+                const s = stages[i];
+                const isActive = i === activeStage;
+                const isPast = i < activeStage;
+
+                // Connection arrow
+                if (i < stages.length - 1) {
+                    const nextCx = 40 + (i + 1) * stageW + stageW / 2;
+                    const arrowActive = i < activeStage || (i === activeStage);
+
+                    // Data packet animation
+                    if (i === activeStage) {
+                        const progress = (time * 1.5) % 1;
+                        const packetX = cx + 35 + (nextCx - cx - 70) * progress;
+                        pCtx.beginPath();
+                        pCtx.arc(packetX, cy, 4, 0, Math.PI * 2);
+                        pCtx.fillStyle = s.color;
+                        pCtx.shadowColor = s.color;
+                        pCtx.shadowBlur = 10;
+                        pCtx.fill();
+                        pCtx.shadowBlur = 0;
+                    }
+
+                    pCtx.strokeStyle = arrowActive ? 'rgba(168,85,247,0.5)' : 'rgba(75,85,99,0.3)';
+                    pCtx.lineWidth = 2;
+                    pCtx.beginPath();
+                    pCtx.moveTo(cx + 35, cy);
+                    pCtx.lineTo(nextCx - 35, cy);
+                    pCtx.stroke();
+
+                    // Arrow tip
+                    pCtx.fillStyle = arrowActive ? 'rgba(168,85,247,0.5)' : 'rgba(75,85,99,0.3)';
+                    pCtx.beginPath();
+                    pCtx.moveTo(nextCx - 35, cy);
+                    pCtx.lineTo(nextCx - 42, cy - 4);
+                    pCtx.lineTo(nextCx - 42, cy + 4);
+                    pCtx.closePath();
+                    pCtx.fill();
+                }
+
+                // Box
+                const boxW = 60, boxH = 40;
+                const glowAlpha = isActive ? 0.6 : (isPast ? 0.2 : 0.05);
+                pCtx.shadowColor = s.color;
+                pCtx.shadowBlur = isActive ? 15 : 0;
+                pCtx.strokeStyle = isActive ? s.color : (isPast ? s.color + '80' : 'rgba(75,85,99,0.3)');
+                pCtx.lineWidth = isActive ? 2 : 1;
+                pCtx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+                pCtx.fillStyle = isActive ? s.color + '20' : 'rgba(0,0,0,0.5)';
+                pCtx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+                pCtx.shadowBlur = 0;
+
+                // Icon
+                pCtx.fillStyle = isActive ? s.color : (isPast ? s.color + '80' : '#4b5563');
+                pCtx.font = 'bold 12px JetBrains Mono';
+                pCtx.textAlign = 'center';
+                pCtx.fillText(s.icon, cx, cy + 4);
+
+                // Label above
+                pCtx.fillStyle = isActive ? '#fff' : '#6b7280';
+                pCtx.font = '9px Inter';
+                pCtx.fillText(s.label, cx, cy - boxH / 2 - 8);
+
+                // Sub below
+                pCtx.fillStyle = isActive ? s.color : '#4b5563';
+                pCtx.font = '8px JetBrains Mono';
+                pCtx.fillText(s.sub, cx, cy + boxH / 2 + 14);
+            }
+
+            pCtx.textAlign = 'start';
+        }
+
+        function drawLorenz() {
+            const rect = lorenzCanvas.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+
+            // Integrate
+            for (let i = 0; i < 20; i++) {
+                lState = rk4Step(lState, 0.005);
+                lTrail.push([...lState]);
+                if (lTrail.length > MAX_TRAIL) lTrail.shift();
+            }
+
+            angle += 0.004;
+
+            // Draw with fade
+            lCtx.fillStyle = 'rgba(0,0,0,0.08)';
+            lCtx.fillRect(0, 0, w, h);
+
+            if (lTrail.length > 1) {
+                for (let i = 1; i < lTrail.length; i += 1) {
+                    const alpha = 0.02 + (i / lTrail.length) * 0.6;
+                    const p0 = projectLorenz(lTrail[i - 1][0], lTrail[i - 1][1], lTrail[i - 1][2], w, h);
+                    const p1 = projectLorenz(lTrail[i][0], lTrail[i][1], lTrail[i][2], w, h);
+
+                    const z = lTrail[i][2];
+                    const hue = 270 + (z - 15) * 2;
+                    lCtx.strokeStyle = `hsla(${hue}, 80%, 65%, ${alpha})`;
+                    lCtx.lineWidth = 1.3;
+                    lCtx.beginPath();
+                    lCtx.moveTo(p0[0], p0[1]);
+                    lCtx.lineTo(p1[0], p1[1]);
+                    lCtx.stroke();
+                }
+
+                // Head glow
+                const last = lTrail[lTrail.length - 1];
+                const pl = projectLorenz(last[0], last[1], last[2], w, h);
+                const grad = lCtx.createRadialGradient(pl[0], pl[1], 0, pl[0], pl[1], 12);
+                grad.addColorStop(0, 'rgba(168,85,247,0.8)');
+                grad.addColorStop(1, 'rgba(168,85,247,0)');
+                lCtx.fillStyle = grad;
+                lCtx.beginPath();
+                lCtx.arc(pl[0], pl[1], 12, 0, Math.PI * 2);
+                lCtx.fill();
+
+                lCtx.beginPath();
+                lCtx.arc(pl[0], pl[1], 3, 0, Math.PI * 2);
+                lCtx.fillStyle = '#fff';
+                lCtx.fill();
+            }
+
+            // Stats overlay
+            lCtx.fillStyle = 'rgba(0,0,0,0.5)';
+            lCtx.fillRect(w - 180, 8, 170, 65);
+            lCtx.strokeStyle = 'rgba(168,85,247,0.3)';
+            lCtx.strokeRect(w - 180, 8, 170, 65);
+            lCtx.fillStyle = '#9ca3af';
+            lCtx.font = '10px JetBrains Mono';
+            lCtx.fillText(`puntos: ${lTrail.length}`, w - 170, 26);
+            lCtx.fillText(`dt: 0.005 | pasos/frame: 20`, w - 170, 40);
+            lCtx.fillText(`x: ${lState[0].toFixed(2)} y: ${lState[1].toFixed(2)}`, w - 170, 54);
+            lCtx.fillText(`z: ${lState[2].toFixed(2)}`, w - 170, 68);
+        }
+
+        function animate() {
+            time += 0.016;
+            drawPipeline();
+            drawLorenz();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeAll);
+
+        resizeAll();
+        animate();
+    </script>
+</body>
+</html>

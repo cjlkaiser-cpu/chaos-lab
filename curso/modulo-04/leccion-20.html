@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leccion 20 · Dadras y Rabinovich-Fabrikant | Chaos Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glow-text { text-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        .progress-bar { background: linear-gradient(90deg, #a855f7, #22d3ee); }
+        .lab-container { border: 2px solid #a855f7; border-radius: 12px; overflow: hidden; }
+        .katex { color: inherit; font-size: 1.1em; }
+    </style>
+</head>
+<body class="bg-black text-gray-100 min-h-screen">
+
+    <!-- Sticky Header -->
+    <header class="sticky top-0 z-50 bg-black/90 backdrop-blur border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <nav class="flex items-center gap-2 text-sm text-gray-400">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span class="text-gray-300">Modulo 04</span>
+            </nav>
+            <div class="flex items-center gap-3">
+                <span class="text-gray-500 text-sm">Leccion 20 / 20</span>
+                <div class="flex gap-2">
+                    <a href="leccion-19.html" class="px-3 py-1 rounded text-xs bg-gray-700 hover:bg-gray-600 transition">Anterior</a>
+                    <a href="../modulo-05/leccion-21.html" class="px-3 py-1 rounded text-xs bg-violet-600 hover:bg-violet-500 transition">Siguiente</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1">
+            <div class="sticky top-20 bg-gray-900/50 rounded-xl border border-gray-800 p-5">
+                <h2 class="text-lg font-bold text-violet-400">Modulo 04</h2>
+                <p class="text-sm text-gray-400 mt-1">Familia de Atractores</p>
+
+                <!-- Progress -->
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Progreso</span>
+                        <span>5 / 5</span>
+                    </div>
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Lesson List -->
+                <nav class="mt-6 space-y-1">
+                    <a href="leccion-16.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">16</span>
+                        <span>Rossler: la ruta de Feigenbaum</span>
+                    </a>
+                    <a href="leccion-17.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">17</span>
+                        <span>Chen y Lu</span>
+                    </a>
+                    <a href="leccion-18.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">18</span>
+                        <span>Thomas y Halvorsen</span>
+                    </a>
+                    <a href="leccion-19.html" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-gray-200 text-sm transition">
+                        <span class="mono text-xs text-gray-600">19</span>
+                        <span>Aizawa y Sprott</span>
+                    </a>
+                    <a href="leccion-20.html" class="flex items-center gap-3 px-3 py-2 rounded-lg bg-violet-500/20 border border-violet-500/30 text-violet-300 text-sm">
+                        <span class="mono text-xs text-violet-400">20</span>
+                        <span>Dadras y Rabinovich-Fabrikant</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:col-span-3">
+            <article>
+                <!-- Lesson Header -->
+                <div class="mb-8">
+                    <div class="flex items-center gap-4 mb-3">
+                        <span class="mono text-cyan-400 text-sm font-medium">LECCION 20</span>
+                        <span class="text-gray-600">|</span>
+                        <span class="text-gray-400 text-sm">~25 min</span>
+                    </div>
+                    <h1 class="text-4xl lg:text-5xl font-bold text-violet-300 glow-text mb-3">Dadras y Rabinovich-Fabrikant</h1>
+                    <p class="text-xl text-gray-400">Complejidad, modulacion y la galeria completa de atractores</p>
+                </div>
+
+                <!-- Prose Content -->
+                <div class="prose prose-invert max-w-none space-y-8">
+
+                    <!-- Complexity and modulation -->
+                    <section>
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Complejidad y modulacion</h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            En las lecciones anteriores de este modulo, hemos recorrido un paisaje de atractores
+                            caoticos: desde la simplicidad estructural de Rossler hasta el minimalismo de Sprott,
+                            pasando por las familias conectadas de Lorenz-Chen-Lu y las simetrias ciclicas de
+                            Thomas y Halvorsen. En esta leccion final del modulo, exploraremos dos sistemas mas
+                            que completan nuestra galeria y que provienen de contextos fisicos y matematicos distintos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema de Rabinovich-Fabrikant nace de la fisica de plasmas y las inestabilidades
+                            de modulacion. El sistema de Dadras surge de la ingenieria de control y la generacion
+                            de atractores de doble ala. Juntos, estos diez sistemas que hemos estudiado
+                            &mdash;Lorenz, Rossler, Chen, Lu, Thomas, Halvorsen, Aizawa, Sprott, Dadras y
+                            Rabinovich-Fabrikant&mdash; forman un panorama representativo de la diversidad del
+                            caos en tres dimensiones.
+                        </p>
+                    </section>
+
+                    <!-- Dadras -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">El sistema de Dadras</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema de Dadras fue propuesto por Sara Dadras y Hamid Reza Momeni en 2009.
+                            Su objetivo era disenar un atractor caotico de <strong class="text-white">doble ala</strong>
+                            con propiedades especificas para aplicaciones en comunicaciones seguras basadas en caos.
+                            La idea es usar la senal caotica como portadora para transmitir informacion de forma
+                            que sea imposible de descifrar sin conocer los parametros exactos del sistema.
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = y - ax + byz, \quad \dot{y} = cy - xz + z, \quad \dot{z} = dxy - ez$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con los parametros \(a = 3\), \(b = 2.7\), \(c = 1.7\), \(d = 2\), \(e = 9\),
+                            el sistema produce un atractor de doble ala con una estructura rica. El termino
+                            \(byz\) en la primera ecuacion acopla las tres variables de manera no lineal,
+                            mientras que el termino \(dxy\) en la tercera ecuacion proporciona la reinjeccion
+                            necesaria para el comportamiento caotico.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Lo interesante del sistema de Dadras es que fue diseñado <em>a proposito</em>
+                            para ser caotico, a diferencia de Lorenz (descubierto por accidente en la meteorologia)
+                            o Rabinovich-Fabrikant (derivado de un modelo fisico). Esta diferencia de origen
+                            refleja la evolucion de la teoria del caos: de descubrimiento accidental a
+                            herramienta de ingenieria.
+                        </p>
+                    </section>
+
+                    <!-- Rabinovich-Fabrikant -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Rabinovich-Fabrikant (1978)</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema de Rabinovich-Fabrikant tiene un origen profundamente fisico. Fue
+                            propuesto por Mikhail Rabinovich y Anatoly Fabrikant en 1978 para modelar la
+                            <strong class="text-white">inestabilidad de modulacion</strong> en medios no lineales,
+                            particularmente en la interaccion de ondas en plasmas.
+                        </p>
+                        <div class="bg-gray-900/50 p-6 rounded-lg text-center my-6">
+                            $$\dot{x} = y(z - 1 + x^2) + \gamma x, \quad \dot{y} = x(3z + 1 - x^2) + \gamma y, \quad \dot{z} = -2z(\alpha + xy)$$
+                        </div>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con los parametros clasicos \(\gamma = 0.87\) y \(\alpha = 1.1\), el sistema
+                            produce uno de los atractores mas visualmente complejos y esteticamente impactantes
+                            de la coleccion. Su estructura es intrincada, con multiples escalas de detalle
+                            que se revelan al acercarse: un autentico fractal en tres dimensiones.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La complejidad visual del atractor R-F refleja la riqueza de su dinamica. El
+                            sistema exhibe una variedad de comportamientos al variar los parametros: puntos
+                            fijos, ciclos limite, toros, y caos. La transicion entre estos regimenes es
+                            particularmente intrincada, con ventanas de periodicidad inmersas en regiones caoticas.
+                        </p>
+                    </section>
+
+                    <!-- Modulation instability -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Inestabilidad de modulacion</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            La <strong class="text-white">inestabilidad de modulacion</strong> es un fenomeno
+                            fundamental en fisica de ondas. Ocurre cuando una onda de amplitud constante se
+                            vuelve inestable frente a perturbaciones que modulan su amplitud. En un medio no
+                            lineal, esta modulacion puede crecer exponencialmente, fragmentando la onda
+                            original en un tren de pulsos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            El sistema R-F captura la esencia de este proceso. Las variables \(x\) e \(y\)
+                            representan las amplitudes de dos modos de onda acoplados, mientras que \(z\)
+                            mide la intensidad total. El termino \(x^2\) en las ecuaciones refleja la
+                            autointeraccion no lineal de las ondas, y el acoplamiento \(xy\) en la
+                            ecuacion de \(z\) modela la transferencia de energia entre modos.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Esta conexion fisica le da al sistema R-F un significado que trasciende la
+                            matematica pura. El caos en este sistema corresponde a una situacion fisica real:
+                            las ondas en un plasma se fragmentan y reorganizan de manera impredecible,
+                            generando una turbulencia de ondas que es caos determinista en accion.
+                        </p>
+                    </section>
+
+                    <!-- Complete gallery -->
+                    <section>
+                        <h3 class="text-xl font-bold text-cyan-400 mb-3">Galeria completa</h3>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Con esta leccion completamos la presentacion de los diez atractores que forman
+                            la coleccion del Chaos Lab. Cada uno cuenta una historia diferente sobre la
+                            inestabilidad, la no linealidad y la emergencia de complejidad a partir de
+                            reglas simples. La siguiente tabla resume toda la familia:
+                        </p>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm border border-gray-700 rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr class="bg-gray-800/80">
+                                        <th class="px-3 py-3 text-left text-violet-400 font-semibold">Atractor</th>
+                                        <th class="px-3 py-3 text-left text-cyan-400 font-semibold">Año</th>
+                                        <th class="px-3 py-3 text-left text-cyan-400 font-semibold">Descubridor</th>
+                                        <th class="px-3 py-3 text-left text-cyan-400 font-semibold">Propiedad clave</th>
+                                        <th class="px-3 py-3 text-left text-cyan-400 font-semibold">Color</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-800">
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Lorenz</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1963</td>
+                                        <td class="px-3 py-2 text-gray-300">Edward Lorenz</td>
+                                        <td class="px-3 py-2 text-gray-300">Conveccion, mariposa \(Z_2\)</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #f97316"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Rossler</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1976</td>
+                                        <td class="px-3 py-2 text-gray-300">Otto Rossler</td>
+                                        <td class="px-3 py-2 text-gray-300">1 no linealidad, single-wing</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #06b6d4"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">R-F</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1978</td>
+                                        <td class="px-3 py-2 text-gray-300">Rabinovich, Fabrikant</td>
+                                        <td class="px-3 py-2 text-gray-300">Modulacion, plasmas</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #14b8a6"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Aizawa</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">~1982</td>
+                                        <td class="px-3 py-2 text-gray-300">Yoji Aizawa</td>
+                                        <td class="px-3 py-2 text-gray-300">SO(2), forma de cebolla</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #f59e0b"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Sprott</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1994</td>
+                                        <td class="px-3 py-2 text-gray-300">Julien C. Sprott</td>
+                                        <td class="px-3 py-2 text-gray-300">Minimalismo, 5 terminos</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #ec4899"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Chen</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1999</td>
+                                        <td class="px-3 py-2 text-gray-300">Guanrong Chen</td>
+                                        <td class="px-3 py-2 text-gray-300">Anti-control, dual de Lorenz</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #3b82f6"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Thomas</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">1999</td>
+                                        <td class="px-3 py-2 text-gray-300">Rene Thomas</td>
+                                        <td class="px-3 py-2 text-gray-300">\(Z_3\) ciclica, \(\sin\) acotado</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #10b981"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Halvorsen</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">~2000</td>
+                                        <td class="px-3 py-2 text-gray-300">J. C. Halvorsen</td>
+                                        <td class="px-3 py-2 text-gray-300">\(Z_3\) ciclica, angular</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #ef4444"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/30">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Lu</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">2002</td>
+                                        <td class="px-3 py-2 text-gray-300">Jinhu Lu</td>
+                                        <td class="px-3 py-2 text-gray-300">Puente Lorenz-Chen</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #8b5cf6"></span></td>
+                                    </tr>
+                                    <tr class="bg-gray-900/50">
+                                        <td class="px-3 py-2 text-gray-300 font-medium">Dadras</td>
+                                        <td class="px-3 py-2 text-gray-300 mono">2009</td>
+                                        <td class="px-3 py-2 text-gray-300">Sara Dadras</td>
+                                        <td class="px-3 py-2 text-gray-300">Doble ala, comunicaciones</td>
+                                        <td class="px-3 py-2"><span class="inline-block w-4 h-4 rounded" style="background: #f97316"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p class="text-gray-300 leading-relaxed mt-4 mb-4">
+                            Mirando la tabla cronologicamente, podemos ver como la ciencia del caos ha
+                            evolucionado: de descubrimientos accidentales (Lorenz) a construcciones
+                            minimalistas (Sprott) y herramientas de ingenieria (Dadras). Cada decada
+                            trajo nuevas perspectivas sobre como los sistemas deterministas pueden
+                            generar complejidad, y la coleccion completa nos da una vision panoramica
+                            de la riqueza de este campo.
+                        </p>
+
+                        <div class="bg-gray-900/50 border-l-4 border-violet-400 p-6 rounded-r-lg my-6">
+                            <p class="text-violet-300 font-semibold mb-2">Idea clave</p>
+                            <p class="text-gray-300">
+                                Cada atractor caotico cuenta una historia diferente sobre la inestabilidad.
+                                Lorenz nos habla del clima, Rabinovich-Fabrikant de los plasmas, Thomas de
+                                las redes biologicas, Sprott de la economia algebraica del caos. Pero todos
+                                comparten un nucleo comun: la no linealidad convierte la prediccion en una
+                                carrera contra el crecimiento exponencial de la incertidumbre.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Exercises -->
+                    <section class="bg-violet-500/10 border border-violet-500/30 rounded-xl p-6 mt-8">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-4">Ejercicios</h2>
+                        <ol class="space-y-4 text-gray-300">
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">01.</span>
+                                <div>
+                                    <p>Observa los atractores de Dadras y R-F en el LAB. ¿Cual te parece
+                                    visualmente mas complejo? Intenta describir la diferencia en terminos
+                                    de cuantas "escalas" de detalle puedes distinguir. ¿Cual parece tener
+                                    mas estructura fractal?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">02.</span>
+                                <div>
+                                    <p>Clasifica los 10 atractores de la galeria segun su tipo de simetria:
+                                    (a) sin simetria obvia, (b) simetria de reflexion \(Z_2\), (c) simetria
+                                    ciclica \(Z_3\), (d) simetria rotacional continua. ¿Que relacion hay
+                                    entre la simetria y la forma visual del atractor?</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="mono text-violet-400 font-bold">03.</span>
+                                <div>
+                                    <p>Abre ChaosLab y explora los 10 atractores interactivamente. Para cada
+                                    uno, anota: (a) numero de "alas" o lobulos, (b) si la trayectoria parece
+                                    suave o angular, (c) si hay una direccion preferida o el atractor se
+                                    extiende uniformemente. Busca patrones y agrupaciones.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                    <!-- LAB Section -->
+                    <section class="mt-10">
+                        <h2 class="text-2xl font-bold text-violet-400 mb-2">LAB: Rabinovich-Fabrikant y Dadras 3D</h2>
+                        <p class="text-gray-400 mb-4">Explora los dos ultimos atractores de nuestra galeria. Alterna entre
+                        Rabinovich-Fabrikant (teal) y Dadras (naranja) para completar tu recorrido.</p>
+
+                        <div class="lab-container bg-gray-950">
+                            <div class="flex flex-wrap items-center justify-between px-4 py-2 bg-gray-900/80 border-b border-violet-500/30 gap-2">
+                                <span class="mono text-xs text-violet-400">chaos-lab::rf-dadras-3d</span>
+                                <div class="flex items-center gap-3">
+                                    <button id="btnRF" class="px-3 py-1 text-xs bg-teal-600 hover:bg-teal-500 rounded transition">R-F</button>
+                                    <button id="btnDadras" class="px-3 py-1 text-xs bg-gray-700 hover:bg-orange-600 rounded transition">Dadras</button>
+                                    <button id="btnReset" class="px-3 py-1 text-xs bg-violet-600 hover:bg-violet-500 rounded transition">Reset</button>
+                                    <button id="btnPause" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded transition">Pausa</button>
+                                </div>
+                            </div>
+                            <canvas id="labCanvas" width="900" height="500" class="w-full"></canvas>
+                        </div>
+                    </section>
+
+                </div>
+            </article>
+
+            <!-- Bottom Navigation -->
+            <nav class="mt-12 flex items-center justify-between border-t border-gray-800 pt-6">
+                <a href="leccion-19.html" class="group">
+                    <span class="block text-xs text-gray-600 mb-1">Anterior</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">&larr; Leccion 19: Aizawa y Sprott</span>
+                </a>
+                <a href="../modulo-05/leccion-21.html" class="text-right group">
+                    <span class="block text-xs text-gray-600 mb-1">Siguiente</span>
+                    <span class="text-violet-400 group-hover:text-violet-300 transition">Leccion 21: Exponente de Lyapunov &rarr;</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm text-gray-600">
+            <nav class="flex items-center gap-2">
+                <a href="../../../../_portal/index.html" class="hover:text-violet-400 transition">EigenLab</a>
+                <span>/</span>
+                <a href="../../index.html" class="hover:text-violet-400 transition">Chaos Lab</a>
+                <span>/</span>
+                <a href="../index.html" class="hover:text-violet-400 transition">Curso</a>
+                <span>/</span>
+                <span>Modulo 04 &middot; Leccion 20</span>
+            </nav>
+            <span>&copy; EigenLab 2025</span>
+        </div>
+    </footer>
+
+    <!-- LAB Script: Rabinovich-Fabrikant & Dadras 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+    (function() {
+        // --- RK4 integrator ---
+        function rk4(f, s, p, dt) {
+            const k1 = f(s, p);
+            const k2 = f([s[0]+k1[0]*dt/2, s[1]+k1[1]*dt/2, s[2]+k1[2]*dt/2], p);
+            const k3 = f([s[0]+k2[0]*dt/2, s[1]+k2[1]*dt/2, s[2]+k2[2]*dt/2], p);
+            const k4 = f([s[0]+k3[0]*dt, s[1]+k3[1]*dt, s[2]+k3[2]*dt], p);
+            return [s[0]+(k1[0]+2*k2[0]+2*k3[0]+k4[0])*dt/6,
+                    s[1]+(k1[1]+2*k2[1]+2*k3[1]+k4[1])*dt/6,
+                    s[2]+(k1[2]+2*k2[2]+2*k3[2]+k4[2])*dt/6];
+        }
+
+        // --- Rabinovich-Fabrikant system ---
+        function rabFab(s, p) {
+            const [x, y, z] = s;
+            const { gamma, alpha } = p;
+            return [
+                y * (z - 1 + x * x) + gamma * x,
+                x * (3 * z + 1 - x * x) + gamma * y,
+                -2 * z * (alpha + x * y)
+            ];
+        }
+
+        // --- Dadras system ---
+        function dadras(s, p) {
+            const [x, y, z] = s;
+            const { a, b, c, d, e } = p;
+            return [
+                y - a * x + b * y * z,
+                c * y - x * z + z,
+                d * x * y - e * z
+            ];
+        }
+
+        // --- Three.js setup ---
+        const canvas = document.getElementById('labCanvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(canvas.width, canvas.height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0x030712);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, canvas.width / canvas.height, 0.1, 1000);
+        camera.position.set(5, 4, 5);
+        camera.lookAt(0, 0, 0);
+
+        // Trail
+        const MAX_POINTS = 18000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(MAX_POINTS * 3);
+        const colorsArr = new Float32Array(MAX_POINTS * 3);
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colorsArr, 3));
+        geometry.setDrawRange(0, 0);
+
+        const material = new THREE.LineBasicMaterial({ vertexColors: true, linewidth: 1 });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+
+        const axesHelper = new THREE.AxesHelper(1);
+        scene.add(axesHelper);
+
+        // State
+        let isRF = true;
+        let state = [-1, 0, 0.5];
+        let rfParams = { gamma: 0.87, alpha: 1.1 };
+        let dadrasParams = { a: 3, b: 2.7, c: 1.7, d: 2, e: 9 };
+        let pointCount = 0;
+        let paused = false;
+        let angle = 0;
+
+        const tealColor = new THREE.Color(0x14b8a6);
+        const cyanColor = new THREE.Color(0x22d3ee);
+        const orangeColor = new THREE.Color(0xf97316);
+        const amberColor = new THREE.Color(0xf59e0b);
+
+        function resetSim() {
+            if (isRF) {
+                state = [-1, 0, 0.5];
+            } else {
+                state = [1.1, 2.1, -2.0];
+            }
+            pointCount = 0;
+            geometry.setDrawRange(0, 0);
+            angle = 0;
+        }
+
+        function addPoint(x, y, z) {
+            if (pointCount >= MAX_POINTS) {
+                for (let i = 0; i < (MAX_POINTS - 1) * 3; i++) {
+                    positions[i] = positions[i + 3];
+                    colorsArr[i] = colorsArr[i + 3];
+                }
+                pointCount = MAX_POINTS - 1;
+            }
+            const idx = pointCount * 3;
+            positions[idx] = x;
+            positions[idx + 1] = y;
+            positions[idx + 2] = z;
+
+            const t = pointCount / MAX_POINTS;
+            const c1 = isRF ? tealColor : orangeColor;
+            const c2 = isRF ? cyanColor : amberColor;
+            const c = c1.clone().lerp(c2, t);
+            colorsArr[idx] = c.r;
+            colorsArr[idx + 1] = c.g;
+            colorsArr[idx + 2] = c.b;
+
+            pointCount++;
+            geometry.setDrawRange(0, pointCount);
+            geometry.attributes.position.needsUpdate = true;
+            geometry.attributes.color.needsUpdate = true;
+        }
+
+        // Controls
+        const btnRF = document.getElementById('btnRF');
+        const btnDadras = document.getElementById('btnDadras');
+
+        btnRF.addEventListener('click', function() {
+            if (!isRF) {
+                isRF = true;
+                btnRF.className = 'px-3 py-1 text-xs bg-teal-600 hover:bg-teal-500 rounded transition';
+                btnDadras.className = 'px-3 py-1 text-xs bg-gray-700 hover:bg-orange-600 rounded transition';
+                resetSim();
+            }
+        });
+
+        btnDadras.addEventListener('click', function() {
+            if (isRF) {
+                isRF = false;
+                btnDadras.className = 'px-3 py-1 text-xs bg-orange-600 hover:bg-orange-500 rounded transition';
+                btnRF.className = 'px-3 py-1 text-xs bg-gray-700 hover:bg-teal-600 rounded transition';
+                resetSim();
+            }
+        });
+
+        document.getElementById('btnReset').addEventListener('click', resetSim);
+        document.getElementById('btnPause').addEventListener('click', function() {
+            paused = !paused;
+            this.textContent = paused ? 'Reanudar' : 'Pausa';
+        });
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!paused) {
+                const dt = isRF ? 0.005 : 0.003;
+                const sys = isRF ? rabFab : dadras;
+                const p = isRF ? rfParams : dadrasParams;
+                const steps = isRF ? 12 : 20;
+                const scale = isRF ? 2.0 : 0.3;
+
+                for (let i = 0; i < steps; i++) {
+                    state = rk4(sys, state, p, dt);
+                    // Guard against numerical explosion
+                    if (isNaN(state[0]) || isNaN(state[1]) || isNaN(state[2]) ||
+                        Math.abs(state[0]) > 200 || Math.abs(state[1]) > 200 || Math.abs(state[2]) > 200) {
+                        resetSim();
+                        break;
+                    }
+                    addPoint(state[0] * scale, state[2] * scale, state[1] * scale);
+                }
+
+                // Auto-rotate camera
+                angle += 0.003;
+                const radius = isRF ? 6 : 5;
+                camera.position.x = radius * Math.cos(angle);
+                camera.position.z = radius * Math.sin(angle);
+                camera.position.y = radius * 0.5;
+                camera.lookAt(0, isRF ? 0.5 : 0, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        // Warm up (skip transient)
+        const warmDt = isRF ? 0.005 : 0.003;
+        const warmSys = isRF ? rabFab : dadras;
+        const warmP = isRF ? rfParams : dadrasParams;
+        for (let i = 0; i < 500; i++) {
+            state = rk4(warmSys, state, warmP, warmDt);
+            if (isNaN(state[0])) {
+                state = [-1, 0, 0.5];
+            }
+        }
+
+        animate();
+    })();
+    </script>
+
+</body>
+</html>
